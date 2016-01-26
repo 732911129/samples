@@ -1,6 +1,8 @@
 from google.appengine.ext import ndb
 from google.appengine.api import search
 import webapp2
+import json
+import logging
 
 from webapp2 import (
   
@@ -15,8 +17,6 @@ from webapp2 import (
 from google.appengine.ext.ndb import (
 
     get_multi as keys_to_entities,
-
-    Model as datastore_entity,
 
     StringProperty as str_slot,
 
@@ -97,6 +97,78 @@ TRANSACTION_STATES = {
   'OUTSTANDING-REFUSES-TO-PAY' : 'OUTSTANDING-REFUSES-TO-PAY'
 }
 
+""" This super class of the entity classes also contains code to handle requests.
+So one model per route."""
+
+class datastore_entity( ndb.Model ):
+  def __repr__( self ):
+    """ convert a class instance to a json string
+    removing any properties blocked by the access role given """
+    cls_name = self.__class__.__name__
+    if access_role is not None:
+      try:
+        properties_excluded_by_role = self.excluded_properties[ access_role ]
+        this_dict = self.to_dict()
+        map( lambda blocked : del this_dict[ blocked ], properties_excluded_by_role )
+        return json.dumps( this_dict )
+      except BaseException:
+        receipt = { 'error' : 'error when creating json string from entity' }
+        logging.warning( "failing to project and create json entity, info : %s" % unicode(
+                          { 'cls' : cls_name, 'slots' : this_dict, 
+                          'role' : access_role, 'excluded' : properties_excluded_by_role } ) )
+        return receipt
+    else:
+      return { 'error' : 'no access role to enable access to %s' % cls_name }
+
+  def __str__( self ):
+    return str( self.__repr__() )
+
+  def __unicode__( self ):
+    return unicode( self.__repr__() )
+
+""" decorators """
+
+# json io makes a request method json input json output and throws if this results in an error
+
+def json_io():
+  pass
+
+# in session makes sure we are in session and informs the client to log in if we are not
+# it also fulfills the session role variable
+
+def in_session():
+  pass
+
+class endpoint( api ):
+  """ codes are a comma separated list of entity ids pairs in the format
+  kind:id:kind:id and so on.
+  We could have chosen '/', yet we think ':' looks cooler.
+  """
+
+  @json_io
+  @in_session
+  def get( self, codes = None ):
+    receipt = None
+    if codes is not None:
+      try:
+        receipt = keys_to_entities( [ ndb.Key( flat = code.split( ':' ) 
+                                         for code in codes.split(',') ] )
+        map( lambda entity : entity.access_role = session_role, receipt )
+      except:
+        receipt = { 'error' : 'unable to access %s' % codes }
+    else:
+      receipt = { 'error' : 'no request was made to the api' }
+    if 'error' in receipt:
+      logging.warn( receipt[ 'error' ] )
+    self.response.write( json.dumps( receipt ) )
+
+  @json_io
+  @in_session
+  def post( self ):
+    """ code to read the response body loaded from json
+    and add or patch the entities requested """
+    pass
+
 """ Some classes are required by others that follow,
 and so are placed preceding those which depend on them """
 
@@ -106,21 +178,21 @@ functionality and expressiveness in consistent ways """
 
 class HoistedNoteGroup( datastore_entity ):
   """ the purpose of this class is to hoist the definition of note
-  which otherwise introduces a cyclic dependency,
-  Note -> Human -> photographable -> flaggable -> Note
-  If we make flaggable -> HoistedNoteGroup
-  and Note -> HoistedNoteGroup
-  Then we are okay. 
-  How we use this is that admin flag notes has a single hoisted note as the ancestor
-  of all notes it links to. Then to get the admin flag notes, 
-  we do an ancestory query with this hoisted note set as the ancestor. 
-  Writes within an ancestor group are usually more expensive than writes to entities that aren't
-  in and ancestor group, and the advice is to keep entity groups small. 
-  At this time that seems an okay strategy to avoid the cyclic dependency 
-  and keep our data model the determining factor of our implementation
-  ( and not the factor being determined by our implementation )
-  because we don't expect that admins will be adding lots of flag notes to a single flagged
-  entity in quick succession ( the actual limit is one write per second ).
+    which otherwise introduces a cyclic dependency,
+    Note -> Human -> photographable -> flaggable -> Note
+    If we make flaggable -> HoistedNoteGroup
+    and Note -> HoistedNoteGroup
+    Then we are okay. 
+    How we use this is that admin flag notes has a single hoisted note as the ancestor
+    of all notes it links to. Then to get the admin flag notes, 
+    we do an ancestory query with this hoisted note set as the ancestor. 
+    Writes within an ancestor group are usually more expensive than writes to entities that aren't
+    in and ancestor group, and the advice is to keep entity groups small. 
+    At this time that seems an okay strategy to avoid the cyclic dependency 
+    and keep our data model the determining factor of our implementation
+    ( and not the factor being determined by our implementation )
+    because we don't expect that admins will be adding lots of flag notes to a single flagged
+    entity in quick succession ( the actual limit is one write per second ).
  
   """
   pass
