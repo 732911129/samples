@@ -46,31 +46,17 @@ Also, the intent is obviously to show you how I think about, model and implement
 
 MAX_PHOTOS = 5
 
+DOGS_RATE_SITTING = {
+    'SO-SATISFIED' : 'SO-SATISFIED',
+    'NOT-ENOUGH-FOOD' : 'NOT-ENOUGH-FOOD',
+    'BORING' : 'BORING',
+    'SCARY' : 'SCARY'
+  }
+
 FLAG_CHOICES = {
     'HIDE-AND-REVIEW' : 'HIDE-AND-REVIEW',
     'REVIEWED-VIOLATES-NOTIFIED' : 'REVIEWED-VIOLATED-NOTIFIED',
     'UNFLAGGED' : 'UNFLAGGED'
-  }
-
-SIT_PROVIDER_STATUS = {
-    'DOES-NOT-AND-DOES-NOT-WANT-TO' : 'DOES-NOT-AND-DOES-NOT-WANT-TO',
-    'DOES-NOT-AND-MIGHT-WANT-TO' : 'DOES-NOT-AND-MIGHT-WANT-TO',
-    'DOES-NOT-AND-WANTS-TO' : 'DOES-NOT-AND-WANTS-TO',
-    'DOES-SIT' : 'DOES-SIT'
-  }
-
-RECURRING_SITTING_STATUS = {
-    'ONE-OFF-ONLY' : 'ONE-OFF-ONLY',
-    'RECURRING-FOR-RIGHT-SITTER' : 'RECURRING-FOR-RIGHT-SITTER',
-    'RECURRING-AND-CURRENTLY-PAUSED' : 'RECURRING-AND-CURRENTLY-PAUSED',
-    'RECURRING' : 'RECURRING' 
-  }
-
-SITTER_RATES_DOGS_AND_HUMANS = {
-    'EVERYTHING-GREAT' : 'EVERYTHING-GREAT',
-    'SOME-PROBLEMS' : 'SOME-PROBLEMS',
-    'TERRIBLE' : 'TERRIBLE',
-    'PAYMENT-PROBLEMS' : 'PAYMENT-PROBLEMS'
   }
 
 HUMANS_RATE_SITTERS = {
@@ -81,12 +67,35 @@ HUMANS_RATE_SITTERS = {
     'DOGLOSS-PROBLEMS' : 'DOGLOSS-PROBLEMS'
   }
 
-DOGS_RATE_SITTING = {
-    'SO-SATISFIED' : 'SO-SATISFIED',
-    'NOT-ENOUGH-FOOD' : 'NOT-ENOUGH-FOOD',
-    'BORING' : 'BORING',
-    'SCARY' : 'SCARY'
+RECURRING_SITTING_STATUS = {
+    'ONE-OFF-ONLY' : 'ONE-OFF-ONLY',
+    'RECURRING-FOR-RIGHT-SITTER' : 'RECURRING-FOR-RIGHT-SITTER',
+    'RECURRING-AND-CURRENTLY-PAUSED' : 'RECURRING-AND-CURRENTLY-PAUSED',
+    'RECURRING' : 'RECURRING' 
   }
+
+SIT_PROVIDER_STATUS = {
+    'DOES-NOT-AND-DOES-NOT-WANT-TO' : 'DOES-NOT-AND-DOES-NOT-WANT-TO',
+    'DOES-NOT-AND-MIGHT-WANT-TO' : 'DOES-NOT-AND-MIGHT-WANT-TO',
+    'DOES-NOT-AND-WANTS-TO' : 'DOES-NOT-AND-WANTS-TO',
+    'DOES-SIT' : 'DOES-SIT'
+  }
+
+SITTER_RATES_DOGS_AND_HUMANS = {
+    'EVERYTHING-GREAT' : 'EVERYTHING-GREAT',
+    'SOME-PROBLEMS' : 'SOME-PROBLEMS',
+    'TERRIBLE' : 'TERRIBLE',
+    'PAYMENT-PROBLEMS' : 'PAYMENT-PROBLEMS'
+  }
+
+TRANSACTION_STATES = {
+  'AMOUNT-DISPUTE' : 'AMOUNT-DISPUTE',
+  'SERVICE-RENDERED-DISPUTE' : 'SERVICE-RENDERED-DISPUTE',
+  'PAID' : 'PAID',
+  'PARTIALLY-PAID' : 'PARTIALLY-PAID',
+  'OUTSTANDING-SAID-WILL-PAY' : 'OUTSTANDING-SAID-WILL-PAY',
+  'OUTSTANDING-REFUSES-TO-PAY' : 'OUTSTANDING-REFUSES-TO-PAY'
+}
 
 """ Some classes are required by others that follow,
 and so are placed preceding those which depend on them """
@@ -95,12 +104,12 @@ and so are placed preceding those which depend on them """
 Interfaces / Prototypes that can be implemented by models to extend 
 functionality and expressiveness in consistent ways """
 
-class HoistedNote( datastore_entity ):
+class HoistedNoteGroup( datastore_entity ):
   """ the purpose of this class is to hoist the definition of note
   which otherwise introduces a cyclic dependency,
   Note -> Human -> photographable -> flaggable -> Note
-  If we make flaggable -> HoistedNote
-  and Note -> HoistedNote
+  If we make flaggable -> HoistedNoteGroup
+  and Note -> HoistedNoteGroup
   Then we are okay. 
   How we use this is that admin flag notes has a single hoisted note as the ancestor
   of all notes it links to. Then to get the admin flag notes, 
@@ -134,30 +143,6 @@ class reputationMeasurable( ):
       lambda self : ( self.positive_reviews - self.negative_reviews - self.flags ) * self.other_metric
     )
 
-class Human( datastore_entity, reputationMeasurable, photographable ):
-  """ a human's entry, can have photos, and therefore we specify a flag property """
-  name = ndb.StringProperty()
-  address = ndb.KeyProperty( Address )
-  dogs = ndb.KeyProperty( Dog, repeated = True )
-  does_sit = ndb.StringProperty( choices = SIT_PROVIDER_STATUS.values() )
-
-class Note( datastore_entity ):
-  parent = HoistedNote
-  """ a note about something, can reference another note as being a reply to it """
-  when = ndb.DateTimeProperty()
-  what = ndb.StringProperty()
-  author = ndb.KeyProperty( Human )
-  replies_to = ndb.KeyProperty( Note )
-  flagged = ndb.StringProperty( choices = FLAG_CHOICES.values(), default = FLAG_CHOICES[ 'UNFLAGGED' ] )
-
-""" Datastore entities that are first class models in the application concept """
-
-class Dog( datastore_entity, reputationMeasurable, photographable ):
-  """ a dog's entry, can have photos, and therefore we specify a flag property """
-  name = ndb.StringProperty()
-  breed = ndb.StringProperty()
-  birthday = ndb.DateProperty()
-
 class Address( datastore_entity ):
   """ 
     the reason we construct the address like this is to make it easier to input
@@ -171,6 +156,40 @@ class Address( datastore_entity ):
   street_number = ndb.StringProperty()
   finding_instructions = ndb.StringProperty()
 
+class Dog( datastore_entity, reputationMeasurable, photographable ):
+  """ a dog's entry, can have photos, and therefore we specify a flag property """
+  name = ndb.StringProperty()
+  breed = ndb.StringProperty()
+  birthday = ndb.DateProperty()
+
+class Human( datastore_entity, reputationMeasurable, photographable ):
+  """ a human's entry, can have photos, and therefore we specify a flag property """
+  name = ndb.StringProperty()
+  address = ndb.KeyProperty( Address )
+  dogs = ndb.KeyProperty( Dog, repeated = True )
+  does_sit = ndb.StringProperty( choices = SIT_PROVIDER_STATUS.values() )
+
+class Note( datastore_entity ):
+  """ a note about something, can reference another note as being a reply to it """
+  when = ndb.DateTimeProperty()
+  what = ndb.StringProperty()
+  author = ndb.KeyProperty( Human )
+  """
+    We take the urlsafe string version of the Note, if any, 
+    which this note is a reply to
+    This avoids a cyclic dependency 
+    Note -> Note
+    It also is in this case unnecessary to make an entity group 
+    since a Note can not reply to more than one Note. 
+  """
+  replies_to_note_urlsafe_key = ndb.TextProperty()
+  flagged = ndb.StringProperty( choices = FLAG_CHOICES.values(), default = FLAG_CHOICES[ 'UNFLAGGED' ] )
+
+class HoistedSittingStoryGroup( datastore_entity ):
+  """ Again the purpose of this is the same to avoid the cyclic dependency 
+  Sitting -> SittingStory -> Sitting
+  """
+  pass
 
 class Sitting( datastore_entity, photographable ):
   """ like a hyper edge between sitters dogs and humans at the sitting """
@@ -181,7 +200,7 @@ class Sitting( datastore_entity, photographable ):
   recurring = ndb.StringProperty( choices = RECURRING_SITTING_STATUS.values() )
   where = ndb.StructuredProperty( Address ) 
   notes = ndb.KeyProperty( Note, repeated = True )
-  history = ndb.KeyProperty( SittingStory, repeated = True )
+  history = ndb.KeyProperty( HoistedSittingStoryGroup )
 
 class SittingStory( datastore_entity ):
   """ a record of a sitting having occurred """
@@ -196,6 +215,19 @@ class SittingStory( datastore_entity ):
   dogs_rate_this = ndb.StringProperty( choices = DOGS_RATE_SITTING.values() )
   transaction_status = ndb.StringProperty( choices = TRANSACTION_STATES.values() )
   notes = ndb.KeyProperty( Note, repeated = True )
+
+class X( api ):
+  def get( self, code = None ):
+    self.response.write( "Hello there %s" % code )
+
+ROUTES = [
+  path( r'/human/<code>', handler = X),
+  path( r'/note/<code>', handler = X),
+  path( r'/dog/<code>', handler = X),
+  path( r'/sitting/<code>', handler = X),
+  path( r'/sitting-story/<code>', handler = X),
+  path( '/<:.*>', handler = X )
+]
 
 app = server( ROUTES, debug = True )
 
