@@ -3,4 +3,7 @@ Sample work of rebuilding a dog sitting website to a beta from a salvaged CSV da
 
 ## todo
 
-- set up a deployment and route it on my server [ maybe, a route on labs.dosaygo.com ? ]
+- DONE [ 2.x.dosaygo.com ] set up a deployment and route it on my server [ maybe, a route on labs.dosaygo.com ? ]
+- get server api running
+- simplify usfe framework
+- build app markup
