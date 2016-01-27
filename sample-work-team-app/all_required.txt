@@ -1,0 +1,41 @@
+  <container-expose>
+    <header-part>
+      <search-control>
+        <search-bar>
+          <input type=search>
+        </search-bar>
+        <search-button>
+          <input type=submit>
+        </search-button>
+        <search-filters>
+          <only-containers></only-containers>
+          <only-leaves></only-leaves>
+        </search-filters>
+      </search-control>
+      <selection-control>
+        <selection-count></selection-count>
+        <possible-actions>
+          <delete-all></delete-all>
+          <container-add></container-add>
+        </possible-actions>
+      </selection-control>
+    </header-part>
+    <listing-part infinite-scroll>
+      <container-summary></container-summary>
+      <leaf-summary></leaf-summary>
+      <leaf-summary></leaf-summary>
+    </listing-part>
+    <edit-overlay>
+      <leaf-expose></leaf-expose>
+    </edit-overlay>
+    <footer-part>
+      <attribution-metadata>
+        <project-name></project-name>
+        <author-name></author-name>
+        <author-website></author-website>
+        <project-source></project-source>  
+        <project-license></project-license>
+      </attribution-metadata>
+    </footer-part>
+  </container-view>
+
