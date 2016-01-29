@@ -35,19 +35,6 @@ class Pear {
 
 ```
 
-If you don't want overloading you can use the regular method decorator syntax :
-
-```js
-class Pear {
-  //
-  [ T `type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ](){}
-  type_checked( a, b, c ) {
-    //
-  }
-  //
-}
-```
-
 Dispatch happens automatically:
 
 ```js
@@ -66,5 +53,15 @@ const b1 = apear.type_checked( {}, 'Guava', [ 'Catnip', 'Catnip' ] );
 // throws TypeError( `parameter 'a' is declared 'String', and was passed type 'Object'`);
 ```
 
+If you don't want overloading you can use the regular method decorator syntax :
 
-
+```js
+class Pear {
+  //
+  [ T `type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ](){}
+  type_checked( a, b, c ) {
+    //
+  }
+  //
+}
+```
