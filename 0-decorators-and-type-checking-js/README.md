@@ -27,7 +27,7 @@ class Pear {
   [ T`type_checked${{ a : String, b : Integer }} ${ Array }` ]( a, b ) {
     //
   }
-  [ T`type_checked${{ a : String, b : Integer, c : Array }}  ${ Array }` ]( a, b, c ) {
+  [ T`type_checked${{ a : String, b : Integer, c : Array }} ${ Array }` ]( a, b, c ) {
     //
   }
   //
