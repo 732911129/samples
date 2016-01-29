@@ -17,6 +17,8 @@ class Apple {
   }
   //
 }
+
+apply_decorators(Apple);
 ```
 
 to make a decorator we need to write a function like this ( just like in Python ):
@@ -80,6 +82,7 @@ class Pear {
   //
 }
 
+apply_decorators(Pear);
 ```
 
 Dispatch happens automatically:
