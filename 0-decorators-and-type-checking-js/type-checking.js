@@ -14,6 +14,31 @@
 
   const STRICT_TYPE_MODE = true;
 
+  function type_string( val ) {
+    return Object.prototype.toString.call(val).replace(/^\[object /,'').replace(/\]$/,'');
+  }
+  
+  function check_type( val, type ) {
+    if( val instanceof type ) return true;
+    else if ( typeof( val )  == type ) return true;
+    else if ( type_string( val ) == type.name ) return true;
+    else {
+      try {
+        if( type_string( val ) == type_string( new type() ) ) return true;
+      } catch ( e ) {
+        // type can't be constructed like that
+      }
+      try {
+        if( type_string( val ) == type_string( type() ) ) return true
+      } catch ( e ) {
+        // type can't be consturcted like that either
+      }
+    }
+    return false;
+  }
+  
+  self.check_type = check_type;
+  
   function type_decorator( fun, args ) {
     console.log( `Function name : ${ args.strings[ 0 ].trim() }` );
     console.log( `Parameters Type signature : `, args.values[ 0 ]);
@@ -37,13 +62,11 @@
       // throw a TypeError( `method signature has unresolvable type becuase no ordering of parmaters is provided` );
       Array.from( arguments ).forEach( ( a, i ) => {
         const type_pair = ordered_type_pairs[ i ];
-        if( a instanceof type_pair[ 1 ] ) return true;
-        else if ( typeof( a ) == type_pair[ 1 ] ) return true; 
+        if( check_type( a, type_pair[ 1 ] ) return true;
         else throw new TypeError( `Argument ${ type_pair[ 0 ] } is ${ a } which is not type ${ type_pair[ 1 ] }` );
       } );
       const results = fun( ...arguments );
-      if( results instanceof args.values[ 1 ] ) return results;
-      else if ( typeof( results ) == args.values[ 1 ] ) return results;
+      if( check_type( results, args.values[ 1 ] ) ) return true;
       else throw new TypeError( `Return value ${ results } is not of type ${ args.values[ 1 ] }` );
     }
     return wrapper;
