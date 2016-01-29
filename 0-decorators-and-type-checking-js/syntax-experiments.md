@@ -21,7 +21,7 @@ class Human {
 - my feeling is we already have the correct syntax, being numbers 3 and 4.
 - #7 is quite nice, since the $ could be said to make it explicit we are doing decorating. It would however requires something like:
   - `$.registerDecorator( dec1 )`
-- in a way tho, #3 and #4 are the best since the syntax ``dec1`love`` actually looks like we are taggin that function with something, which is exactly what the template strings syntax this is enabled by is said to mean, and also is very similar to what, in fact, a decorator is doing to a function.
+- in a way tho, #3 and #4 are the best since the syntax ``dec1`love``` actually looks like we are tagging that function with something, which is exactly what the template strings syntax this is enabled by is said to mean, and also is very similar to what, in fact, a decorator is doing to a function.
 
 
 
