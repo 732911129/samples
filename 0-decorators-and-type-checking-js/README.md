@@ -24,10 +24,10 @@ Use the `T` function ( `T` is for type, also aliased to `_` and also `def` if yo
 ```js
 class Pear {
   // 
-  [ T` type_checked ${{ a : String, b : Integer }} -> ${ Array }` ]( a, b ) {
+  [ T `type_checked ${{ a : String, b : Integer }} -> ${ Array }` ]( a, b ) {
     //
   }
-  [ T` type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ]( a, b, c ) {
+  [ T `type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ]( a, b, c ) {
     //
   }
   //
@@ -40,7 +40,7 @@ If you don't want overloading you can use the regular method decorator syntax :
 ```js
 class Pear {
   //
-  [ T`type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ](){}
+  [ T `type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ](){}
   type_checked( a, b, c ) {
     //
   }
