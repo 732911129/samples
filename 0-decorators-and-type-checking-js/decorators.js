@@ -1,20 +1,93 @@
 {
-    function dec1( strings, ...values ) {
-      console.log( `Running dec1`, strings, values );
-      return `dec1`;
-    };
-    function dec2( strings, ...values ) {
-      console.log( `Running dec2`, strings, values );
-      return `dec2`;
+    /**
+     *
+     * a decorator function performs the following steps 
+     * 
+     * 1. Saves the decoration request in a decorator map.
+     * 2. Once an apply decorators call is performed, iterates through each name
+     * in the decorator map, finds the function named so in the given type, and wraps
+     * them in each decorator, in turn, in the order in which the decoration requests
+     * appear in the list keyed by that functions name. 
+     */
+
+    // decorator_map
+      const decorator_map = Object.create( null );
+
+      function decorate( decorator ) {
+         return function capture( strings, ...values ) {
+           const decorated_name = strings[ 0 ].trim(),
+              args = { strings, values },
+            decoration_request = { decorated_name, decorator, args };
+          if ( !( decorated_name in decorator_map ) ) decorator_map[ decorated_name ] = [];
+          decorator_map[ decorated_name ].push( decoration_request );
+          console.log( 'Saved decoration request', decoration_request );
+          return Symbol.for( '[[ Decoration Only ]]' );
+        }
+      }
+
+      function wrap( decorator, method ) {
+        return decorator( method );  
+      }
+
+      function apply_decorators( type ) {
+        const proto = type.prototype;
+        for( let fun_name of Object.keys( decorator_map ) ) {
+          const decoration_requests = Array.from( decorator_map[ fun_name ] );
+          decoration_requests.reverse();
+          if( proto[ fun_name ] ) {
+            let method = proto[ fun_name ];
+            decoration_requests.forEach( req => method = wrap( req.decorator, method ) );
+            proto[ fun_name ] = method;
+          } else console.warn ( `${ proto } has no method ${ fun_name }` );
+        }
+        type.prototype = proto;
+      }
+
+    // type_map 
+      const type_map = Object.create( null );
+
+      function save_type_declaration( strings, ...values ) {
+        const name = strings[ 0 ].trim(),
+          signature = values[ 0 ],
+          return_value = values[ 1 ],
+          type_object = { name, signature, return_value };
+        if( !( name in type_map ) ) type_map[ name ] = [];
+        type_map[ name ].push( type_object );
+      }
+
+    function dec1( fun ) {
+      console.log( `Wrapping fun with dec1`, dec1 );
+      function wrapper() {
+        console.log( `Applying decoration dec1 to fun`, fun );
+        arguments[0] += 10;
+        let result = fun( ...arguments );
+        result *= 2;
+        return result;
+      }
+      return wrapper;
+    }
+
+    function dec2( fun ) {
+      console.log( `Wrapping fun with dec2`, dec2 );
+      function wrapper() {
+        console.log( `Applying decoration dec2 to fun`, fun );
+        arguments[0] += 20;
+        let result = fun( ...arguments );
+        result *= 3;
+        return result;
+      }
+      return wrapper;
     }
  
   class Test {
-    [ dec1`fun1 ${{ a : String, b : Number }} ${ Array }` ](){}
-    fun1() { console.log(`fun 1`); }
-    [ dec2`fun2 ${{ a : String, b : Number, c : Array }} ${ Array }` ](){}
-    fun2() { console.log(`fun 2`); }
+    [ decorate( dec1 )`fun1` ](){}
+    [ decorate( dec2 )`fun1` ](){}
+    fun1 (x) { return x + 1; }
+    [ decorate( dec2 )`fun2 ${{ a : String, b : Number, c : Array }} ${ Array }` ](){}
+    fun2(y) { return y + 2; }
   }
 
+  apply_decorators(Test);
   const t = new Test();
   self.t = t;
 }
