@@ -19,21 +19,20 @@ class Apple {
 }
 ```
 
-Use the `T` function ( T is for type, also aliased to `_` if you think that looks better ), to provide type checking ( and polymorphism, otherwise known as type signature overloading ), for any method of a class or object with *this* simple syntax:
+Use the `T` function ( `T` is for type, also aliased to `_` and also `def` if you think that looks better ), to provide type checking ( and polymorphism, otherwise known as type signature overloading ), for any method of a class or object with *this* simple syntax:
 
 ```js
 class Pear {
   // 
-  [ T`type_checked${{ a : String, b : Integer }} ${ Array }` ]( a, b ) {
+  [ T `type_checked ${{ a : String, b : Integer }} -> ${ Array }` ]( a, b ) {
     //
   }
-  [ T`type_checked${{ a : String, b : Integer, c : Array }}  ${ Array }` ]( a, b, c ) {
+  [ T `type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ]( a, b, c ) {
     //
   }
   //
 }
 
-T(Pear)
 ```
 
 Dispatch happens automatically:
@@ -54,5 +53,15 @@ const b1 = apear.type_checked( {}, 'Guava', [ 'Catnip', 'Catnip' ] );
 // throws TypeError( `parameter 'a' is declared 'String', and was passed type 'Object'`);
 ```
 
+If you don't want overloading you can use the regular method decorator syntax :
 
-
+```js
+class Pear {
+  //
+  [ T `type_checked ${{ a : String, b : Integer, c : Array }} -> ${ Array }` ](){}
+  type_checked( a, b, c ) {
+    //
+  }
+  //
+}
+```
