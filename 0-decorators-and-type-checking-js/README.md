@@ -11,7 +11,7 @@ Decorate any method in a class or object with this simple syntax:
 ```js
 class Apple {
   //
-  [ decorator ]
+  [ decorator ](){}
   decorated_function() {
     //
    }
@@ -24,11 +24,11 @@ Use the `T` function ( T is for type ), to provide type checking ( and polymorph
 ```js
 class Pear {
   // 
-  [ T`type_checked( a : String, b : Integer ) -> Array` ]
+  [ T`type_checked( a : String, b : Integer ) -> Array` ](){}
   type_checked( a, b ) {
     //
   }
-  [ T`type_checked( a : String, b : Integer, c : Array ) -> Array` ]
+  [ T`type_checked( a : String, b : Integer, c : Array ) -> Array` ](){}
   type_checked( a, b, c ) {
     //
   }
