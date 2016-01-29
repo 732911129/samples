@@ -50,6 +50,7 @@ Another example:
 
 ```js
 const b1 = apear.type_checked( {}, 'Guava', [ 'Catnip', 'Catnip' ] ); 
+// also not ok
 // throws TypeError( `parameter 'a' is declared 'String', and was passed type 'Object'`);
 ```
 
