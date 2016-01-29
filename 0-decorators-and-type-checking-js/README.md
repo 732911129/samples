@@ -11,7 +11,7 @@ Decorate any method in a class or object with this simple syntax:
 ```js
 class Apple {
   //
-  [ decorator ](){}
+  [ decorator`decorated_function` ](){}
   decorated_function() {
     //
    }
@@ -19,21 +19,21 @@ class Apple {
 }
 ```
 
-Use the `T` function ( T is for type ), to provide type checking ( and polymorphism, otherwise known as type signature overloading ), for any method of a class or object with *this* simple syntax:
+Use the `T` function ( T is for type, also aliased to `_` if you think that looks better ), to provide type checking ( and polymorphism, otherwise known as type signature overloading ), for any method of a class or object with *this* simple syntax:
 
 ```js
 class Pear {
   // 
-  [ T`type_checked( a : String, b : Integer ) -> Array` ](){}
-  type_checked( a, b ) {
+  [ T`type_checked${{ a : String, b : Integer }} ${ Array }` ]( a, b ) {
     //
   }
-  [ T`type_checked( a : String, b : Integer, c : Array ) -> Array` ](){}
-  type_checked( a, b, c ) {
+  [ T`type_checked${{ a : String, b : Integer, c : Array }}  ${ Array }` ]( a, b, c ) {
     //
   }
   //
 }
+
+T(Pear)
 ```
 
 Dispatch happens automatically:
