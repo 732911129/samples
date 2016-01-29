@@ -39,15 +39,18 @@ class Pear {
 Dispatch happens automatically:
 
 ```js
-const a1 = apear.type_checked( 10, 'Apples' ),
-  a2 = apear.type_checked( 20, 'Pears', [ 'Orange', 'Orange' ] ),
-  a3 = apear.type_checked( 30, 'Durians', [ 'Banana', 'Banana' ], true ), // throws TypeError( `unexpected argument true in position 4` );
+const a1 = apear.type_checked( 10, 'Apples' ), // ok 
+  a2 = apear.type_checked( 20, 'Pears', [ 'Orange', 'Orange' ] ), // ok 
+  a3 = apear.type_checked( 30, 'Durians', [ 'Banana', 'Banana' ], true );
+  // not ok
+  // throws TypeError( `unexpected argument true in position 4` );
 ```
 
 Another example:
 
 ```js
-const b1 = apear.type_checked( {}, 'Guava', [ 'Catnip', 'Catnip' ] ); // throws TypeError( `parameter a is declared 'String', and was passed type 'Object'`);
+const b1 = apear.type_checked( {}, 'Guava', [ 'Catnip', 'Catnip' ] ); 
+// throws TypeError( `parameter a is declared 'String', and was passed type 'Object'`);
 ```
 
 
