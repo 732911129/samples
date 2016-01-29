@@ -1,3 +1,4 @@
+"use strict";
 {
     /**
      *
@@ -34,14 +35,16 @@
         for( let fun_name of Object.keys( decorator_map ) ) {
           const decoration_requests = Array.from( decorator_map[ fun_name ] );
           decoration_requests.reverse();
-          if( proto[ fun_name ] ) {
-            let method = proto[ fun_name ];
-            decoration_requests.forEach( req => method = wrap( req.decorator, method, req.args ) );
-            decorator_map[ fun_name ] = []; // delete decorators
-            proto[ fun_name ] = method;
-          } else console.warn ( `${ proto } has no method ${ fun_name }` );
+          if( decoration_requests.length > 0 ) {
+            if( proto[ fun_name ] ) {
+              let method = proto[ fun_name ];
+              console.log( decoration_requests );
+              decoration_requests.forEach( req => method = wrap( req.decorator, method, req.args ) );
+              decorator_map[ fun_name ] = []; // delete decorators
+              proto[ fun_name ] = method;
+            } else console.warn ( `${ proto } has no method ${ fun_name }` );
+          }
         }
-        type.prototype = proto;
       }
 
     // type_map 
@@ -80,15 +83,6 @@
       return wrapper;
     }
  
-  class Test {
-    [ decorate( dec1 )`fun1` ](){}
-    [ decorate( dec2 )`fun1` ](){}
-    fun1 (x) { return x + 1; }
-    [ decorate( dec2 )`fun2 ${{ a : String, b : Number, c : Array }} ${ Array }` ](){}
-    fun2(y) { return y + 2; }
-  }
-
-  apply_decorators(Test);
-  const t = new Test();
-  self.t = t;
+  self.decorate = decorate;
+  self.apply_decorators = apply_decorators;
 }
