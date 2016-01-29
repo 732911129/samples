@@ -14,10 +14,57 @@ class Apple {
   [ decorator`decorated_function` ](){}
   decorated_function() {
     //
-   }
+  }
   //
 }
 ```
+
+to make a decorator we need to write a function like this ( just like in Python ):
+
+```js
+function dec1( fun ) {
+  function wrapper() {
+    // some logic, tho basically it follows a pattern like this
+    const 
+      // do something before we call the function, say
+      modified_arguments = somehow_modify_arguments( arguments ),
+      // then call the function 
+      results = fun( ...modified_arguments ),
+      // then do something after we call the function, say 
+      modified_results = somehow_modify_results( results );
+      // then return, say
+    return modified_results;
+  }
+  return wrapper;
+}
+```
+
+Finally in order to turn that into a decorator we can use, one more step is required:
+
+```js
+const dec1_decorator = decorator( dec1 );
+```
+
+And that's it! Now we can use it like so:
+
+```js
+class Orange {
+  //
+  [ dec1_decorator`eat` ](){}
+  [ dec2_decorator`eat` ](){}
+  [ decorator( dec3 )`eat` ](){}
+  eat() {
+    // something
+  }
+  //
+}
+
+apply_decorators(Orange);
+```
+
+And the methods or Orange, suitably decorated, are ready to use.
+
+### type checking
 
 Use the `T` function ( `T` is for type, also aliased to `_` and also `def` if you think that looks better ), to provide type checking ( and polymorphism, otherwise known as type signature overloading ), for any method of a class or object with *this* simple syntax:
 
