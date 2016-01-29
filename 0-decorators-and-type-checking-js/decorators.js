@@ -20,13 +20,13 @@
             decoration_request = { decorated_name, decorator, args };
           if ( !( decorated_name in decorator_map ) ) decorator_map[ decorated_name ] = [];
           decorator_map[ decorated_name ].push( decoration_request );
-          console.log( 'Saved decoration request', decoration_request );
+          //console.log( 'Saved decoration request', decoration_request );
           return Symbol.for( '[[ Decoration Only ]]' );
         }
       }
 
-      function wrap( decorator, method ) {
-        return decorator( method );  
+      function wrap( decorator, method, args ) {
+        return decorator( method, args );  
       }
 
       function apply_decorators( type ) {
@@ -36,7 +36,8 @@
           decoration_requests.reverse();
           if( proto[ fun_name ] ) {
             let method = proto[ fun_name ];
-            decoration_requests.forEach( req => method = wrap( req.decorator, method ) );
+            decoration_requests.forEach( req => method = wrap( req.decorator, method, req.args ) );
+            decorator_map[ fun_name ] = []; // delete decorators
             proto[ fun_name ] = method;
           } else console.warn ( `${ proto } has no method ${ fun_name }` );
         }
@@ -56,9 +57,9 @@
       }
 
     function dec1( fun ) {
-      console.log( `Wrapping fun with dec1`, dec1 );
+      //console.log( `Wrapping fun with dec1`, dec1 );
       function wrapper() {
-        console.log( `Applying decoration dec1 to fun`, fun );
+        //console.log( `Applying decoration dec1 to fun`, fun );
         arguments[0] += 10;
         let result = fun( ...arguments );
         result *= 2;
@@ -68,9 +69,9 @@
     }
 
     function dec2( fun ) {
-      console.log( `Wrapping fun with dec2`, dec2 );
+      //console.log( `Wrapping fun with dec2`, dec2 );
       function wrapper() {
-        console.log( `Applying decoration dec2 to fun`, fun );
+        //console.log( `Applying decoration dec2 to fun`, fun );
         arguments[0] += 20;
         let result = fun( ...arguments );
         result *= 3;
