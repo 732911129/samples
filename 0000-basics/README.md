@@ -12,19 +12,28 @@
 
 ```js
   class Adder {
-    [T `add ${{ a : Number }} ${{ b : Number }} -> ${{ Number }}`] ( a, b ) {
+    
+    [T `add ${{ a : Number }} ${{ b : Number }} -> ${{ Number }}`] 
+    
+    ( a, b ) {
       const sum = a + b;
       
       return sum;
     }
     
-    [T `add ${{ a : Array }} ${{ b : Array }} -> ${{ Array }}`] ( a, b ) {
+    
+    [T `add ${{ a : Array }} ${{ b : Array }} -> ${{ Array }}`] 
+    
+    ( a, b ) {
       const sum = [ ...a, ...b ];
       
       return sum;
     }
     
-    [T `add ${{ a : Function }} ${{ b : Function }} -> ${{ Function }}`] ( a, b ) {
+    
+    [T `add ${{ a : Function }} ${{ b : Function }} -> ${{ Function }}`] 
+    
+    ( a, b ) {
       const sum = ( ...args ) => a( b( ...args ) );
     
       return sum;
