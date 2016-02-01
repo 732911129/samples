@@ -1,12 +1,12 @@
 # basics
 
-1. TypeChecking.
-2. Decorators.
-3. Logging.
-4. Partial classes.
-5. Modules. 
-6. Mixins / Prototypal delegation / Multiple Inheritance.
-7. DataFlow.
+1. TypeChecking.[[ name : AURELIUS ]]
+2. Decorators.[[ name : FILIGREE ]]
+3. Logging.[[ name : NSA ]]
+4. Partial classes.[[ name : CLASSLEGOS ]]
+5. Modules. [[ name : TEAMBUILDER ]]
+6. Mixins / Prototypal delegation / Multiple Inheritance. [[ name : DIVERSIFY ]]
+7. DataFlow. [[ name : QUICKSILVER ]]
 
 # TypeChecking
 
@@ -49,7 +49,12 @@
   adder.add( x => x + 1, y => y + 2 ); // z, z(0) == 3
 ```
 
+# Decorators
+
+
 # Logging
+
+We use Proxy objects for logging. As well as decorators. 
 
 ## todo
 
@@ -59,5 +64,7 @@
 - log events ( listeners )
 - log methods ( proxy traps, wrappers )
 - log properties ( proxy traps )
+
+
 
 
