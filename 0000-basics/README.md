@@ -48,3 +48,16 @@
   adder.add([1],[2,3]); // [1,2,3]
   adder.add( x => x + 1, y => y + 2 ); // z, z(0) == 3
 ```
+
+# Logging
+
+## todo
+
+- log constructors ( wrap, or construct trap )
+- log lines ( self.log = Log( <stuff to log>, ...<log scopes> ) , global setter, scobable )
+    - ( new Error().stack.split( '\n' )
+- log events ( listeners )
+- log methods ( proxy traps, wrappers )
+- log properties ( proxy traps )
+
+
