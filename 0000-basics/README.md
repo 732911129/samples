@@ -48,3 +48,10 @@
   adder.add([1],[2,3]); // [1,2,3]
   adder.add( x => x + 1, y => y + 2 ); // z, z(0) == 3
 ```
+
+# Decorators
+
+
+# Logging
+
+We use Proxy objects for logging. As well as decorators. 
