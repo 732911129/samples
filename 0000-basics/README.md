@@ -1,6 +1,7 @@
 # basics
 
-1. Modules. [[ name : TEAMBUILDER ]]
+0. Modules. [[ name : TEAMBUILDER ]]
+1. Utils. [[ name : FUWU ]] 
 2. TypeChecking.[[ name : AURELIUS ]]
 3. Decorators.[[ name : FILIGREE ]]
 4. Logging.[[ name : NSA ]]
@@ -10,7 +11,45 @@
 
 # Modules
 
-These are first.
+These are first. They have no dependencies. 
+
+The way we do it is, server side, everything comes from static directory codebase
+
+`https://media.dosaygo.com/codebase/js/<module_name>/<module_version>/code.js`
+
+The reason we do this is so that we get optimal caching of the code files. We set cache expiry headers to never, and we make a new directory with a new version number when we update the code. We use the new version when we want to.
+
+The question is how to we get module version to be the latest ( or whatever ) into our code?
+
+There is another resource :
+
+`https://media.dosaygo.com/versions/<version>/js.json`
+
+This resource contains a line by line list of latest version numbers of all our javascript files. 
+
+We can then, in the module loader, grab this file, to know both what files are available, and also, what versions we can get. 
+
+The module loader then makes requests for the latest version ( unless another version is specified ).
+
+This versions file also has a version which is updated whenever any of the versions of the files it lists are updated. 
+
+However, versions is not a static handler. 
+
+What happens is that every time the application is redeployed, it performs the version check task, which basically just reads the codebase/js directory, and for each subdirectory, gets the largest version of each file, and in this way the versions file is computed on instance startup. 
+
+The current versions file is retrieved from the datastore, and if any of the versions it lists are different to the one before, it updates the version of the versions file, it writes the new versions file to the datastore.
+
+Then the final question is, how do we get the latest verion of the versions file in order to obtain the latest versions file, so we can use the latest versions of any modules we use ?
+
+`https://media.dosaygo.com/versions/latest-version.json`
+
+This is a non static end point. It retrieves the versions version number record from the datastore and returns it in json format. 
+
+This can then be used to obtain the latest versions file, which is used to obtain the latest versions of all the modules.
+
+However, this capability of the modules loader is not something which is included in the initial version of the modules loader. 
+
+
 
 # TypeChecking
 
