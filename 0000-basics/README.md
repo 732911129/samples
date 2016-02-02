@@ -1,12 +1,16 @@
 # basics
 
-1. TypeChecking.[[ name : AURELIUS ]]
-2. Decorators.[[ name : FILIGREE ]]
-3. Logging.[[ name : NSA ]]
-4. Partial classes.[[ name : CLASSLEGOS ]]
-5. Modules. [[ name : TEAMBUILDER ]]
+1. Modules. [[ name : TEAMBUILDER ]]
+2. TypeChecking.[[ name : AURELIUS ]]
+3. Decorators.[[ name : FILIGREE ]]
+4. Logging.[[ name : NSA ]]
+5. Partial classes.[[ name : CLASSLEGOS ]]
 6. Mixins / Prototypal delegation / Multiple Inheritance. [[ name : DIVERSIFY ]]
 7. DataFlow. [[ name : QUICKSILVER ]]
+
+# Modules
+
+These are first.
 
 # TypeChecking
 
