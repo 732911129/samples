@@ -1,0 +1,16 @@
+Very important
+
+DONE -- rewrite the op-call code to accept selector arguments that compose relative to a parent, or a child or something like that. Something not requiring knowledge of the global structure. Something which can be put in a layout file and not affected by changes outside that file.
+
+DONE -- rewrite component setup code to use general functions like "transmit attribute", and perhaps be configurable to the types of attributes transmitted. Perhaps use something like op-int load and mv. Instead of code. Good. 
+
+DONE -- bug : somehow there is a 1px line through the float panel list items that are used in the search box. How? Why? Is it because they are children? If so, do we need to put all float panels external? I think in any case we do. We can fix now. DONE.
+
+DONE -- Also let's write an attribute that let's this float panel shrink and have a scroll.
+
+
+
+
+
+
+

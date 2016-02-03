@@ -1,0 +1,12 @@
+Poor design again is crippling this project.
+
+I don't want to write a full UI now at all, but I need something.
+
+I need to design that something well.
+
+Here is basically what I need to do. I need to navigate a JSON structure (the DATABASES) object, which is pulled from and saved to local storage. 
+
+So I need to write a way to HTML serialize the JSON. ANd let me modify it in HTML interface. Then when I click save, it just saves the motherfucker back to DB.
+
+
+

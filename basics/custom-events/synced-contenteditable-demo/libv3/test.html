@@ -1,0 +1,31 @@
+<style>
+	[contenteditable] {
+		background:black;
+		border:5px solid transparent;
+		color:transparent;
+		text-shadow: 0 0 0 lime;
+		font-family:"Lucida Sans Typewriter", "Lucida Console", Monaco, "Courier New", monospace;
+		width:85%;
+		margin:5rem auto;
+		height:6rem;
+		max-height:6rem;
+		overflow-y:auto;
+	}
+	[contenteditable]:focus {
+		outline:none;
+		border-color:lime;
+	}
+</style>
+<div id=writing_box contenteditable >SyncHELLO</div>
+<div id=printing_box contenteditable ></div>
+<div id=printing_box2 contenteditable ></div>
+<script src=Ranges.js></script>
+<script src=Selections.js></script>
+<script src=ID.js></script>
+<script src=Emitter.js></script>
+<script src=EditScript.js></script>
+<script src=EditActor.js></script>
+<script src=EditSensor.js></script>
+<script src=Cursor.js></script>
+<script src=runtests.js></script>
+

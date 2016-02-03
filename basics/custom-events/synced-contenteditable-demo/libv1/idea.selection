@@ -1,0 +1,52 @@
+Refactoring Ideas
+-----------------
+
+
+Make sequence a class.
+
+Create a thing which when applied to a contenteditable div, input or textarea will fire custom events "sequence_events", which can then be added to a sequence like that.
+
+So we add something to those elements, which then fires off sequence events, 
+the sequence events are captured, and saved to a sequence say, 
+And those sequence events can also be applied to a thing to "playback" what happened.
+
+Cool. Nice. This works.
+
+
+Essentially everything is working. 
+
+--
+
+Basic idea to handle paste
+
+Monitor selection change. That means whenever we receive a selection change event, monitor where the selection is, the element, the start and end offset, and the content. Store these, per element.
+
+If I get an input event, combined with a selection change then I can assume that something happened. 
+
+The selection has been removed, so I pass on this delete command to the render.
+
+If I get a cut I know it's just been deleted.
+
+If I get an input event then I know how much was inserted, because I know the size change of the content.
+
+I also know the insertion point (the smaller number of the selection anchor and focus offsets), so I can then place the caret at the position where the selection was previously, and I can then insert the section I determined.
+
+There's a couple of cases here and they depend on some properties
+
+like the content length, selection start and end, the value of the data attribute of any input event received and what set of events we received from
+
+selectionchange, cut, copy, paste, input  
+
+So this is really a chance to put compound event processing in. 
+
+We store events in a queue, and analyze the, the attributes and the order and we issue either or both commands
+
+output.delect(from,to)
+output.insert(str,at)
+
+That's it. 
+
+So we just have to determine : what do we insert, if anything
+And we have to determine : what was deleted, if anything
+
+

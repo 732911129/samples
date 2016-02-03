@@ -1,0 +1,6 @@
+
+Extra
+
+
+-- Currently all this only works with plain text not HTML, because we 'execCommand' insertText and we also capture the clipboard data as 'text/plain' -- we could include a way to indicate whether to insert text or html, and handle each respectively.
+

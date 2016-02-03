@@ -1,0 +1,26 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/link-advisor/style.css");
+	</style>
+	<div id=advisory>
+		<span id=advice><content></content></span>
+		<op-int call-complete on=consolemessage event-object=~attached 
+			attach-parent=tab-body
+			attach="::shadow webview">
+			<op-call function=advise_link target-parent="link-advisor"
+				msg={{event-object}}
+				project="msg"
+				project-msg="level message line sourceId"
+			></op-call>
+		</op-int>
+		<op-int on=loadcommit  
+			attach-parent=tab-body
+			attach="::shadow webview">
+			<op-call function=advise_link target-parent="link-advisor"
+				msg=""
+				clear="1"
+			></op-call>
+		</op-int>
+	</div>
+</template>

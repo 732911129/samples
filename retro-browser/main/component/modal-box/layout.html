@@ -1,0 +1,74 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/modal-box/style.css");
+	</style>
+	<div id=box>
+		<div id=header>
+			<content select=header>
+				The page at 
+					<op-int on-attr=active attach-parent=modal-box>
+						<op-fun 
+							elem-parent=tabs-panel 
+							elem='tab-body::shadow [code="{{code}}"]'
+							_resolve-selector=elem
+							>
+								<op-remove multiple attach=span attach-parent=op-fun></op-remove>
+								<op-create _here _element=span 
+									_text-content-parent=tabs-panel 
+									_text-content={{elem.event_object.url}}
+									>
+								</op-create>	
+						</op-fun>
+				 	</op-int>
+				 says:
+			</content>
+		</div>				
+		<div id=body>
+			<span id=asset></span>
+			<content select=main>
+					<op-int on-attr=active attach-parent=modal-box>
+						<op-remove multiple attach=span attach-parent=op-int></op-remove>
+						<op-create _here _element=span 
+							_text-content={{message}}
+							>
+						</op-create>	
+				 	</op-int>
+			</content>
+		</div>
+		<div id=input>
+			<input-addon input-label-default=Reply label={{input-label}} id=reply></input-addon>
+		</div>
+		<div id=action>
+			<input-addon cancel-label-default=Cancel type=submit action-label={{cancel-label}} id=cancel>
+				<op-int on=click attach-parent=input-addon>
+					<op-del target-parent=modal-box[active] attr=active></op-del>
+					<op-call function=cancel
+						elem-parent=tabs-panel 
+						elem='tab-body::shadow [code="{{code}}"]'
+						_resolve-selector=elem	
+						target={{elem.event_object.dialog}}
+						_property=target
+						>
+					</op-call>
+				</op-int>
+			</input-addon>
+			<input-addon confirm-label-default=Ok type=submit action-label={{confirm-label}} id=confirm>
+				<op-int on=click attach-parent=input-addon>
+					<op-del target-parent=modal-box[active] attr=active></op-del>
+					<op-call function=ok
+						target={{elem.event_object.dialog}}
+						user-input={{input-element.value}}
+						_property=target
+						_resolve-selector="elem	input-element"
+						elem-parent=tabs-panel 
+						elem='tab-body::shadow [code="{{code}}"]'
+						input-element-parent=#box
+						input-element='input-addon::shadow input'
+						>
+					</op-call>
+				</op-int>
+			</input-addon>
+		</div>
+	</div>
+</template>

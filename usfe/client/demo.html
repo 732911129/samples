@@ -1,0 +1,47 @@
+<style>
+  body {
+    color: yellow;
+    background: black;
+  }
+  div {
+    margin: 1rem;
+  }
+  .post {
+    border: 1px solid blue;
+  }
+  .control {
+    border: 1px solid lime;
+  }
+  .container {
+    border: 1px solid red;
+  }
+  template\:- {
+    display:none;
+  }
+</style>
+<body>
+  <div id=usfe-test-control class=control
+    :-req-uri=https://labs.dosaygo.com/json-test
+    :-bind-at="#usfe-test-bind"
+    :-ins-meth="afterend"
+    :-ins-at="#usfe-test-container h1">Test Control</div>
+  <template:- id=usfe-test-bind>
+    <div class=post>
+      <div class=keys :-a-key-time=time :-a-key-random=random :-a-key-epoch=epoch></div> 
+      <div class=random :-t-replace=random>Unknown Random</div>
+      <div class=date :-t-replace=date>Unknown Date</div>
+      <div class=time :-t-replace=time>Unknown Time</div>
+      <div class=epoch :-t-replace=epoch>Unknown Epoch Time</div>
+    </div>
+  </template:->
+  <div id=usfe-test-container class=container>
+    <h1>Test Posts</h1>
+  </div>
+</body>
+<script src=install.js></script>
+<script>
+  // Test
+  const control = document.querySelector( '#usfe-test-control' );
+
+  control.addEventListener( 'click', e => control.main() );
+</script>

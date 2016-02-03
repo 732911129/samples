@@ -1,0 +1,7 @@
+We can rewrite styles by accessing the styleSheet property of document objects.
+
+In this way we can rewrite the style for an entire class. 
+
+Relevant to the idea to create a spreadsheet. We can rewrite the style for an entire class. And then we can set the height and width properties of all cells (".cell" class) simply by rewriting the stylsheet, instead of iterating through them. This is great. We should create a function to do this. And link it with op-call. Or perhaps even we can create a tag for this directly. Boom. 
+
+

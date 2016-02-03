@@ -1,0 +1,24 @@
+
+:unresolved {
+	display:none;
+}
+
+body, html {
+	font-size:16px;
+	-webkit-font-smoothing:none;
+	border:0;
+	padding:0;
+	margin:0;
+	height:100%;
+	width:100%;
+	max-height:100%;
+	max-width:100%;
+	font-family:"Courier New", Courier, Consolas, monospace;
+}
+
+body {
+	background:#0d47a1;
+	color:#18ffff;
+	border-color:#18ffff;
+}
+

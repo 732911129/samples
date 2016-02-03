@@ -1,0 +1,39 @@
+RELEGATED TO PRODUCT DEV PHASE
+
+***
+
+Somewhat of an issue. In selecting say documents in google docs we invariable select all documents. Not just the ones that are spreadsheets, even if we make a selector only for spreadsheets. We could fix this with a page action to first limit the results to spreadsheets. But we could also fix this by making the selector deal with some other attributes and characteristics in its analysis of the paths. For instance the presence or absence of a particular child node, or of some types of attributes could become additional features upon which we could distinguish elements.
+
+
+***
+
+ISSUE - Data-heavy application use elements identified only by data attributes and custom attributes. So we can not distinguish based on class and path alone. We need to also analyze all attributes of an element. This is highly complex and non trivial. Since for some distinguishing attribtues, such as for instance, in the charts on the bloomberg site, the only feature which reliably separates is the length of the d attribute. A long one, contains lots of data. It seems then we should have scoring by 1: attribute presence, 2: attribute length, 4: attribute value. We give higher scores for bigger matches. If things get tricky I can use a binary divided space machine learning on the attributes of the chosen set. Boom. 
+IMPORTANCE - Highly important.JUST as important as Language identification.
+USE CASES - 30%, BUT 80% of value ones is likely, particularly going forward.
+
+***
+
+ISSUE - Capturing classes of chosen elements
+IMPORTANT - Highly important
+USE CASES - The 80%
+* Make (Catpure off-hover effect the default. Put a box to say, capture on-hover effect). The reason is some times elements have classes added when they are hovered, and removed when not hovered. This limits the selected elements to only the one you are hovering. Sometimes you want to catch hover only tool tips, but mostly you do not. So capture off-hover effect is the default.
+
+1)-Implement off-hover default behaviour for canonical_path grabbing. With option to get on-hover behaviour. Easy, create once off mouseout event on the element, that fires after a delay (to allow other handlers to complete before). Then capture the canonical_path. DONE. Google images now JUST WORKS first time.
+
+DONE. But this is non trivial since the mouseout event does not always fire. 
+A work around could be checking to see when the element changes using hover elem -- which we do anyway. We could fire out collection as we save hover elem.
+
+DONE. Another work around is this. We make the default on hover. Then we detect when an elements class changes on and off hover. "This element changes depending on whether you hover it or not. You need to check the 'capture off-hover state' to select multiple elements by choosing this element."
+This sounds like the best. Though perhaps I will try the "custom mouseout" for curiosity. However, none of this is necessary for the final push.
+
+
+Actually the best idea is to just detect and adjust accordingly. Then provide information like, we are automatically detecting this state changes and adjusting our collection to the non-hovered state. To collect the hovered state. Check the box below. DONE. This is the best. Auto detection. BOOM.
+
+I think I need to go over the "ADD ELEMENT" on space bar methods with a fine tooth comb. They just seem to be sticking a little bit. Or it could be chrome. Anyway, it's crucial the central interaction is really fucking smooth. Even if it means, we need to do some SERIOUS heavy lifting to achieve that. It is worth every bit of effort, for the multiples of frustration and effort that we save people who are using our product.
+
+
+***
+
+2) Update our jset, and our chosen elements everytime we scroll. But regulate it so we do it...only every 5 seconds as we scroll or something. No need for this before PUSH. Relegating.
+
+

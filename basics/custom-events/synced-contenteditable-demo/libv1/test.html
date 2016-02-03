@@ -1,0 +1,53 @@
+<style>
+	#c1, #c2 {
+		background:lime;
+		width:2ch;
+		height:3ex;
+		position:fixed;
+		line-height:3ex;
+    animation: blink 1s steps(5, start) infinite;
+	}
+	@keyframes blink {
+		to {
+			visibility:hidden;
+		}
+	}	
+	button:hover {
+		background:red;
+	}
+	button:click {
+		background:blue;
+	}
+	[contenteditable] {
+		border:1px solid lime;
+		width:33%;
+		height:6rem;
+		max-height:6rem;
+		overflow-y:auto;
+	}
+</style>
+<h1>This is simulated</h1>
+<ol>
+	<li>
+		<h2>Text input simulation</h2>
+		<div>
+			<div id=input contenteditable plaintext-only>XXXXYYYYAAA000</div>
+			<div id=output contenteditable plaintext-only placeholder="see output here">XXXXYYYYAAA000</div>
+		</div>
+	</li>
+	<li>
+		<h2>Mouse input simulation</h2>
+		<div>
+			<button id=receiver>Play here</button>
+			<button id=emitter>See here</button>
+		</div>
+	</li>
+</ol>
+<div id=c1></div>
+<div id=c2></div>
+<script src=simulate.js></script>
+<script src=monitor.js></script>
+<script src=display.js></script>
+<script src=transmit.js></script>
+<script src=selectionsync.js></script>
+<script src=runtest.js></script>

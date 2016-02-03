@@ -1,0 +1,44 @@
+{
+		"manifest_version":2,
+		"version":"1.0",
+		"minimum_chrome_version":"37",
+	"icons":{
+		"16":"assets/images/sitemap_00ff00_16.png",
+		"32":"assets/images/sitemap_00ff00_32.png",
+		"48":"assets/images/sitemap_00ff00_48.png",
+		"64":"assets/images/sitemap_00ff00_64.png",
+		"128":"assets/images/sitemap_00ff00_128.png"
+	},
+		"short_name":"RB",
+		"name":"Retro Browso",
+			"description":"Bizarre retro browser created with web components.",
+		"author":"dosaygo",
+	"webview" : {
+		"partitions" : [
+			{
+				"name" : "cris-*",
+				"accessible_resources": ["favicon.ico", "static/*", "assets/*"]
+			}
+		]
+	},
+	"permissions": [
+		"<all_urls>",
+		"clipboardRead",
+		"clipboardWrite",
+		"webview",
+		"contextMenus",
+		"storage"
+	],
+	"url_handlers":{
+		"launch":{
+			"matches":["https://www.dosaygo.com/launch_retro_browso"],
+			"title":"launch"
+		}
+	},
+	"app": {
+		"background":{
+			"scripts":["app_control.js","test_context_menus.js"]
+		}
+	},
+	"signature":"999"
+}

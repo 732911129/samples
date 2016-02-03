@@ -1,0 +1,29 @@
+Using the Framework
+-------------------
+
+Creating Re-Usable Components
+-----------------------------
+
+Two Ways.
+
+Style Centered and Set Structure Palette
+----------------------------------------
+
+There's two ways to create re-usable components that can be parameterized to change their style and function.
+
+We can parameterize derivative components of a reusable component by using attributes on the host element, and creating styles with the re-usable comoponent's stylesheet to represent those. This works for component's whose derived component's are known ahead of time, and are simply composed of various style and structure combinations of the set of styles and elements already built into that re-usable component. 
+
+So the styles in the component make available combinatorial products which draw from the structural palette already present in the component, using display:none to mask structures, and styling from the styles available.
+
+This is achieved by masking out certain structures when a particular attribute is present on the host, giving rise to differing forms defined in the CSS and effected using attributes.
+
+Functionality can be extended by adding more attributes which define new presentation arrangements. 
+
+Structure Centered
+------------------
+
+The second way relies more heavily on distributing nodes through content insertion points that select certain nodes for display in parts of the document. Structure is composed by the nodes within the tags of the re-usable component, and is in some ways more transparent, so long as the content selection API is published. 
+
+These distributed nodes can be styled by the document and can also be styled by the re-usable component.
+
+Functionality can be added by adding new distributed nodes.

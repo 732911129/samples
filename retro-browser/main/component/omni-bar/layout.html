@@ -1,0 +1,49 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/omni-bar/style.css");
+	</style>
+	<div id=omni_bar>
+		<do-tool id=back icon="angle-left" class=small>
+			<op-int on=click attach-parent=do-tool>
+				<op-call function={{rn.webview.back}}></op-call>
+			</op-int>
+		</do-tool>
+		<do-tool id=forward icon="angle-right" class=small>
+			<op-int on=click attach-parent=do-tool>
+				<op-call function={{rn.webview.forward}}></op-call>
+			</op-int>
+		</do-tool>
+		<do-tool id=toggle_load icon="repeat" class=small>
+			<op-int on=click attach-parent=do-tool>
+				<op-call function={{rn.webview.reload}}></op-call>
+			</op-int>
+		</do-tool>
+		<div id=omni_panel>
+			<do-tool id=omni_icon flush icon="globe" class=small>
+				<!-- set the webview src on click !-->
+					<op-int on=click attach-parent=do-tool>
+						<op-mv from-parent=#omni_panel from=input[value] property=from
+							to-parent=main-app to="tab-body[active][src]"></op-mv>
+					</op-int>
+				<!-- set the webview src on enter !-->
+					<op-int no-default on=submit attach-parent=#omni_panel attach=#omni_input_form>
+						<op-mv from-parent=#omni_panel from=#omni_input[value] property=from
+							to-parent=main-app to="tab-body[active][src]"></op-mv>
+					</op-int>
+			</do-tool>
+			<form id=omni_input_form>
+				<input name=omni_input id=omni_input type=text />
+			</form>
+			<op-int on=focus attach-parent=#omni_panel attach=#omni_input>
+				<op-call target-parent={{attach-parent}} target={{attach}}
+					function=select
+					clear-null
+					target-this
+					>
+				</op-call>	
+			</op-int>
+		</div>
+		<do-tool id=toggle_tools icon="cog" class=small></do-tool>
+	</div>
+</template>

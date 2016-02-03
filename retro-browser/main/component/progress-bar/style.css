@@ -1,0 +1,21 @@
+#range {
+	width:100%;
+	height:100%;
+}
+
+#value {
+	width:0%;
+	height:100%;
+	/*background-color:rgba(50,50,50,0.8);*/
+	/*background-color:rgb(43,145,218);*/
+	background-color:rgb(255,0,127);
+}
+
+:host {
+	display:block;
+	width:20em;
+	height:0.5em;
+	border-radius:1em;
+	overflow:hidden;
+	background-color:#18ffff;
+}

@@ -1,0 +1,139 @@
+/* common element resets */
+	.world {
+		position:relative;
+		padding:45pt 0 0 0;
+		height:calc(100% - 45pt);
+		max-height:calc(100% - 45pt);
+	}
+
+	.universe {
+		overflow:hidden;
+	}
+
+/* search layout */
+	.search-result-box-container {
+		position:relative;
+		box-sizing:border-box;
+		width:100%;
+		max-width:100%;
+		height:100%;
+		max-height:100%;
+		overflow:hidden;
+		margin:0;
+		border:0;
+		padding:0;
+	}
+
+	.search-result-box {
+		font-size:0;
+		width:auto;
+		overflow-y:hidden;
+		overflow-x:auto;
+		-webkit-overflow-scrolling:touch;
+		white-space:nowrap;
+		position:absolute;
+		top:0; left:0; bottom:0; right: 0;	
+		margin:auto;
+		padding:15vh 0;
+		height:45vh;
+		max-height:45vh;
+	}
+
+	.search-result-container {
+		box-sizing:border-box;
+		display:inline-block;
+		padding:0;
+		width:100vw;
+		height:100%;
+		overflow:hidden;
+	}
+
+/* search result styling */
+	.search-result {
+		position:relative;
+		box-sizing:border-box;
+		font-size:1.1429rem;
+		line-height:1.75rem;
+		margin:0 auto;
+		padding:3vmin;
+		width:61.8%;
+		height:100%;
+		color:rgb(52,255,181);
+		background-color:rgb(13,56,76);
+		white-space:normal;
+		word-break:break-word;
+		overflow:hidden; 
+	}
+
+	.search-result > button.buy {
+		-webkit-appearance:none;
+		font-family:inherit;
+		font-size:inherit;
+		background-color:rgb(18,35,58);		
+		color:white;
+		border:none;
+		cursor:pointer;
+		position:absolute;
+		right:0;
+		padding:3vh 2vw;
+	}
+
+	.search-result > button.buy:focus, .search-result > button.buy:active {
+		outline:none !important;
+	}
+
+	.search-result  .title {
+		text-decoration:underline;
+		padding:0;
+	}
+
+	.search-result  .price {
+		text-style:italic;
+	}
+
+	.search-result  .license {
+		color:rgb(0,158,158);
+	}
+
+	.search-result  .short-description {
+		font-size:0.9rem;
+		line-height:1.4562rem;
+	}
+
+
+/* star */
+		.star-issue {
+			position:relative;
+			padding:0;
+			width:auto;
+			text-align:center;
+			display:inline-block;
+		}
+		.star-issue > label {
+			margin:0;
+			position:relative;
+			min-width:10px;
+			width:auto;
+			-webkit-user-select:none;
+			padding:0;
+		}
+		.star-issue > label.fa-star-o {
+			position:relative;
+			left:0;
+			top:0;
+		}
+		.star-issue > label.fa-star {
+			position:absolute;
+			z-index:2;
+			left:0;
+			top:0;
+			pointer-events:none;
+			display:none;
+		}
+		.star-issue > input:checked + label.fa-star {
+			display:inline;
+			color:rgb(52,255,181);
+			background-color:transparent;
+		}
+
+

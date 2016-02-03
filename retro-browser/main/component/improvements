@@ -1,0 +1,5 @@
+-- OP-LOOP:
+	-- Make it so that op-loop takes receipt of the hand off of the instruction pointer from the final element in its loop. We can do this by op-loop inserting an element after all others to collect that. That element then triggers the next loop, or executes any final actions.
+	-- Make it so that op-loop can collect "deferred" tasks from things in op-loop, tasks that make sense to perform inside another separate loop instead of in the first one because doing so will optimise some desirable metric, like speed. For instance, we can perform all style setting changes in a loop separate to changes that effect a style to be computed, thereby isolating all reflow creating events together, to give us an optimum number of browser reflows. 
+
+

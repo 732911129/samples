@@ -1,0 +1,1 @@
+bind(document,'DOMContentLoaded', function () {	var output = document.querySelector('#url_output');	output.textContent = host_string;});

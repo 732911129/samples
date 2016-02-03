@@ -1,0 +1,1 @@
+var host_string = "semocracy.com/";function on_start_do(fun) {	window.addEventListener('DOMContentLoaded',fun);}

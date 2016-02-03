@@ -1,0 +1,119 @@
+<meta charset='utf-h'>
+	<link rel=stylesheet href=../edit-cards/edit-cards-shared-style.css?23123 type=text/css/>
+	<script src=../edit-cards/system-tools.js></script>
+	<script src=../browsing-cards/window-control.js></script>
+<style>
+.bigbox {
+			background-color:rgb(13,56,76);
+	position:absolute;
+	height:100%;
+	width:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	font:Unifont;
+}
+body {
+	position:relative;
+	height:100%;
+	width:100%;
+}
+.midbox {
+	position:relative;
+	max-width:40%;
+	box-sizing:border-box;
+	padding:0;
+	margin:0;
+	border:0;
+}
+.dark-text {
+	color:rgb(18,35,58); /* darksky2 */
+}
+.all-centered {
+	position:relative;
+}
+.all-centered > * {
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+}
+.wrapper {
+	font-size:2em;
+}
+.deep-space {
+	/*background-color:rgb(18,35,58); /* darksky2 */*/
+}
+.backcircle {
+	font-size:22em;
+}
+.innercircle {
+	font-size:12em;
+	left:-100px;
+}
+.text {
+	top:200px;
+	text-align:center;
+	width:300px;
+	font-size:3em;
+}
+.clouda {
+	color:rgba(0,158,158,1.0);
+	left:135px;
+	font-size:1.1em;
+	top:-37px;
+}
+.cloudb {
+	left:-111px;
+	font-size:1.1em;
+	top:58px;
+}
+.fa-circle {
+	overflow:hidden;
+}
+</style>
+
+<body class="deep-space leaf">
+<script>
+	var step = 3.141/360*2;
+	var cx = window.innerWidth/2;
+	var cy = window.innerHeight/2;
+	var radiusa,radiusb;
+	var limita,limitb;
+	limita = 700*step;
+	limitb = 510*step;
+
+	var frequency = 500;
+	function do_move_elem_through_circle(elem,deg,radius,limit) {
+		return function () {
+			deg = deg + step;
+			var x = radius*Math.cos(deg);
+			var y = radius*Math.sin(deg);	
+			elem.style.top = y+"px";
+			elem.style.left = x+"px";	
+			/*console.log(x,y,cx,cy,radius,deg);*/
+			if(deg < limit) {
+				setTimeout(do_move_elem_through_circle(elem,deg,radius,limit),1.0/frequency*1000);
+			}
+		};
+	}
+	function move_clouds() {
+		radiusa = parseInt(getComputedStyle(document.querySelector('.backcircle')).width)*0.52;
+		radiusb = parseInt(getComputedStyle(document.querySelector('.backcircle')).width)*0.39;
+		setTimeout(do_move_elem_through_circle(document.querySelector('.clouda'),220*step,radiusa,limita),1.0/frequency*1000);
+		setTimeout(do_move_elem_through_circle(document.querySelector('.cloudb'),0,radiusb,limitb),1.0/frequency*1000);
+	}
+	on_start_do(move_clouds);
+</script>
+<div class="bigbox">
+	<div class=midbox>
+		<div class=all-centered>
+			<span class="backcircle dark-text fa fa-5x fa-circle"></span>
+			<div class="clouda"><span class="innercircle fa fa-flip-horizontal fa-5x fa-cloud"></span></div>
+			<div class="cloudb"><span class="innercircle fa fa-flip-horizontal fa-5x fa-cloud"></span></div>
+			<div class=wrapper><span class="fa fa-fw fa-5x fa-cub dark-text"></span></div>
+			<span class="dark-text text">SEMOCRACY</span>
+		</div>
+	</div>
+</div>
+</body>

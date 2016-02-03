@@ -1,0 +1,29 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/core-tools/style.css");
+	</style>
+	<do-tool id=search icon="search" active >Search
+		<click-toggle panel-selector="[type=search]"></click-toggle>
+	</do-tool>
+	<do-tool id=build icon="cubes" active >Build
+		<click-toggle panel-selector="[type=build]">
+		</click-toggle>
+	</do-tool>
+		<!-- holy shit the build phase by building a "form" includes : grouping, ordering and annotating with semantic information. HOLY SHIT. It's awesome. !-->
+	<do-tool id=field icon="flag" active >Field
+		<click-toggle panel-selector="[type=field]"></click-toggle>
+	</do-tool>
+	<do-tool id=tag icon="tag" active >Tag
+		<click-toggle panel-selector="[type=tag]"></click-toggle>
+	</do-tool>
+	<do-tool id=map icon=map-marker active >Map
+		<click-toggle panel-selector="[type=map]"></click-toggle>
+	</do-tool>
+	<do-tool id=package icon=archive active >Package
+		<click-toggle panel-selector="[type=package]"></click-toggle>
+	</do-tool>
+	<do-tool id=publish icon=bullhorn active >Publish
+		<click-toggle panel-selector="[type=publish]"></click-toggle>
+	</do-tool>
+</tempalte>

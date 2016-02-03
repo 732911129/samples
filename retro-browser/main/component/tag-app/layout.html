@@ -1,0 +1,18 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/build-app/style.css");
+	</style>
+	<app-let>
+		<input-addon class=header label=Label maxlength=70 ></input-addon>
+		<input-addon class=header label="Labels in other languages" maxlength=140 ></input-addon>
+		<input-addon class=header label="Tagged with" maxlength=140 ></input-addon>
+		<search-bar class=header id=tags placeholder="Search tags to add"></search-bar>
+		<input-addon class=header type=checkbox label="Is a link tag?" maxlength=140 ></input-addon>
+		<div class="header flex-row flex-end">
+			<input-addon class=header type=submit action-label=Cancel ></input-addon>
+			<input-addon class=header type=submit action-label=Save ></input-addon>
+		</div>
+		<content></content>
+	</app-let>
+</template>

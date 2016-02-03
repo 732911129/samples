@@ -1,0 +1,15 @@
+@import url("../../assets/fonts/font-awesome/css/font-awesome.min.css");
+
+.flex-row {
+	display:flex;
+}
+
+.flex-end {
+	justify-content:flex-end;
+}
+
+.debug, [debug] {
+	border:1px solid lime;
+}
+
+

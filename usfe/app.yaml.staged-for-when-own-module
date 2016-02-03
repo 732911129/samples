@@ -1,0 +1,14 @@
+module: usfe
+runtime: python27
+threadsafe: true
+
+
+handlers:
+- url: /usfe/server/.*
+  script: server.threads
+  secure: always
+
+- url: /usfe/client
+  static_dir: client
+  secure: always
+  

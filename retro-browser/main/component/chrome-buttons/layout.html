@@ -1,0 +1,35 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/chrome-buttons/style.css");
+	</style>
+	<div id=container>
+		<div id=close class="sized control" >
+			<div class="sized mask"></div>	
+			<span class="sized icon fa fa-fw fa-close"></span>
+			<op-int on=click attach-parent>
+				<op-mv from="body[cris]" to="head[love]"></op-mv>	
+				<op-mv from="head[love]" to="head[immortal]"></op-mv>	
+				<op-call function={{rn.comms.send}} msg=close></op-call>
+			</op-int>
+		</div>
+		<div id=minimize class="sized control" >
+			<div class="sized mask"></div>	
+			<span class="sized icon fa fa-fw fa-minus"></span>	
+			<op-int on=click attach-parent>
+				<op-mv from="#app-body[cris]" to="#app-body[cris-copy]"></op-mv>	
+				<op-mv from="chrome-bar[freedom]" to="chrome-bar[eternity]"></op-mv>	
+				<op-call function={{rn.comms.send}} msg=minimize></op-call>
+			</op-int>
+		</div>
+		<div id=maximize class="sized control" >
+			<div class="sized mask"></div>	
+			<span class="sized icon fa fa-fw fa-sort rotate-45"></span>	
+			<op-int on=click attach-parent>
+				<op-mv from=omni-bar[happiness] to=tabs-panel[expression]></op-mv>	
+				<op-mv from=tabs-panel[expression] to=tabs-panel[creation]></op-mv>	
+				<op-call function={{rn.comms.send}} msg=maximize></op-call>
+			</op-int>
+		</div>
+	</div>
+</template>

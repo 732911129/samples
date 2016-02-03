@@ -1,0 +1,38 @@
+{
+	"name"			:	"the system",
+	"version"		:	"1.137",
+	"manifest_version"	:	2,
+	"permissions"	:	[
+					"<all_urls>",
+					"http://*/*",
+					"https://*/*",
+					"tabs",
+					"storage",
+					"unlimitedStorage",
+					"geolocation"
+					],
+	"web_accessible_resources"	:	[
+		"stantech.js",
+		"dynamic_iframe_loader.js",
+		"ui/*"
+		],
+	"background"		:	{
+		"scripts"	:	[
+			"stantechbg.js"
+			]
+			},
+	"content_scripts"	:	[
+		{
+			"matches"	:	["<all_urls>"],
+			"js"	:	[
+				"stantech.js",
+				"jq.js",
+				"thesystem.js",
+				"reveal.js",
+				"dfa.js",
+				"slate.js"
+				],
+			"all_frames": true
+			}
+			] 
+}

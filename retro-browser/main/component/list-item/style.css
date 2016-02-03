@@ -1,0 +1,68 @@
+:host {
+	display:block;
+	position:relative;
+	border:0;
+	font-size:0.8rem;
+	padding:0.3rem 1.2rem;
+	margin:0;
+}
+
+:host(:hover), :host(:active) {
+}
+
+:host(:hover) #item-text, :host(:active) #item-text {
+}
+
+:host(:hover) #item-icon, :host(:active) #item-icon {
+	text-shadow: 0 1px 0 rgb(1, 37, 74);
+}
+
+:host([divider]) {
+	height:1px;
+	width:100%;
+	padding:0;
+	margin:0.2rem 0;
+	background:#18ffff;
+}
+
+:host([divider]) #item-icon {
+	display:none;
+}
+
+:host-context(float-panel[curved]):host(:first-child) {
+	border-top-left-radius:5px;	
+	border-top-right-radius:5px;	
+}
+
+:host-context(float-panel[curved]):host(:last-child) {
+	border-bottom-left-radius:5px;	
+	border-bottom-right-radius:5px;	
+}
+
+:host(:not([icon]):not([divider])) {
+	padding:1rem 1rem;
+}
+:host(:not([icon])) #item-icon {
+	display:none;
+}
+
+:host(:not([icon])) #item-text:hover {
+	text-decoration:underline;
+}
+
+#item-icon {
+	font-size:2rem;
+	padding-right:0.5rem;
+	text-shadow: 0 1px 0 gray;
+}
+
+#item-text {
+	cursor:default;
+}
+
+#item {
+	display:flex;
+	flex-direction:row;
+	align-items:center;
+	justify-content:flex-start;
+}

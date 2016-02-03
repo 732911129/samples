@@ -1,0 +1,116 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/tab-head/style.css");
+	</style>
+	<div id=tab-head>
+		<div class=container>
+			<span id=favicon><content select="img"></content></span>
+			<span id=spinner><do-tool icon=refresh circle clear flush spin tiny></do-tool></span>
+			<span id=page-title-container>
+				<span id=page-title>
+					<content select=".title"></content>
+				</span>
+			</span>
+			<do-tool id=close circle clear flush tiny icon=close>
+				<op-int on=click attach-parent=do-tool prevent-bubble>
+					<!-- first indicate the webview is closed !-->
+						<op-set target-parent=tabs-panel
+							target='tab-body[tabid="{{tabid}}"]::shadow webview'
+							attr=closed
+							>	
+						</op-set>
+					<!-- if the tab is active move the active !-->
+					<!-- if not just delete it !-->
+						<op-if call-complete condition-parent=tabs-panel
+							condition=tab-head[tabid="{{tabid}}"][active]
+							>
+								<op-then>
+									<!-- first label the outgoing tab !-->
+										<op-set multiple target-parent=tabs-panel
+											target='[tabid="{{tabid}}"]'
+											attr=outgoing
+											>
+										</op-set>
+									<!-- first move the active to the following tab !-->
+										<op-mv remove from-parent=tabs-panel 
+											from=tab-body[outgoing][active][active]
+											to-parent=tabs-panel
+											to='tab-body[active]~tab-body[active]'
+											>
+										</op-mv>
+										<op-mv remove from-parent=tabs-panel
+											from=tab-head[outgoing][active][active]
+											to-parent=tabs-panel
+											to='tab-head[active]~tab-head[active]'
+											>
+										</op-mv>
+									<!-- then remove the element !-->
+									<!-- then stop any navigation on the webview !-->
+										<op-call target-parent=tabs-panel 
+											target='tab-body[tabid="{{tabid}}"]::shadow webview'
+											function=stop
+											clear-null
+											target-this
+										>
+										</op-call>
+									<!-- finally remove the element !-->
+										<op-remove multiple attach-parent=tabs-panel
+											attach=[tabid="{{tabid}}"]
+											>
+										</op-remove>
+									<!-- if there is no following tab move the active to the last of type !-->
+										<op-if call-complete condition-parent=tabs-panel
+											condition=tab-body[active][active]>
+											<op-else>
+												<op-set multiple target-parent=tabs-panel
+													target="tab-body:last-of-type, tab-head:last-of-type"
+													attr=active
+													>
+												</op-set>
+											</op-else>
+										</op-if>
+									<!-- and advise the omni box about the uri of the newly active tab !-->
+										<op-mv 
+											to-parent=main-app 
+											to="omni-bar::shadow #omni_input[value]" property=to
+											from-parent=main-app 
+											from="tab-body[active]::shadow webview[src]"
+											>
+										</op-mv>
+								</op-then>
+								<op-else>
+									<!-- then stop any navigation on the webview !-->
+										<op-call target-parent=tabs-panel 
+											target='tab-body[tabid="{{tabid}}"]::shadow webview'
+											function=stop
+											clear-null
+											target-this
+										>
+										</op-call>
+									<!-- finally remove the element !-->
+										<op-remove multiple attach-parent=tabs-panel
+											attach=[tabid="{{tabid}}"]
+											>
+										</op-remove>
+								</op-else>
+						</op-if>
+				</op-int>
+			</do-tool>
+		</div>
+		<op-int on=click attach-parent=tab-head>
+			<op-mv remove from-parent=tabs-panel
+				from="tab-body[active][active]"
+				to-parent=main-app
+				to='tab-body[tabid="{{tabid}}"][active]'>
+			</op-mv>
+			<op-mv remove from-parent=tabs-bar
+				from="tab-head[active][active]"
+				to-parent=tabs-bar
+				to='tab-head[tabid="{{tabid}}"][active]'>
+			</op-mv>
+			<op-mv delay=5 to-parent=main-app to="omni-bar::shadow #omni_input[value]" property=to
+				from-parent=main-app from="tab-body[active]::shadow webview[src]"></op-mv>
+		</op-int>
+	</div>
+</template>

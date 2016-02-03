@@ -1,0 +1,128 @@
+:host {
+	-webkit-app-region:no-drag;
+	display:flex;
+	position:relative;
+	height:100%;
+	width:100%;
+	margin:0;
+	border:0;
+	padding:0;
+	background:inherit;
+}
+
+#app, header, #app-body, main#content, nav#app-tools, footer {
+	position:relative;
+	box-sizing:border-box;
+	background:inherit;
+}
+
+#app {
+	height:100%;
+	width:100%;
+}
+
+#app, #app-body {
+	display:flex;
+	flex-direction:column;
+}
+
+#app-body {
+	flex-direction:row;
+	flex:1;
+}
+
+main#content, #app-tools {
+	display:flex;
+	flex-direction:column;
+	overflow:hidden;
+	z-index:45;
+}
+
+:host(:not([borderless])) main#content:hover, #app-tools:hover {
+	overflow:auto;
+}
+
+::content > .content, ::content > .tools {
+	flex:0 0 auto;
+}
+
+::content > [full] {
+	flex:1 1 auto;
+}
+
+main#content::-webkit-scrollbar, #app-tools::-webkit-scrollbar {
+	width:6px;
+	height:6px;
+	box-sizing:border-box;
+}
+
+main#content::-webkit-scrollbar:horizontal, #app-tools::-webkit-scrollbar:horizontal {
+	border-top:1px solid #18ffff;
+	border-right:1px solid #18ffff;
+}
+
+main#content::-webkit-scrollbar:vertical, #app-tools::-webkit-scrollbar:vertical {
+	border-bottom:1px solid #18ffff;
+	border-left:1px solid #18ffff;
+}
+
+main#content::-webkit-scrollbar-corner, #app-tools::-webkit-scrollbar-corner {
+	background:transparent;
+}
+
+main#content::-webkit-scrollbar-thumb, #app-tools::-webkit-scrollbar-thumb {
+	background:#18ffff;
+}
+
+main#content {
+	flex: 2 0 auto;
+}
+
+:host-context(float-panel[multi-panel]) main#content, 
+:host-context(float-panel[multi-panel]) #app-tools,
+:host-context(build-app) main#content, 
+:host-context(build-app) #app-tools {
+	padding: 0 5.8px 5.8px 0;
+}
+
+:host-context(float-panel[multi-panel]) main#content:hover,
+:host-context(float-panel[multi-panel]) #app-tools:hover,
+:host-context(build-app) main#content:hover, 
+:host-context(build-app) #app-tools:hover {
+	padding: 0 5.75px 5.75px 0;
+}
+
+:host([borderless]) #app-tools, :host([borderless]) header, :host([borderless]) footer {
+	border:0;
+}
+
+#app-tools {
+	flex: 0 0 auto;
+	order: -1;
+}
+
+header, footer {
+	z-index:50;
+}
+
+#app-tools {
+	border-right-width:1px;
+	border-right-style:solid;
+}
+
+header {
+	border-bottom-width:1px;
+	border-bottom-style:solid;
+	padding:7px 9px 0 9px;
+}
+
+footer {
+	border-top-width:1px;
+	border-top-style:solid;
+}
+
+:host([contrast]) footer, :host([contrast]) header, :host([contrast]) #app-tools, 
+:host([contrast]) main#content::-webkit-scrollbar, 
+:host([contrast]) #app-tools::-webkit-scrollbar {
+	background:rgba(13,71,161,0.5);
+}

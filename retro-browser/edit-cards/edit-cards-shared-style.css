@@ -1,0 +1,397 @@
+@import url("../../assets/fonts/font-awesome/css/font-awesome.min.css");
+
+/* definitions */
+
+/* elements */
+/* media queries */
+
+	/* html */
+		html {
+			display:block;
+			margin:0;
+			padding:0;
+			border:0;
+			height:100%;
+		}
+
+	/* body */
+		body {
+			/* size */
+				padding:0;
+				margin:0;
+				border:0;
+				height:100%;	
+			/* font */
+        -webkit-font-smoothing: none;
+				font-family:"Courier New", Courier, Consolas, monospace;
+				font-size: 1.1429em;
+				word-break:break-word;
+				line-height:1.75em;
+		}
+
+	/* input */
+		select,option,input,textarea,label,output {
+			-webkit-appearance:none;
+			appearance:none;
+			border-radius:0 !important;
+			cursor:pointer;
+			font-family:"Courier New", Courier, Consolas, monospace;
+			font-size:inherit;
+			border:2px solid transparent;
+			margin:5px;
+			padding:4px 2px;
+			box-sizing:border-box;
+		}
+		input[type=password] {
+			-webkit-text-security:square !important;
+			text-security:square !important;
+		}
+		output {
+			display:block;
+			padding:0;
+			overflow:scroll !important;
+			margin:0; 
+		}
+		.output-container {
+			padding:0;
+		}
+		form {
+			margin:0;
+			padding:0;
+		}
+		input:not([type=checkbox]):not([type=radio]),select,option,textarea,label,output {
+			min-width:90px;
+			width:150px;
+		}
+		input[type=checkbox], input[type=radio] {
+			position:absolute;
+			z-index:0;
+			width:0;
+			height:0;
+			background:transparent;
+		}
+		label {
+			position:relative;
+			z-index:1;
+		}
+		input[type=checkbox]:focus,input[type=radio]:focus {
+			border-color:transparent;
+		}
+		input[type=checkbox]:focus + label, input[type=radio]:focus + label {
+			border-color:rgb(52,255,181);
+		}
+		a:focus {
+			outline:none;
+		}	
+		a:focus > span {
+			border-color:rgb(52,255,181);
+		}
+		a:focus > span.current {
+			border-color:rgb(0,158,158);
+		}
+		label {
+			text-align:center;
+			padding:2px 7pt;
+			display:inline-block;
+			width:auto;
+		}
+		textarea {
+			margin:5px;	
+			resize:none;
+			width:99%;
+			height:49pt;
+		}
+		input[type=date] {
+			padding:0 2px;
+			min-width:200px;
+			text-align:center;
+		}
+		input[type=date]::-webkit-calendar-picker-indicator {
+			cursor:pointer;
+		}	
+		::-webkit-clear-button {
+			-webkit-appearance:none;
+			cursor:pointer;
+			width:20px;
+			height:20px;
+			border-radius:20px;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-inner-spin-button {
+			cursor:pointer;
+		}
+		::-webkit-datetime-edit-month-field:hover{
+			cursor:pointer;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-datetime-edit-day-field:hover {
+			cursor:pointer;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-datetime-edit-year-field:hover {
+			cursor:pointer;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-datetime-edit-month-field:focus {
+			cursor:text;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-datetime-edit-day-field:focus {
+			cursor:text;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-datetime-edit-year-field:focus {
+			cursor:text;
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		::-webkit-clear-button::before {
+			font-family:"FontAwesome";
+			content:"X";
+		}
+		input[type=date]::-webkit-calendar-picker-indicator:hover {
+			background:rgb(52,255,181);
+			color:rgb(59,89,152);
+		}
+		input[type=number] {
+			cursor:default;
+		}
+		input[type=number]::-webkit-inner-spin-button, input[type=date]::-webkit-inner-spin-button {
+			-webkit-appearance:menulist !important;
+			background:rgb(18,35,58);	
+			height:30px;
+			display:block;
+			width:30px;
+		}	
+		::-webkit-input-placeholder {
+			color:rgb(52,255,181);
+		}
+		label:hover,input:hover,textarea:hover,select:hover,option:hover {
+			border-top-color:rgb(52,255,181);
+			cursor:pointer;
+		}
+		input:focus,textarea:focus,select:focus,option:focus {
+			border:2px solid rgb(52,255,181);
+			outline:none;
+			cursor:text;
+		}
+		label:focus, input[type=radio]:checked + label, label:focus, input[type=checkbox]:checked + label, input[type=radio]:checked + label {
+			background:rgb(52,255,181);
+			color:rgb(18,35,58);
+			outline:none;
+			cursor:pointer;
+		}
+	/* div */ 
+		div { 
+			padding:7pt;
+		}
+	
+/* classes */
+	/* colors 
+		*sky: 135,206,235
+		*sky2: 60,190,212
+		*moonsky: 57,144,212
+		*darksky:12,110,248
+		lake : 59,89,152
+		mountain : 26,112,151
+		earth : 0, 128, 128
+		leaf : 52, 255, 181
+		shade : 55, 141, 78
+		grass : 22, 154, 100
+		*/
+
+	/* natural parts */
+		.atmosphere {
+			position:relative;
+			margin:0;
+			padding:0;
+			z-index:1;
+			border:0;
+		}
+		.world {
+			position:relative;
+			z-index:1;
+			margin:0;
+			padding:98pt 0 0 0;
+		}
+		.earth {
+			padding:0;
+			background-color:rgba(0,158,158,0.5);
+			border:0;
+			font-size:0;
+		}
+		.page {
+			display:block;
+			height:100%;
+			margin:0;
+			padding:0;
+			border:0;
+		}
+		#starfield {
+
+		}
+		.universe {
+			position:relative;
+			height:100%;
+			margin:0;
+			padding:0;
+			border:0;
+			-webkit-overflow-scrolling:touch;
+		}
+
+
+/* rest */
+		.sky {
+			position:absolute;
+			top:0;
+			left:0;
+			z-index:0;
+			width:100%;
+			height:100%;
+			margin:0;
+			padding:0;
+			background-color:rgb(135,206,235);	
+			background-color:rgb(1,37,74);
+		}
+		.lake {
+			background-color:rgba(18,35,58,0.8); /* darksky2 */
+			margin:0;
+			width:100%;
+		}
+		.mountain {
+			width:50%;
+			max-width:495px;
+			min-width:276px;
+			box-sizing:border-box;
+			margin:0 auto;
+			padding:0;
+			background-color:rgb(13,56,76);
+			background:transparent;
+			border:20px solid rgba(0,158,158,0.5);
+			border-bottom:none;
+			overflow:visible;
+		}
+		.leaf {
+			color:rgb(52,255,181);
+			font-size:1.1429rem;
+		}
+		.small {
+			font-size:11pt;
+		}
+		.cloud.earth {
+			font-size:1.1429rem;
+		}
+		.earth > span.fa {
+			font-size:1.1429rem;
+		}
+		.cloud {
+			margin:0 auto;
+			min-width:180px;
+			max-width:0;
+			border:10px solid transparent;
+			border-radius:30px;	
+			box-sizing:border-box;
+			text-align:center;
+		}
+		.shade {
+			text-align:center;
+			background-color:rgb(0,28,28);
+		}
+		.lightning {
+			color:rgb(52,255,181);
+			border-color:rgb(52,255,181);
+		}
+		.space {
+			position:absolute;
+			-webkit-app-region:drag;
+			text-align:center;
+			font-size:0;
+			z-index:10000000;
+			padding:7pt 0;
+			top:0;
+			width:100%;
+			background-color:rgb(28,122,169); /* really nice blue */
+			background-color:rgb(18,35,58); /* darksky2 */
+			background:transparent;
+			box-sizing:border-box;
+		}
+		.space > * {
+			font-size:14pt;
+		}
+		.space span.fa {
+			padding:7pt;
+			margin:0;
+		}
+		.current {
+			color:rgb(0,158,158);
+			cursor:default !important;
+			background:transparent !important;
+		}
+		.space span.fa:hover {
+			border-color:rgb(52,255,181);
+			cursor:pointer;
+		}
+		.space span.fa.current:hover {
+			border-color:rgb(0,158,158);
+		}
+		.search-wrapper {
+			position:relative;
+		}	
+		a.reset {
+			text-decoration:none;
+			color:inherit;
+			padding:0;
+			margin:0;
+			font-size:0;
+			width:1px;
+		}
+		.space span {
+			border:none;
+			border-top:2px solid transparent;
+		}
+		.space > a.reset > * {
+			font-size:14pt;
+		}
+		.search-wrapper > .fa-search {
+			position:relative;
+			left:0;
+			z-index:1;
+		}
+		.search-wrapper {
+			display:none;
+		}
+		.search-wrapper > input.search:hover + .fa-search, 
+		.search-wrapper > input.search:focus + .fa-search {
+			background-color:rgb(13,56,76);
+		}
+		.search-wrapper > input.search:not(:focus) {
+			color:transparent;
+		}
+		.search-wrapper > .search {
+			position:absolute;
+			width:150px;
+			padding:7pt;
+			z-index:0;
+			left:100%;
+		}
+		.search:not(:focus) {
+			background:transparent;
+		}
+			
+		.star {
+			background:rgb(220,220,248);
+			width:3px;
+			height:3px;
+			padding:0;
+			border-radius:3px;
+			position:absolute;	
+			z-index:0;
+		}
+
+/* test */

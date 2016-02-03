@@ -1,0 +1,97 @@
+#container {
+	border:0;
+	padding:0;
+	margin:0;
+	width:52px;
+	display:flex;
+	justify-content:space-between;	
+}
+
+.control {
+	-webkit-app-region:no-drag;
+	position:relative;
+	top:0;
+	left:0;
+	z-index:10;
+	text-align:center;
+}
+
+.sized {
+	position:relative;
+	box-sizing:border-box;
+	border:1px solid transparent;
+	width:12px;
+	height:12px;
+	border-radius:12px;
+	text-align:center;
+	line-height:10px;
+	font-size:10px;
+	left:-1px;
+	top:-1px;
+}
+
+#close {
+}
+
+#close .icon {
+	left:-0.75px;
+}
+	
+#minimize {
+}
+
+#minimize .icon {
+	position:relative;
+	top:0;
+}
+
+#maximize {
+}
+
+#maximize .icon {
+	position:relative;
+	top:-0.35px;
+	left:-1.35px;
+	font-size:10.5px;
+}
+
+
+
+:host {
+	align-self:flex-start;
+	order:0;
+	padding:0;
+	top:0;
+	left:0;
+}
+
+.icon {
+	visibility:hidden;
+}
+
+#container:hover .icon, #container:active .icon {
+	visibility:visible;
+}
+
+#container:hover #maximize .icon {
+	visibility:visibile:
+}	 
+
+:host.inactive .control {
+}
+
+.mask {
+	position:absolute;
+	visibility:hidden;
+	z-index:20;	
+}
+
+.control:hover:active .mask {
+	visibility:visible;
+}
+
+
+.rotate-45 {
+	transform:rotate(45deg);
+}
+

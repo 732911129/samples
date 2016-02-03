@@ -1,0 +1,43 @@
+DONE -- all prior refactor
+	DONE -- Delete needs to handle being at the start of a node (if there's a node previou to it (previous Sibling) then we delete from there, if there's no more nodes before then we do nothing))
+
+
+	DONE -- And when we are moving the cursor around text larger than the height of the editable div it will not scroll to where the cursor is. I believe this is because input.focus brings it up to the top scroll point.
+
+
+	DONE -- It also seems buggy on multi line selections.
+		[CAUSE : The start was being reset whenever we changed nodes, so on a multiline selection because we would overwrite the previously set start, as the total was still greater than, as it only monotonically increased as we stepped through the DOM, the index would eventually become negative resulting in the attempt to set start raising an error. When we created that we only set start once, everything was fine.]
+
+	DONE -- Cut, copy and paste do not yet work. Idea is to catch the events, and catch the modifications to the content, and replicate those modifications. We can do the cut fairly easily using delete. (This is likely blocke by the bug in multiline selections identified above), and the paste is easier, we just set the cursor, and perform a text input event.
+		DONE -- Cut 
+			[CREATION: Save the selection at beforecut event, issue delete command on this]
+		REJECTED -- Copy 
+			[REASON: No need for this, it changes nothing]
+		DONE -- Paste
+			[CREATION: Capture paste data from pasteEvent.clipboardData :)]
+
+	DONE -- Once these work, we are essentially done, and then we can refine and refactor everything. Yes.
+
+	DONE -- let's do sequences
+		DONE -- To sequence
+			[REPORT: Essentially works]
+
+		FIXED -- From sequence
+			[MIDWAY REPORT: Seems kind of buggy. Mostly works but sometimes doesn't. Why?]
+			[MIDWAY REPORT: Some bugs removed, some remain. A removed bug was the set_selection was unable to set the selection at 0,0 so and now that works.]
+			FIXED -- bugs : on involved edits things fuck up. Why?
+				[MIDWAY REPORT: Owing to an event handler on input on keyup in selectionsync spaces at the start of lines created by inserting an \n before the space were disappearing. Why?]
+				[CREATED: This was due to the interaction of creating a span (in get range) and inserting that into the range. Presumably, when this additional non-zero element, combined with the modification of other parts of the DOM when a new line is created at the point of \n insertion, changes occurred to the new line DOM resulting in the first space being clipped. Removing the span creation and insertion solved this problem.]
+
+-- refactor
+	-- new model: something attaches to contenteditable div and emits events which are edit intents. These can be sent to a receiver straight away (also which has some thing attache to it), they can be sent over the wire for instance, and all events can also be saved into a sequence and played back later. I'm thinking sequence is a class.
+
+-- fix cursor handling so it's neat and tidy.
+
+
+
+
+
+
+
+

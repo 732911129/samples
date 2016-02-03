@@ -1,0 +1,75 @@
+<style>
+	body {
+		-webkit-user-select:none;
+		font-family:monospace;
+	}
+	#view-change {
+		opacity:0;
+		width:0;
+	}
+	label {
+		pointer-events:none;
+	}
+	#view-change:checked ~ #row-view {
+		pointer-events:auto;
+		color:-webkit-link;
+		text-decoration:underline;
+		cursor:pointer;
+	}
+	#view-change:not(:checked) ~ #column-view {
+		pointer-events:auto;
+		color:-webkit-link;
+		text-decoration:underline;
+		cursor:pointer;
+	}
+	#view-change:checked ~ #sheet {
+		flex-direction:column;
+	}
+	#view-change:checked ~ #sheet .cell {
+		min-height:120px;
+	}
+	#sheet {
+		display:flex;
+		background:blue;
+		width:100%;
+		height:80%;
+		flex-wrap:wrap;
+		justify-content:space-around;
+		align-items:stretch;
+		align-content:stretch;
+		overflow:auto;
+	}
+	#sheet.column-layout {
+		flex-direction:column;
+	}
+	#sheet.column-layout .cell {
+		min-height:120px;
+	}
+	.cell {
+		border:1px solid lime;
+		box-sizing:border-box;
+		flex-grow:1;
+		background:rgba(200,200,200,0.5);
+	}
+	.cell:hover, .cell:hover input, input:focus {
+		outline:none;
+		background:lime;
+		color:black;
+	}	
+</style>
+<input id=view-change type=checkbox />
+<label id=row-view for=view-change>Row View</label>
+<label id=column-view for=view-change>Column View</label>
+<div id=sheet>
+	<div class=cell>0<input /></div>
+	<div class=cell>1<input /></div>
+	<div class=cell>2<input /></div>
+	<div class=cell>3<input /></div>
+	<div class=cell>4<input /></div>
+	<div class=cell>5<input /></div>
+	<div class=cell>6<input /></div>
+	<div class=cell>7<input /></div>
+	<div class=cell>8<input /></div>
+	<div class=cell>9<input /></div>
+	<div class=cell>A<input /></div>
+</div>

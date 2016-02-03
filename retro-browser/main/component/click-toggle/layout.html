@@ -1,0 +1,19 @@
+<template>
+	<style>
+	</style>
+	<op-int debug on=click attach-parent="{{attach-parent}}" attach-parent-default="do-tool, list-item">
+		<op-if debug condition="float-panel{{panel-selector}}[active]">
+			<op-then>
+				<op-mv from="float-panel{{panel-selector}}[active]" to-parent="list-item, do-tool" to="[active]"  remove></op-mv>
+				<op-mv from="float-panel#search-drop-down[active]" to-parent="list-item, do-tool" to="[active]" remove></op-mv>
+				<op-mv from="float-panel#language[active]" to-parent="list-item, do-tool" to="[active]" remove></op-mv>
+			</op-then>
+			<op-else>
+				<op-call id=get_pos function={{rn.layout.get_float_position_relative_to}} selector-parent="do-tool, list-item" wait-result ></op-call>
+				<op-mv from-parent="op-int" from="#get_pos[result]" to-parent="op-int" to="#set_pos[pos]"></op-mv>
+				<op-call id=set_pos function={{rn.layout.position}} selector="float-panel{{panel-selector}}" wait-result></op-call>
+				<op-mv from-parent="do-tool, list-item" from="[active]" to="float-panel{{panel-selector}}[active]"></op-mv>
+			</op-else>
+		</op-if>
+	</op-int>
+</template>

@@ -1,0 +1,18 @@
+2 Methods for MSA
+
+1. Random
+
+Take the first and second canonical paths off the list and form their LCS.
+Take the next canonical path off the list and form the LCS with the previous LCS. Continue until list is exhausted. O(n) LCS steps.
+
+2. Tournament
+
+Compute all (n**2)/2 LCS pairs, then for each of the original n sequences pick its best aligned pair. There are n/2 such LCS. 
+
+Again form the ((n/2)**2)/2 = (n**2)/8 LCS pairs for these n/2 LCS sequences. And again pick the best pairing for each. There are n/4 such LCS of LCS.
+
+Again form the ((n/4)**2)/2 = (n**2)/32 LCS pairs for these n/2 LCS sequences. And again pick the best pairing for each.
+
+Continue until there are is only 1 sequence remaining. This is the winner.
+
+

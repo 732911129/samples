@@ -1,0 +1,328 @@
+<template>
+	<style>
+		@import url("component/style.css");
+		@import url("component/sheet-app/style.css");
+	</style>
+	<div id=container happiness=cris-stringfellow>
+		<op-int on=click
+			attach-parent=#container
+			>
+			<op-if condition="[cell-clicked]"
+				condition-parent="sheet-app"
+				>	
+				<op-then></op-then>
+				<op-else>
+					<op-create _element=sheet-cell row=row{{clicked-row}} column=column{{clicked-column}}
+						_attach-parent=#container
+						_attach=#cell-stash>
+					</op-create>
+				</op-else>
+			</op-if>
+		</op-int>
+		<div id=rows>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+			<div class=row></div>
+		</div>
+		<div id=columns class=option1>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+			<div class=column></div>
+		</div>
+		<div id=cell-stash></div>
+	</div>
+	<!-- cells !-->
+	<content select=sheet-cell></content>
+	<!-- column and row label cells !-->
+		<div id=row-labels>
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+		</div>
+		<div id=column-labels>
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+			<sheet-cell label></sheet-cell>	
+		</div>
+	<!-- setup operations, including numbering rows and columns !-->
+		<op-fun immediate>
+			<op-set multiple target="#rows > .row" 
+				target-parent="::shadow" attr=row value=row{{index}}></op-set>
+			<op-set multiple target="#columns > .column" 
+				target-parent="::shadow" attr=column value=column{{index}}></op-set>
+			<op-set multiple target="sheet-cell"
+				target-parent="::shadow" attr=label></op-set>
+			<op-set multiple target="sheet-cell::shadow input"
+				target-parent="::shadow" attr=readonly value=readonly></op-set>
+		</op-fun>
+	<!-- executed when sheet is revealed !-->
+		<op-fun id=setup-sheet
+			attach-parent="::shadow"
+			attach=#container>
+				<op-set multiple target="#container" 
+					target-parent="::shadow" attr=hidden value=hidden></op-set>
+				<op-set id=column-labels-rows
+					multiple target="#column-labels > sheet-cell" 
+					target-parent="::shadow" attr=row value=row0></op-set>
+				<op-set id=column-labels-columns
+					multiple target="#column-labels > sheet-cell" 
+					target-parent="::shadow" attr=column value=column{{index}}></op-set>
+				<op-set id=row-labels-rows
+					multiple target="#row-labels > sheet-cell" 
+					target-parent="::shadow" attr=row value=row{{index}}></op-set>
+				<op-set id=row-labels-columns
+					multiple target="#row-labels > sheet-cell" 
+					target-parent="::shadow" attr=column value=column0></op-set>
+				<op-set id=labels-columns
+					multiple target="#column-labels > sheet-cell::shadow input" 
+					target-parent="::shadow" attr=value value={{index}}></op-set>
+				<op-set id=labels-rows
+					multiple target="#row-labels > sheet-cell::shadow input" 
+					target-parent="::shadow" attr=value value={{index}}></op-set>
+				<op-set id=corner-attribute
+					target="#column-labels > sheet-cell:nth-of-type(1)" 
+					target-parent="::shadow" attr=corner></op-set>
+				<op-loop id=restyle-rows 
+					forEach-parent="sheet-app" 
+					forEach="::shadow #rows > .row" 
+					elem=~attached
+					wait-result>
+					<op-restyle 
+						style-parent="sheet-app"
+						from='[row="row{{index}}"]' 
+						height="{{elem.getBoundingClientRect().height}}px"
+						top="{{elem.getBoundingClientRect().top}}px"
+						bases="top"
+						top-base="{{elem.parentNode.parentNode.getBoundingClientRect().top}}"
+					></op-restyle>		 
+				</op-loop>
+				<op-loop id=restyle-columns
+					forEach-parent="sheet-app" 
+					forEach="::shadow #columns > .column" 
+					elem=~attached
+					wait-result>
+					<op-restyle 
+						style-parent="sheet-app"
+						from='[column="column{{index}}"]' 
+						width="{{elem.getBoundingClientRect().width}}px"
+						left="{{elem.getBoundingClientRect().left}}px"
+						bases="left"
+						left-base="{{elem.parentNode.parentNode.getBoundingClientRect().left}}"
+					></op-restyle>		 
+				</op-loop>
+				<op-set multiple target="#container" 
+					target-parent="::shadow" attr=hidden value=visible></op-set>
+		</op-fun>
+</template>

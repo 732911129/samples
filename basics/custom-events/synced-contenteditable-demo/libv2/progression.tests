@@ -1,0 +1,7 @@
+Test Progression
+
+DONE -- Contenteditable div, a thing attaches to it, and any interaction fires an event on it, which we capture and print.
+
+-- The thing also knows when the cursor has been updated and it fires an event.
+
+
