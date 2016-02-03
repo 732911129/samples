@@ -20,6 +20,3 @@ project staging -> labs -> media
 - do basics
 - do usfe
 - do sample works
-
- 
-
