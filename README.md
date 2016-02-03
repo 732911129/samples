@@ -15,6 +15,8 @@
 
 ## current todo
 
+- basics
+- USFE 
 - do sample-work-dog-sitting-web-app [ for hiring process ]
 - do sample-work-team-app [ for hiring process ]
 - web component browser ( repurpose part of previous semocracy prototype code, removing everything but the browser ) [ for release ]
