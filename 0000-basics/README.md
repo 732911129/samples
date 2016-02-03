@@ -1,3 +1,13 @@
+# todo
+
+In order to start testing and using all these things, it's necessary to rewrite typechecking and decorators so they can be modules. 
+
+Then it's necessary to host these modules somewhere ( say, media, and do so with some kind of auto build ). 
+
+- It also works to factor out utils from type checkng and decorators into its own module.
+- Then wrap typechecking and decorators so they can use the nanoloader.
+- Then host them somewhere.
+
 # basics
 
 0. Modules. [[ name : TEAMBUILDER ]]
