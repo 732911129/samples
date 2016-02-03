@@ -7,6 +7,7 @@ Then it's necessary to host these modules somewhere ( say, media, and do so with
 - It also works to factor out utils from type checkng and decorators into its own module.
 - Then wrap typechecking and decorators so they can use the nanoloader.
 - Then host them somewhere.
+  - Possible hosting locations https://media.dosaygo.com/codebase/
 
 # basics
 
