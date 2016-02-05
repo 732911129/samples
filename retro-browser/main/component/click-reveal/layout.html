@@ -1,9 +1,0 @@
-<template>
-	<op-int on=click attach-parent={{attach-parent}} attach-parent-default="input-addon">
-		<op-call id=get_pos function={{rn.layout.get_float_position_relative_to}} selector-parent="input-addon" selector="::shadow input" wait-result anchor=left ></op-call>
-		<op-mv from-parent="op-int" from="#get_pos[result]" to-parent="op-int" to="#set_pos[pos]"></op-mv>
-		<op-call id=set_pos function={{rn.layout.position}} selector="float-panel{{panel-selector}}"></op-call>
-		<op-mv from-parent="input-addon" from="[active]" to="float-panel{{panel-selector}}[active]"></op-mv>
-		<op-call function={{rn.layout.match_size}} selector="float-panel{{panel-selector}}" match-parent="input-addon" match-width="::shadow input"></op-call>
-	</op-int>
-</template>
