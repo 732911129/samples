@@ -1,0 +1,40 @@
+module: project-staging
+runtime: python27
+api_version: 1
+threadsafe: true
+instance_class: F1
+
+default_expiration: "1s"
+
+handlers:
+
+- url: /.well\-known/acme\-challenge/.*
+  static_files: letsencrypt.txt
+  upload: letsencrypt\.txt
+  secure: optional
+
+- url: /json\-test
+  script: json-test.app
+  secure: always
+
+- url: /codebase
+  static_dir: basics
+  secure: always
+
+- url: /usfe/server/.*
+  script: usfe.server.threads
+  secure: always
+
+- url: /usfe/client
+  static_dir: usfe/client
+  secure: always
+
+- url: /
+  static_files: static/index.html
+  upload: index\.html
+  secure: always
+
+- url: .*
+  static_dir: static
+  secure: always
+
