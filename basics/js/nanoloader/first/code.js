@@ -22,7 +22,8 @@
     }
 
     function insertScriptTag( p, whenLoaded ) {
-      const tag = document.createElement( 'script' );
+      const 
+        tag = document.createElement( 'script' );
       tag.addEventListener( 'load', () => whenLoaded() );
       tag.src = p;
       document.documentElement.appendChild( tag );
@@ -75,7 +76,8 @@
     }
 
     function loadModuleRequirements( name, whenModuleLoaded ) {
-      module_requires = self.loader[ name ].next().value;
+      const 
+        module_requires = self.loader[ name ].next().value;
 
       loadRequirements( name, module_requires, whenModuleLoaded );
     }
@@ -113,7 +115,7 @@
         console.info( `${ name } is already loading.` );
       else {
         loadModule( name, whenModuleLoaded );
-        self.loader[ name ] = { status : 'file requested, not yet loaded' };
+        self.loader[ name ] = { status : 'file requested, not yet loaded, or may not be a nanoloader module' };
       }
     }
 
