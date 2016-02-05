@@ -8,11 +8,6 @@ default_expiration: "1s"
 
 handlers:
 
-- url: /.well\-known/acme\-challenge/.*
-  static_files: letsencrypt.txt
-  upload: letsencrypt\.txt
-  secure: optional
-
 - url: /json\-test
   script: json-test.app
   secure: always
