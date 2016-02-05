@@ -13,7 +13,6 @@ project staging -> labs -> media
 - basics
 - usfe
 - sample works
-- web component browser ( repurpose part of previous semocracy prototype code, removing everything but the browser )
 
 ## current todo
 
