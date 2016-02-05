@@ -1,0 +1,77 @@
+<body>
+  <h1>This is a demo of decorators and type checking</h1>
+  <script src=/codebase/js/nanoloader/first/code.js></script>
+  <script>
+    "use strict";
+
+    console.log( 'App loading...' );
+    requestModules( 'aurelius filigree', () => ( app(), console.log( 'App loaded.' ) ) );
+
+    function app() { 
+      function *a0() {
+        let out = 0;
+        while( true ) {
+          let inval = yield out;
+          out = inval + 1;
+        }
+      }
+      function *a1() {
+        let out = 1;
+        while( true ) {
+          let inval = yield out;
+          out = inval * 2;
+        }
+      }
+      function *stream( source ) {
+        for( let item of source ) yield item;
+      }
+      self.a0 = a0;
+      self.a1 = a1;
+      self.stream = stream;
+      class Adder {
+        [T `add ${{ a : Generator }} ${{ b : Generator }} -> ${ Generator }` ] (a, b) {
+          return (function*() {
+            let outval = 2;
+            while(true) {
+              let inval = yield outval;
+              outval = b.next( inval );
+              if( outval.done ) break;
+              outval = a.next( outval.value );
+              if( outval.done ) break;
+              outval = outval.value;
+            }
+          }());
+        }
+        [T `add ${{ a : Function }} ${{b : Function }} -> ${ Function }` ] (a, b) {
+          return function() {
+            return a( b( ...arguments ) );
+          }
+        }
+        [T `add ${{ a : Array }} ${{ b : Array }} -> ${ Array }` ] (a, b) {
+          const c = Array.from ( a );
+          c.push( ... b );
+          return c;
+        }
+        [T `add ${{ a : String }} ${{ b : String }} -> ${ String }` ] (a, b) {
+          return a + b;
+        }
+        [T `add ${{ a : Number }} ${{ b : Number }} -> ${ Number }` ] (a, b) {
+          return a + b;
+        }
+        [T `halve ${{ x : Number }} -> ${ Number }` ]
+        ( x ) {
+          return x/2;
+        }
+        [T `halve ${{ x : Array }} -> ${ Array }` ]
+        ( x ) {
+          return x.splice( x.length/2, x.length/2 );
+        }
+      }
+      Type(Adder);
+
+      const asp = new Adder();
+      self.asp = asp;
+    }
+  </script>
+</body>
+
