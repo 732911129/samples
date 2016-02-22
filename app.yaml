@@ -29,7 +29,7 @@ handlers:
   upload: index\.html
   secure: always
 
-- url: .*
+- url: /
   static_dir: static
   secure: always
 
