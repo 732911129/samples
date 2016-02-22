@@ -1,0 +1,42 @@
+<script>
+  console.log( `
+    Maybe something with 
+    media capture
+    ?
+    ` );
+  console.log( `
+    Actually going to go with something
+    for input elements
+    mixing together list autocomplete and some other attributes
+    ` );
+</script>
+
+<form id=searcher>
+  <input name=query type=search autocomplete=on list=growing autocapitalize=on required>
+</form>
+<datalist id=growing></datalist>
+
+<script>
+  const
+    searcher = document.querySelector( '#searcher' ),
+    query = searcher.querySelector( '[name="query"]' ),
+    growing = document.querySelector( '#growing' );
+
+  searcher.addEventListener( 'change', grow_list );
+  searcher.addEventListener( 'submit', grow_list );
+
+  growing.set = new Set();
+
+  function grow_list( e ) {
+    e.preventDefault();
+    const
+      value = query.value;
+
+    if ( ! growing.set.has( value ) ) {
+      growing.insertAdjacentHTML( 'afterbegin', `<option value="${ value.replace( /"/, '&quot;' ) }">` ); 
+      growing.set.add( value );
+      console.log( `New : ${ value }` );
+      console.log( `Seen : ${ [ ...growing.set.values() ] }` );
+    }
+  }
+</script>
