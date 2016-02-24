@@ -17,7 +17,7 @@ Sample work making a feature request component.
 
 3. It will be live at:
 
-  http://localhost:8080/
+  [http://localhost:8080/](http://localhost:8080/)
 
 ## how to run it in online ?
 
