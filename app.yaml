@@ -1,0 +1,21 @@
+module: feature-request-sample
+runtime: python
+threadsafe: true
+
+handlers:
+
+- url: /api
+  script: back.app
+  secure: always
+
+- url: /
+  static_files: front/app.html
+  upload: front\/app\.html
+  secure: always
+
+- url: /
+  static_dir: front
+  secure: always
+
+
+

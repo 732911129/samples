@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <style>
+      * {
+        border: 1px solid lime;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Feature</h1>
+    <form method=POST action=/api>
+      <p>
+        <label for=title>Title</label>
+        <input name=title id=title>
+      </p>
+      <p>
+        <label for=body>Body</label>
+        <textarea name=body id=body></textarea>
+      </p>
+      <p>
+        <button>Request</button>
+      </p>
+    </form>
+  </body>
+</html>
+

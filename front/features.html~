@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>Features</title>
+    <style>
+      :root, body {
+        border: 0;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Features</h1>
+    <ul>
+
+    </ul>
+  </body>
+</html>
