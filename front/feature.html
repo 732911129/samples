@@ -26,7 +26,7 @@
         <label class=explainer for=description>
         A long description of the feature request.
         </label>
-        <textarea required name=description id=description></textarea>
+        <textarea required resize-triggers="mouseup" name=description id=description></textarea>
       </dd>
       <dd>
         <label for=client>Client</label>
@@ -78,15 +78,15 @@
             <label class=explainer for=client_contact_person>
               The person at the client who requested this feature, or the point of contact for interaction about this feature.
             </label>
-            <input type=text name=client_contact_person id=client_contact_person pattern=".{3,60}"
-              title="Good client contact names are between 3 and 60 characters">
+            <input type=text name=client_contact_person id=client_contact_person pattern=".{2,60}"
+              title="Good client contact names are between 2 and 60 characters">
           </dd>
           <dd>
             <label for=client_contact_person_contact_information>Client Contact Person Contact Information</label>
             <label class=explainer for=client_contact_person_contact_information>
               The contact details of this person.
             </label>
-            <input required type=text name=client_contact_person_contact_information id=client_contact_person_contact_information pattern=".{5,140}"
+            <input type=text name=client_contact_person_contact_information id=client_contact_person_contact_information pattern=".{5,140}"
               title="Good client contact details are between 5 and 140 characters">
           </dd>
           <dd>
@@ -96,6 +96,28 @@
             </label>
             <input type=text name=client_contact_person_role id=client_contact_person_role pattern=".{3,60}"
               title="Good client contact person roles are between 3 and 60 characters.">
+          </dd>
+          <dd>
+            <label for=interaction_notes>Interaction Notes</label>
+            <label class=explainer for=interaction_notes>
+              Notes for the interaction, if any.
+            </label>
+            <textarea resize-triggers="mouseup" name=interaction_notes id=interaction_notes></textarea>
+          </dd>
+          <dd>
+            <label for=human_receiver>Human Receiving Feature Request</label>
+            <label class=explainer for=human_receiver>
+              The human who received the feature request and entered it.
+            </label>
+            <input type=text name=human_receiver id=human_receiver pattern=".{2,60}"
+              title="Good human names are between 2 and 60 characters">
+          </dd>
+          <dd>
+            <label for=receiver_priority>Receiver Priority</label>
+            <label class=explainer for=receiver_priority>
+              A numbered priority with regards to the receiver of this feature request.
+            </label>
+            <input required type=number min=1>
           </dd>
         </details>
       </dd>

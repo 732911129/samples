@@ -94,3 +94,11 @@ Ideas for improvements:
 
 Ideas for improvements:
 
+- trigger resize on textarea change size. 
+  - Currently done using mouseup. This is somewhat wasteful as it triggers on every click. 
+
+## Form Interaction:
+
+Ideas for improvements:
+
+- trigger display of the explainer tooltip on hover, or perhasp on clicking a '?' icon next to the input.
