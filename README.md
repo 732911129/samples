@@ -11,8 +11,9 @@ Sample work making a feature request component.
 1. Install gcloud.
   1. `curl https://sdk.cloud.google.com | bash`
   2. Restart your terminal shell.
-  3. `gcloud init`
-  4. `gcloud components install app-engine-python`
+  3. Go to: [https://console.developers.google.com/](https://console.developers.google.com/) and createa a project.
+  4. `gcloud init`
+  5. `gcloud components install app-engine-python`
 
 2. Run:
 
@@ -28,8 +29,9 @@ Sample work making a feature request component.
 1. Install gcloud if you haven't already:
   1. `curl https://sdk.cloud.google.com | bash`
   2. Restart your terminal shell.
-  3. `gcloud init`
-  4. `gcloud components install app-engine-python`
+  3. Go to: [https://console.developers.google.com/](https://console.developers.google.com/) and createa a project.
+  4. `gcloud init`
+  5. `gcloud components install app-engine-python`
 
 2. Run:
 
