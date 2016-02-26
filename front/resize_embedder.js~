@@ -14,8 +14,7 @@
   }
 }
 {
-  function resize() {
-    console.log( `Resizing` );
+  function resize( event, block_resize ) {
     const 
       parent = self.parent.document,
       parent_uri = parent.location.href,
@@ -37,16 +36,52 @@
           embed[src="${ absolute_src }"],
           embed[src="${ relative_src }"],
           embed[src$="${ relative_src }"]               
-        `),
-      rect = document.documentElement.getBoundingClientRect();
-
-    console.log( `Seeking embed with src corresponding to ${ full_src }` );
-    console.log( `Found: `, embed );
-    console.log( `My content: `, rect );
-
+        `);
     if( embed ) {
-      embed.width = rect.width;
-      embed.height = rect.height;
+      setTimeout( () => {  
+        const
+          doc_style = getComputedStyle( document.documentElement ),
+          embedder_rect = embed.getBoundingClientRect(),
+          client_rect = document.documentElement.getBoundingClientRect(),
+          embedder = { 
+              width : Math.round( embedder_rect.width ), 
+              height : Math.round( embedder_rect.height ) 
+            },
+          client = { 
+              width : Math.round( client_rect.width ), 
+              height : Math.round( client_rect.height ) 
+            },
+          scroll = { 
+              width : document.documentElement.scrollWidth, 
+              height : document.documentElement.scrollHeight 
+            },
+          border = { 
+              width : ( parseInt( doc_style.borderLeftWidth ) || 0 ) + ( parseInt( doc_style.borderRightWidth ) || 0 ),
+              height : ( parseInt( doc_style.borderTopWidth ) || 0 ) + ( parseInt( doc_style.borderBottomWidth ) || 0 )
+            },
+          content = {
+              width : scroll.width + border.width,
+              height : scroll.height + border.height
+            },
+          scrollbars = {
+            vertical : content.height > client.height || content.height > embedder.height,
+            horizontal : content.width > client.width || content.width > embedder.width
+          };
+        console.group( `Resizing Dimensions` );
+        console.log( `Embedder `, JSON.stringify( embedder ) );
+        console.log( `Client `, JSON.stringify( client ) );
+        console.log( `Scroll `, JSON.stringify( scroll ) );
+        console.log( `Border `, JSON.stringify( border ) );
+        console.log( `Content `, JSON.stringify( content ) );
+        console.log( `Scrollbars `, JSON.stringify( scrollbars ) );
+        console.groupEnd();
+        console.log('\n');
+
+        if( ! block_resize ) {
+          embed.height = content.height + ( scrollbars.horizontal ? 15 : 0 );
+          embed.width = content.width + ( scrollbars.vertical ? 15 : 0 );
+        }
+      }, 500 );
     }
   }
   resize();
@@ -63,6 +98,9 @@
 {
   // resize when custom event triggered. 
   document.addEventListener( 'component-resize', resize );
+  window.addEventListener( 'load', resize );
+  window.addEventListener( 'mouseup', resize );
+  window.addEventListener( 'resize', resize );
 }
 {
   // components that trigger resize 

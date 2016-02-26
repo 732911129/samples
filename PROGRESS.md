@@ -96,9 +96,15 @@ Ideas for improvements:
 
 - trigger resize on textarea change size. 
   - Currently done using mouseup. This is somewhat wasteful as it triggers on every click. 
+  - However, it also works, and it's not that wasteful ( not as wasteful as say, mousemove ).
+- handle these interesting bugs:
+  - if dimensions of embedder are intrinsically sized ( min, max or fit -content ), then scrollbars appear on the content or embedder, and yet the script does not detect these. this is incorrect.
+  - the same undetectable scrollbars occur if overflow, of the embedder, is set to hidden. this is incorrect. 
+  - if we resize a textarea, the component correctly becomes larger to accommodate it. however, if we then shrink the textarea, the component does not shrink with it. this is incorrect. 
 
 ## Form Interaction:
 
 Ideas for improvements:
 
 - trigger display of the explainer tooltip on hover, or perhasp on clicking a '?' icon next to the input.
+

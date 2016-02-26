@@ -5,7 +5,6 @@
     <style>
       embed {
         display:block;
-        box-sizing: border-box;
       }
     </style>
   </head>
