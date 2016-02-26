@@ -86,7 +86,7 @@
   }
   resize();
   self.resize = resize;
-}())
+}());
 (function () {
   function emit_resize( target ) {
     const
@@ -94,14 +94,14 @@
     target.dispatchEvent( e ); 
   }
   self.emit_resize = emit_resize;
-}())
+}());
 (function () {
-  // resize when custom event triggered. 
+  //resize when custom event triggered. 
   document.addEventListener( 'component-resize', resize );
   window.addEventListener( 'load', resize );
   window.addEventListener( 'mouseup', resize );
   window.addEventListener( 'resize', resize );
-}())
+}());
 (function () {
   // components that trigger resize 
   const
@@ -115,5 +115,5 @@
     // set timeout is necessary so that redraw can happen before we measure the size 
     events_to_resize_on.forEach( name => el.addEventListener( name, () => setTimeout( () => emit_resize( el ) , 0 ) ) );
   } );
-}())
+}());
 
