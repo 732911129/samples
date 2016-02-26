@@ -1,7 +1,7 @@
 "use strict";
 // this script reizes the embedding embed tag to fit the dimensions of the embedded content
 // doing so on load and also on resize
-{
+(function () {
   Object.defineProperty( String.prototype, 'subtract', { get : () => subtract } );
 
   function subtract( subtractand ) {
@@ -12,8 +12,8 @@
     }
     return this.slice( i );
   }
-}
-{
+}());
+(function () {
   function resize( event, block_resize ) {
     const 
       parent = self.parent.document,
@@ -32,10 +32,10 @@
                                                           // tho it can also catch cases not caught
                                                           // by others such as '../'
       embed = parent.querySelector( `
-          embed[src="${ full_src }"],
-          embed[src="${ absolute_src }"],
-          embed[src="${ relative_src }"],
-          embed[src$="${ relative_src }"]               
+          object[data="${ full_src }"],
+          object[data="${ absolute_src }"],
+          object[data="${ relative_src }"],
+          object[data$="${ relative_src }"]               
         `);
     if( embed ) {
       setTimeout( () => {  
@@ -86,23 +86,23 @@
   }
   resize();
   self.resize = resize;
-}
-{
+}())
+(function () {
   function emit_resize( target ) {
     const
       e = new CustomEvent( 'component-resize', { bubbles: true } );
     target.dispatchEvent( e ); 
   }
   self.emit_resize = emit_resize;
-}
-{
+}())
+(function () {
   // resize when custom event triggered. 
   document.addEventListener( 'component-resize', resize );
   window.addEventListener( 'load', resize );
   window.addEventListener( 'mouseup', resize );
   window.addEventListener( 'resize', resize );
-}
-{
+}())
+(function () {
   // components that trigger resize 
   const
     resize_triggers = Array.from( document.querySelectorAll( '[resize-triggers]' ) );
@@ -115,5 +115,5 @@
     // set timeout is necessary so that redraw can happen before we measure the size 
     events_to_resize_on.forEach( name => el.addEventListener( name, () => setTimeout( () => emit_resize( el ) , 0 ) ) );
   } );
-}
+}())
 

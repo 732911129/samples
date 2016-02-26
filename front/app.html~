@@ -5,13 +5,14 @@
     <style>
       embed {
         display:block;
+        border: 2px solid red;
       }
     </style>
   </head>
   <body>
     <h1>Feature Request Sample</h1>
-    <embed src=/feature.html>
-    <embed src=/features.html>
+    <object data=/feature.html></object>
+    <object data=/features.html></object>
   </body>
 </html>
 
