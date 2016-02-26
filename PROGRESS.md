@@ -31,8 +31,8 @@ Idea is just to build:
 ### Client Data Field
 
 - Can we have multiple clients?
-  - Assuming, no, because generally feature requests will be made my a client.
-  - However, like the "star", feature of issues in many bug systems, often different customers will desire the same features, and tracking who and how many is one way to guage importance. 
+  - Assuming, no, because generally feature requests will be made by one client.
+  - However, like the "star" feature of issues in many bug systems, often different customers will desire the same features, and tracking who and how many is one way to guage importance. 
   - In this case, tho, providing paid SaaS, the economics are slightly reversed, so that almost *any* feature request by a client works to be honoured, and often, each client receives a separate version of the application tailored for them, so that, the utility of aggregating to both track feature importance and ship features into a single product is not a requirement, while, handling separate products, and tracking the importance of features within those client products, is important.
 
 ### Product Area Data Field

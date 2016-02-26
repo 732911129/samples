@@ -9,6 +9,11 @@ Sample work making a feature request component.
 ## how to run it locally?
 
 1. Install gcloud.
+  1. `curl https://sdk.cloud.google.com | bash`
+  2. Restart your terminal shell.
+  3. Go to: [https://console.developers.google.com/](https://console.developers.google.com/) and create a project.
+  4. `gcloud init`
+  5. `gcloud components install app-engine-python`
 
 2. Run:
 
@@ -21,12 +26,16 @@ Sample work making a feature request component.
 
 ## how to run it in online ?
 
-1. Install gcloud.
+1. Install gcloud if you haven't already:
+  1. `curl https://sdk.cloud.google.com | bash`
+  2. Restart your terminal shell.
+  3. Go to: [https://console.developers.google.com/](https://console.developers.google.com/) and create a project.
+  4. `gcloud init`
+  5. `gcloud components install app-engine-python`
 
 2. Run:
 
   - `cd feature-request-sample`
-  - `gcloud init` ( and follow the prompts if you have never run gcloud init before )
   - `gcloud preview app deploy ./app.yaml --version 1-0 --promote`
 
 3. It will be live at:
