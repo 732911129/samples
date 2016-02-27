@@ -2,6 +2,12 @@
 
 This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Progress overview 
+
+- a50c727
+  - Working in FF Nightly ( 47 )
+  - Working in Chrome Beta and up ( 49 + )
+
 ## Design Sketches
 
 The description is well specified, since they provide a clear target data structure.
