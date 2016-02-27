@@ -41,6 +41,7 @@
       setTimeout( () => {  
         const
           doc_style = getComputedStyle( document.documentElement ),
+          embed_style = getComputedStyle( embed ),
           embedder_rect = embed.getBoundingClientRect(),
           client_rect = document.documentElement.getBoundingClientRect(),
           embedder = { 
@@ -51,23 +52,38 @@
               width : Math.round( client_rect.width ), 
               height : Math.round( client_rect.height ) 
             },
-          scroll = { 
-              width : document.documentElement.scrollWidth, 
-              height : document.documentElement.scrollHeight 
-            },
           border = { 
-              width : ( parseInt( doc_style.borderLeftWidth ) || 0 ) + ( parseInt( doc_style.borderRightWidth ) || 0 ),
-              height : ( parseInt( doc_style.borderTopWidth ) || 0 ) + ( parseInt( doc_style.borderBottomWidth ) || 0 )
+              content : { 
+                width : ( parseInt( doc_style.borderLeftWidth ) || 0 ) + ( parseInt( doc_style.borderRightWidth ) || 0 ),
+                height : ( parseInt( doc_style.borderTopWidth ) || 0 ) + ( parseInt( doc_style.borderBottomWidth ) || 0 )
+              }, 
+              embed : {
+                width : ( parseInt( embed_style.borderLeftWidth ) || 0 ) + ( parseInt( embed_style.borderRightWidth ) || 0 ),
+                height : ( parseInt( embed_style.borderTopWidth ) || 0 ) + ( parseInt( embed_style.borderBottomWidth ) || 0 )
+              }
+            },
+          scroll = { 
+              width : document.documentElement.scrollWidth + border.content.width, 
+              height : document.documentElement.scrollHeight + border.content.height 
             },
           content = {
-              width : scroll.width + border.width,
-              height : scroll.height + border.height
+              width : client.width,
+              height : client.height
             },
           scrollbars = {
-            vertical : content.height > client.height || content.height > embedder.height,
-            horizontal : content.width > client.width || content.width > embedder.width
+            content : {
+              vertical : content.height > scroll.height, 
+              horizontal : content.width > scroll.width
+            }, 
+            embedder : {
+              vertical : content.height > embedder.height,
+              horizontal : content.width > embedder.width
+            }
           };
-        console.group( `Resizing Dimensions` );
+
+        // apply size corrections based on scrollbars 
+
+        console.group( `Resizing Dimensions for ${ location.href }` );
         console.log( `Embedder `, JSON.stringify( embedder ) );
         console.log( `Client `, JSON.stringify( client ) );
         console.log( `Scroll `, JSON.stringify( scroll ) );
@@ -78,8 +94,8 @@
         console.log('\n');
 
         if( ! block_resize ) {
-          embed.height = content.height + ( scrollbars.horizontal ? 15 : 0 );
-          embed.width = content.width + ( scrollbars.vertical ? 15 : 0 );
+          embed.height = content.height + border.embed.height;
+          embed.width = content.width + border.embed.width;
         }
       }, 500 );
     }
@@ -100,7 +116,7 @@
   document.addEventListener( 'component-resize', resize );
   window.addEventListener( 'load', resize );
   window.addEventListener( 'mouseup', resize );
-  window.addEventListener( 'resize', resize );
+  //window.addEventListener( 'resize', resize );
 }());
 (function () {
   // components that trigger resize 

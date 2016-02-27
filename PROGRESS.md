@@ -94,19 +94,40 @@ Ideas for improvements:
 
 Ideas for improvements:
 
+- handle these interesting bugs:
+  - ALL DONE
+
 - DONE - bugs fixed
+  - DONE - fascinating bug in firefox where the embedding object keeps expanding. The calculations used for the width, which work so well in Chrome, are likely the cause of this bug in Firefox.
+    - [ NOTES ] - In work on the other bugs, it appears this one has ceased to have effect.
+    - [ SOLVED ] 
+  - DONE - when a mouse is connected, a scroll bar appears on the embedded content. And it seems that the calculated size of the embedder is incorrect, and possibly that this scroll bar is not detected. This is incorrect. If a scrollbar is to appear, then it works to detect it. Or perhaps there is a way to prevent a scrollbar appearing in embedded content, even when a mouse is connected. Correction: this bug appears now in chrome whether a mouse is connected or not. The scrollbar appears to be inserted on the embedding object tag.  
+    - [ UPDATE ] - removing the scrollbar tests from embedded dimensions calculation has appeared to remove this bug.
+    - [ NOTES ] - In work on the other bugs, it appears this one has ceased to have effect. 
+    - [ SOLVED ] 
+  - DONE - scroll bars around embedding tag persist in firefox. This appears to be because the border if any of the embedding tag is not being added to the embedding tag's dimensions. 
+    - [ EXPERIMENT ] - try styling embedding tag with box-sizing:border-box. 
+      - [ RESULT ] - now the scroll bars persist in both chrome and firefox. What appears to be happening is the border and then the scroll bars are taking up space in the content zone. 
+    - [ EXPERIMENT ] - try capturing the border style if any of the embedding tag and applying it to the embedding tag's dimensions. 
+      - [ RESULT ] - this works to remove the scroll bars and now there is a little gap between the embedding tag and it's content. It may work to further create an improvement in the calculation of the correct size of the embedding tag. 
+    - [ SOLVED ]  
+  - DONE - In firefox the scroll height is equal to the size of the embedded, even when the document content is shorter than this. This leaves the calculated content height, and therefore the size of the embedder too tall. This bug is likely because we incorrectly calculated the content height based on the scroll height and not on the height of the documentElement ( that is the client height ). Corrected this.
+    - [ UPDATE ] - correct content height to be calculated on client height, removes this bug in Firefox. 
+    - [ SOLVED ]
+  - DONE - In firefox the width of the document element will not collapse to fit it's contents even tho display table or width fit content are set.
+    - [ SOLVED ] - styling :root with width: min-content works to achieve the embedded content's document element fitting its content in both firefox and chrome.
+  - DONE - the same undetectable scrollbars occur if overflow, of the embedder, is set to hidden. this is incorrect. 
+    - [ UNNECESSARY ] - no need to set overflow on embedding tag. 
+  - DONE - if dimensions of embedder are intrinsically sized ( min, max or fit -content ), then scrollbars appear on the content or embedder, and yet the script does not detect these. this is incorrect.
+    - [ UNNECESSARY ] - contributing reason : no need to size embedding tag intrinsically. 
+  - DONE - if a mouse is connected a scrollbar appears on the embedded document. And is then removed, then reappears. 
+    - [ SOLVED ] - remove the resize handler from the window 'resize' event.
   - DONE - trigger resize on textarea change size. 
     - Currently done using mouseup. This is somewhat wasteful as it triggers on every click. 
     - However, it also works, and it's not that wasteful ( not as wasteful as say, mousemove ).
   - DONE - if we resize a textarea, the component correctly becomes larger to accommodate it. however, if we then shrink the textarea, the component does not shrink with it. this is incorrect. 
     - [ SOLVED ] - setting the width of :root in the embedded document to width: fit-content solves this. 
     - [ SOLVED ] - setting dispaly: table solves this ( in a cross browser way to size a box to fit its content. 
-
-- handle these interesting bugs:
-  - if a mouse is connected a scrollbar appears on the embedded document. And is then removed, then reappears. 
-  - if dimensions of embedder are intrinsically sized ( min, max or fit -content ), then scrollbars appear on the content or embedder, and yet the script does not detect these. this is incorrect.
-  - the same undetectable scrollbars occur if overflow, of the embedder, is set to hidden. this is incorrect. 
-  - fascinating bug in firefox where the embedding object keeps expanding. The calculations used for the width, which work so well in Chrome, are likely the cause of this bug in Firefox.
 
 ## Form Interaction:
 
