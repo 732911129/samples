@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
+    <style id=layout>
       :root {
         border: 1px solid lime;
         width: min-content;
@@ -20,10 +20,28 @@
         justify-content: space-between;
       }
       dd label {
-        margin-right: 0.5rem;
+        margin-right: 1.5rem;
       }
       dd input {
         align-self: flex-start;
+      }
+      textarea, input {
+        padding: 0.2rem 0.5rem 0.3rem;
+      }
+    </style>
+    <style id=color>
+      :root {
+        background: blue;
+        color: yellow;
+      }
+    </style>
+    <style id=fonts>
+      :root {
+        font-family: Tahoma, Geneva;
+        font-family: "Trebuchet MS", Helvetica;
+      }
+      textarea, input {
+        font: inherit;
       }
     </style>
   </head>
@@ -134,7 +152,7 @@
             <label class=explainer for=receiver_priority>
               A numbered priority with regards to the receiver of this feature request.
             </label>
-            <input required type=number min=1>
+            <input type=number min=1>
           </dd>
         </details>
       </dd>
