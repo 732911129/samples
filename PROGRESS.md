@@ -95,7 +95,8 @@ Ideas for improvements:
 Ideas for improvements:
 
 - handle these interesting bugs:
-  - ALL DONE
+  - ALL DONE - first set
+  - after adding some styling to feature.html, scrollbars appear in Chrome after the details section is expanded and then contracted. 
 
 - DONE - bugs fixed
   - DONE - fascinating bug in firefox where the embedding object keeps expanding. The calculations used for the width, which work so well in Chrome, are likely the cause of this bug in Firefox.
