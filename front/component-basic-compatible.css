@@ -25,6 +25,10 @@
   textarea {
     resize: vertical;
   }
+/* type annotations */
+  .type {
+    display: none;
+  }
 /* layout two screen sizes screen */
   /* details */
     /*
@@ -41,6 +45,9 @@
     *{}
     #component {
       text-align: center;
+    }
+    #component > * {
+      text-align: left;
     }
     object {
       margin: 16px auto;
