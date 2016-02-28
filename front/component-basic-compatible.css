@@ -7,7 +7,10 @@
   }
   #component {
     padding: 8px 16px;
-    margin: 0;
+    margin: 0 auto;
+  }
+  #component:not( scrollable ) {
+    overflow: none;
   }
   object {
     display: inline-block;
@@ -18,6 +21,30 @@
   object:not(.js-active) {
     min-width: 255px;
     min-height: 127px;
+  }
+  textarea {
+    resize: vertical;
+  }
+/* layout two screen sizes screen */
+  /* details */
+    /*
+     objects basically just layout like cards that can tile across the screen 
+     if there is sufficient width
+     and down the screen 
+    */
+  @media ( min-width: 600px ) {
+    object {
+      margin: 16px;
+    }
+  }
+  @media ( max-width: 599px ) {
+    *{}
+    #component {
+      text-align: center;
+    }
+    object {
+      margin: 16px auto;
+    }
   }
 /* fonts */
   :root {
