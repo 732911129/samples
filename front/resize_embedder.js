@@ -5,7 +5,7 @@
   Object.defineProperty( String.prototype, 'subtract', { get : () => subtract } );
 
   function subtract( subtractand ) {
-    let i = 0;
+    var i = 0;
     while( i < this.length ) {
       if( this[ i ] !== subtractand[ i ] ) break;
       i++;
@@ -15,7 +15,7 @@
 }());
 (function () {
   function resize( event, block_resize ) {
-    const 
+    var 
       parent = self.parent.document,
       parent_uri = parent.location.href,
       my_uri = self.document.location,
@@ -39,7 +39,7 @@
         `);
     if( embed ) {
       setTimeout( () => {  
-        const
+        var
           doc_style = getComputedStyle( document.documentElement ),
           embed_style = getComputedStyle( embed ),
           embedder_rect = embed.getBoundingClientRect(),
@@ -107,7 +107,7 @@
 }());
 (function () {
   function emit_resize( target ) {
-    const
+    var
       e = new CustomEvent( 'component-resize', { bubbles: true } );
     target.dispatchEvent( e ); 
   }
@@ -122,16 +122,51 @@
 }());
 (function () {
   // components that trigger resize 
-  const
+  var
     resize_triggers = Array.from( document.querySelectorAll( '[resize-triggers]' ) );
 
   console.log( `Parts with resize triggers `, resize_triggers );
 
   resize_triggers.forEach( el => {
-    const
+    var
       events_to_resize_on = el.getAttribute( 'resize-triggers' ).split( /\s+/g );
     // set timeout is necessary so that redraw can happen before we measure the size 
     events_to_resize_on.forEach( name => el.addEventListener( name, () => setTimeout( () => emit_resize( el ) , 0 ) ) );
   } );
+}());
+(function () {
+  // resize negotiation
+  var 
+    INTERVAL = 50, // 3 frames
+    index,
+    steps = [
+      `
+        page adjusts layout to embedded tag
+        page gives more or less space to embedded tag,
+        embedding tag occupies available space,
+        embedded content is reflowed,
+        branch(
+          if embedded content is too large for space, then embedded tag minimum is set to content dimensions
+          if embedded content is too small for space, then embedded tag maximum is set to content dimensions
+        )
+      `
+    ];
+
+  function negotiate_resize() {
+    index = 0;
+    yield_then_run_next_step();
+  }
+
+  function next_step() {
+    var 
+      current_step = steps[ index ];
+    current_step();
+    index++;
+    yield_then_run_next_step();
+  }
+
+  function yield_then_run_next_step() {
+    setTimeout( next_step, INTERVAL );
+  }
 }());
 
