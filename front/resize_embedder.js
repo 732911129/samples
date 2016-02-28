@@ -114,7 +114,7 @@ self.resize_off = false;
               embed.classList.add( 'js-active' );
             }
           }
-        }, 500 );
+        }, 40 );
       }
     }
     resize();
