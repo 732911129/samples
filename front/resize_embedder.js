@@ -1,7 +1,7 @@
 "use strict";
 // this script reizes the embedding embed tag to fit the dimensions of the embedded content
 // doing so on load and also on resize
-self.resize_off = true;
+self.resize_off = false;
 (function () {
   Object.defineProperty( String.prototype, 'subtract', { get : () => subtract } );
 
@@ -83,6 +83,9 @@ self.resize_off = true;
             }
           };
 
+        if( component.hasAttribute( 'ignore-content-dimensions' ) ) {
+          return;
+        }
         // apply size corrections based on scrollbars 
 
         console.group( `Resizing Dimensions for ${ location.href }` );
@@ -96,10 +99,15 @@ self.resize_off = true;
         console.log('\n');
 
         if( ! block_resize && ! self.resize_off ) {
-          embed.style.height = content.height + border.embed.height;
-          embed.style.width = content.width + border.embed.width;
+          if( ! component.hasAttribute( 'ignore-content-height' ) )
+            embed.style.height = content.height + border.embed.height;
+          if( ! component.hasAttribute( 'ignore-content-width' ) )
+            embed.style.width = content.width + border.embed.width;
           //embed.style.minHeight = content.height + border.embed.height;
           //embed.style.minWidth = content.width + border.embed.width;
+          if( ! embed.classList.contains( 'js-active' ) ) {
+            embed.classList.add( 'js-active' );
+          }
         }
       }, 500 );
     }
@@ -120,7 +128,6 @@ self.resize_off = true;
   document.addEventListener( 'component-resize', resize );
   window.addEventListener( 'load', resize );
   window.addEventListener( 'mouseup', resize );
-  //window.addEventListener( 'resize', resize );
 }());
 (function () {
   // components that trigger resize 

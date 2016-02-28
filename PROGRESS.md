@@ -54,6 +54,11 @@ This file tracks design, implementation, test and bugs discussion for feature-re
         - How to determine if the embedded content will use the new space assigned to it?
           - An idea:
             - Set the embedded content's document to the dimensions of the space offered to the embedding tag, and if the embedded content uses the space ( the component resizes in some way ), then update the embedding tag's dimensions to match the component's. 
+        - What's the aim of this? 
+          - The aim is to be able to display a functioning site on any device, using any browser.
+          - There's a whole lot of primitives we can build that use only basic JavaScript, and no flexbox. And so we want to start at a very simple, direct and straight forward base using those, and provide the options to upgrade if we have the capability as well.
+          - Do as much as possible as simply and directly as possible without using flexbox or JavaScript. 
+          - Basically the way to build a component is to build it as a stand alone, and then it can display okay over a range of sizes, and then it is a workable component. 
 
 - Notes on Components
   - [ NOTES ]

@@ -7,14 +7,17 @@
   }
   #component {
     padding: 8px 16px;
+    margin: 0;
   }
   object {
     display: inline-block;
     width:40%;
-    min-width: 255px;
     height:33%;
-    min-height: 127px;
     margin:16px;
+  }
+  object:not(.js-active) {
+    min-width: 255px;
+    min-height: 127px;
   }
 /* fonts */
   :root {
