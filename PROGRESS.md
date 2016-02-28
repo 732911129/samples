@@ -22,33 +22,39 @@ This file tracks design, implementation, test and bugs discussion for feature-re
     - Let's set the sizes calculated for the embedding tag as the minimum dimensions rather than the attribute dimensions.
       - [ DONE ]
     - Let's add another step to the size negotiation that then, if the embedded content does not require ( utilize ) the extra space, we also set the attribute dimensions to those calculated. 
-      - [ NOTES ]
-        - How do we determine if the embedded content utilizes the space ? 
-          - I think we can check if we expand the documentElement to fill the given space, if the body element also expands. If it does, the space is utilized. If it does not, the space is not utilized. 
-        - How do we make the resize function actually happen in steps?
-          - Some ideas:
-            - Between each step it is necessary to yield to the browser, so that any layout can be performed. Since we are not aiming for most advanced ES target, we can implement this using set timeouts. 
-            - The resize function can in fact be the function which co-ordinates the sub steps in this size negotation algorithm. Something like:
-              1. Let next_step be a function that closes over an index, and an array of function each of which is a step in the resize algorithm. 
-              2. Step the index to 0.
-              3. Let next_step perform the following tasks:
-                1. Run the step corresponding to the function at the current index of the array.
-                2. Set a timeout to call next_step.
-                3. Increment the index.
-                4. Return. 
-              4. Run next_step.
-              5. Return.
-            - Okay some ideas:
-              - It works to use the tasks and data flow like functions I wrote for another sample work here. 
-              - It works to simplify the content resizing algorithm. 
-      - [ NOTES ]
-        - The proposed algorithms can produce reflow loops. 
-        - This is okay, since we can just halt them after counting the number of times we reflowed. 
-        - The worst case is we just expand the containing page ( or any other containrs with 'expand-into-scroll' set ), until there is enough space. 
-      - [ What is the point of this ? ] 
-        - The point is that we can roughly specify a type of layout, using embedded content like custom elements, or objects, and have everything size tiself so that it is displayed as we would like, even if this means changing the layout in some way, or expanding into the size of containers that have 'expand into scroll' set. 
-        - The whole point is we don't really have to think about layout any more. We just know that we want these components on screen, with these rough placing between them, and we don't really care where everything goes so long as it basically fits the dimensions of the screen we are on. And we don't have scrollbars on or hidden parts of components where we don't want them. 
-        - Having layout be flexible and not having to worry about it really works. 
+      - [ SESSION 1 ] 
+        - [ NOTES ]
+          - How do we determine if the embedded content utilizes the space ? 
+            - I think we can check if we expand the documentElement to fill the given space, if the body element also expands. If it does, the space is utilized. If it does not, the space is not utilized. 
+          - How do we make the resize function actually happen in steps?
+            - Some ideas:
+              - Between each step it is necessary to yield to the browser, so that any layout can be performed. Since we are not aiming for most advanced ES target, we can implement this using set timeouts. 
+              - The resize function can in fact be the function which co-ordinates the sub steps in this size negotation algorithm. Something like:
+                1. Let next_step be a function that closes over an index, and an array of function each of which is a step in the resize algorithm. 
+                2. Step the index to 0.
+                3. Let next_step perform the following tasks:
+                  1. Run the step corresponding to the function at the current index of the array.
+                  2. Set a timeout to call next_step.
+                  3. Increment the index.
+                  4. Return. 
+                4. Run next_step.
+                5. Return.
+              - Okay some ideas:
+                - It works to use the tasks and data flow like functions I wrote for another sample work here. 
+                - It works to simplify the content resizing algorithm. 
+        - [ NOTES ]
+          - The proposed algorithms can produce reflow loops. 
+          - This is okay, since we can just halt them after counting the number of times we reflowed. 
+          - The worst case is we just expand the containing page ( or any other containrs with 'expand-into-scroll' set ), until there is enough space. 
+        - [ What is the point of this ? ] 
+          - The point is that we can roughly specify a type of layout, using embedded content like custom elements, or objects, and have everything size tiself so that it is displayed as we would like, even if this means changing the layout in some way, or expanding into the size of containers that have 'expand into scroll' set. 
+          - The whole point is we don't really have to think about layout any more. We just know that we want these components on screen, with these rough placing between them, and we don't really care where everything goes so long as it basically fits the dimensions of the screen we are on. And we don't have scrollbars on or hidden parts of components where we don't want them. 
+          - Having layout be flexible and not having to worry about it really works. 
+      - [ SESSION 2 ] 
+        - How to determine if the embedded content will use the new space assigned to it?
+          - An idea:
+            - Set the embedded content's document to the dimensions of the space offered to the embedding tag, and if the embedded content uses the space ( the component resizes in some way ), then update the embedding tag's dimensions to match the component's. 
+
 - Notes on Components
   - [ NOTES ]
     - Components work to be designed as cards, that can adjust layout based on the size of their containers. 
