@@ -1,0 +1,26 @@
+/* layout */
+  :root, body {
+    /* these settings make it easy to calculate the size of the embedding tag */
+    padding:0;
+    margin:0;
+    border:0;
+  }
+  #component {
+    padding: 8px 16px;
+  }
+  object {
+    display: inline-block;
+    width:40%;
+    min-width: 255px;
+    height:33%;
+    min-height: 127px;
+    margin:16px;
+  }
+/* fonts */
+  :root {
+    font-family: Tahoma, Geneva;
+    font-family: "Trebuchet MS", Helvetica;
+  }
+  textarea, input, select, option {
+    font: inherit;
+  }

@@ -49,6 +49,12 @@ This file tracks design, implementation, test and bugs discussion for feature-re
         - The point is that we can roughly specify a type of layout, using embedded content like custom elements, or objects, and have everything size tiself so that it is displayed as we would like, even if this means changing the layout in some way, or expanding into the size of containers that have 'expand into scroll' set. 
         - The whole point is we don't really have to think about layout any more. We just know that we want these components on screen, with these rough placing between them, and we don't really care where everything goes so long as it basically fits the dimensions of the screen we are on. And we don't have scrollbars on or hidden parts of components where we don't want them. 
         - Having layout be flexible and not having to worry about it really works. 
+- Notes on Components
+  - [ NOTES ]
+    - Components work to be designed as cards, that can adjust layout based on the size of their containers. 
+    - In the most basic case all components are simply displayed as cards, left to right ( if there is sufficient width ), and down the page. 
+    - In more involved cases, the components have specific position in relation to each other, or in relation to the screen or both. 
+    - The most basic case is there is no javascript, and no custom styling. In this case, it's not so important that components look amazing ( since there are no custom stylings ), simply that they are available, and display without error. 
 
 ## Progress overview 
 

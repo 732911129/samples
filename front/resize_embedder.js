@@ -1,6 +1,7 @@
 "use strict";
 // this script reizes the embedding embed tag to fit the dimensions of the embedded content
 // doing so on load and also on resize
+self.resize_off = true;
 (function () {
   Object.defineProperty( String.prototype, 'subtract', { get : () => subtract } );
 
@@ -40,10 +41,11 @@
     if( embed ) {
       setTimeout( () => {  
         var
-          doc_style = getComputedStyle( document.documentElement ),
+          component = document.querySelector( '#component' ),
+          doc_style = getComputedStyle( component ),
           embed_style = getComputedStyle( embed ),
           embedder_rect = embed.getBoundingClientRect(),
-          client_rect = document.documentElement.getBoundingClientRect(),
+          client_rect = component.getBoundingClientRect(),
           embedder = { 
               width : Math.round( embedder_rect.width ), 
               height : Math.round( embedder_rect.height ) 
@@ -63,8 +65,8 @@
               }
             },
           scroll = { 
-              width : document.documentElement.scrollWidth + border.content.width, 
-              height : document.documentElement.scrollHeight + border.content.height 
+              width : component.scrollWidth + border.content.width, 
+              height : component.scrollHeight + border.content.height 
             },
           content = {
               width : client.width,
@@ -93,11 +95,11 @@
         console.groupEnd();
         console.log('\n');
 
-        if( ! block_resize ) {
-          //embed.height = content.height + border.embed.height;
-          //embed.width = content.width + border.embed.width;
-          embed.style.minHeight = content.height + border.embed.height;
-          embed.style.minWidth = content.width + border.embed.width;
+        if( ! block_resize && ! self.resize_off ) {
+          embed.style.height = content.height + border.embed.height;
+          embed.style.width = content.width + border.embed.width;
+          //embed.style.minHeight = content.height + border.embed.height;
+          //embed.style.minWidth = content.width + border.embed.width;
         }
       }, 500 );
     }
@@ -141,10 +143,8 @@
     index,
     steps = [
       `
-        page adjusts layout to embedded tag
-        page gives more or less space to embedded tag,
-        embedding tag occupies available space,
-        embedded content is reflowed,
+        page gives more or less space to embedded tag ( width, height unset ),
+        embedding tag occupies available space ( content in tag reflows ),
         branch(
           if embedded content is too large for space, then embedded tag minimum is set to content dimensions
           if embedded content is too small for space, then embedded tag maximum is set to content dimensions

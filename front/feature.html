@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset=utf-8>
+    <title>Feature</title>
+    <link rel=stylesheet href=/component-test-colors.css>
+    <link rel=stylesheet href=/component-basic-compatible.css>
+    <link rel=stylesheet href=/component-modern-upgrade.css>
     <style id=layout>
-      :root {
-        padding: 0;
-        margin: 0;
-      }
-      body {
-        border: 1px solid lime;
+      form {
         width: min-content;
         width: -moz-min-content; /* for firefox */
+        height: min-content;
         padding: 0.5rem;
         margin: 0;
       }
@@ -34,27 +35,9 @@
         padding: 0.2rem 0.5rem 0.3rem;
       }
     </style>
-    <style id=color>
-      :root {
-        background: yellow;
-      }
-      body {
-        background: blue;
-        color: yellow;
-      }
-    </style>
-    <style id=fonts>
-      :root {
-        font-family: Tahoma, Geneva;
-        font-family: "Trebuchet MS", Helvetica;
-      }
-      textarea, input {
-        font: inherit;
-      }
-    </style>
   </head>
   <body>
-    <form method=POST action=/api>
+    <form id=component method=POST action=/api>
       <dt><h1>Feature</h1></dt>
       <dd>
         <label for=title>Title</label>
