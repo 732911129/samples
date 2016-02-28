@@ -2,6 +2,41 @@
 
 This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Todo Sunday
+
+- Embedding tags are responsive.
+  - Strategy:
+    - Minimum dimensions are set by current algorithm for content.
+    - Tags can resize larger than this based on space available on page.
+    - This change to one or both dimensions being larger can adjust the layout of the content inside the embedding tag. 
+    - It seems that with this two party negotiation for the size of the embedding tag, it works to have two stages, or two turns. 
+    - The algorithm is sketched as:
+      - First the page makes some space available for the embedding tag.
+      - The embedding tag sizes itself to occupy this space.
+      - The content then determine's its own size and requests the embedding tag to change size.
+      - The embedding tag changes size. The content is fit. 
+      - The page agjusts ( flows ) its own layout to the size of the embedding tag. 
+  - Implementation:
+    - Let's try to add responsive sizing to the embedding tag.
+      - [ DONE ]
+    - Let's set the sizes calculated for the embedding tag as the minimum dimensions rather than the attribute dimensions.
+      - [ DONE ]
+    - Let's add another step to the size negotiation that then, if the embedded content does not require ( utilize ) the extra space, we also set the attribute dimensions to those calculated. 
+      - [ NOTES ]
+        - How do we determine if the embedded content utilizes the space ? 
+          - I think we can check if we expand the documentElement to fill the given space, if the body element also expands. If it does, the space is utilized. If it does not, the space is not utilized. 
+        - How do we make the resize function actually happen in steps?
+          - Some ideas:
+            - Between each step it is necessary to yield to the browser, so that any layout can be performed. Since we are not aiming for most advanced ES target, we can implement this using set timeouts. 
+            - The resize function can in fact be the function which co-ordinates the sub steps in this size negotation algorithm. Something like:
+              1. Let next_step be a function that closes over an index, and an array of function each of which is a step in the resize algorithm. 
+              2. Let next_step perform the following tasks:
+                1. Run the step corresponding to the function at the current index of the array.
+                2. Set a timeout to call next_step.
+                3. Return. 
+              3. Run next_step.
+              4. Return.
+
 ## Progress overview 
 
 - a50c727

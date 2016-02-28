@@ -94,8 +94,10 @@
         console.log('\n');
 
         if( ! block_resize ) {
-          embed.height = content.height + border.embed.height;
-          embed.width = content.width + border.embed.width;
+          //embed.height = content.height + border.embed.height;
+          //embed.width = content.width + border.embed.width;
+          embed.style.minHeight = content.height + border.embed.height;
+          embed.style.minWidth = content.width + border.embed.width;
         }
       }, 500 );
     }
