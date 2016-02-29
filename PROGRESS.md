@@ -24,6 +24,12 @@ This file tracks design, implementation, test and bugs discussion for feature-re
     3. Obtain the model instance.
     4. Walk over the tree filling each named slot with the corresponding values from the model.
     5. Serve the string representation of the processed HTML as the response.
+  - The rendering algorithm for documents returned from the collection endpoint is:
+    1. Obtain the collections blank definition.
+    2. Parse it into a HTML tree.
+    2. Obtain the paged set of key only results containing the instances ( summary role ) ids.
+    4. For each instance id in the result, insert an object element with its data attribute set to the URI for the summary role document of the instance with that idm, wrap that object element in a list item element, and insert it into the list.
+    5. Return the string version of the processed HTML tree as the response for the endpoint.
 
 ## Todo Sunday
 
