@@ -2,6 +2,29 @@
 
 This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Todo Monday 
+
+- Begin to write back/api.py
+  - Models can be defined from a HTML file like feature.html
+  - The end points are:
+    1. /model/type/feature/id/<id>
+      - A specific instance
+    2. /model/type/feature/role/<role>
+      - role = detail-definition - The blank feature.html definition.
+      - role = summary-definition - An as yet to be written summary view.
+      - role = collection - The blank features.html definition.
+    3. /model/type/feature
+      - All
+  - The instances are returned as HTML documents. 
+    - The content type is text/html
+    - XMLHttpRequest.response is type document
+  - The rendering algorithm for documents returned from the specific instance end point is:
+    1. Obtain the blank definition.
+    2. Parse it into a HTML tree.
+    3. Obtain the model instance.
+    4. Walk over the tree filling each named slot with the corresponding values from the model.
+    5. Serve the string representation of the processed HTML as the response.
+
 ## Todo Sunday
 
 - Embedding tags are responsive.
