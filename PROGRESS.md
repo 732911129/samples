@@ -30,6 +30,13 @@ This file tracks design, implementation, test and bugs discussion for feature-re
     2. Obtain the paged set of key only results containing the instances ( summary role ) ids.
     4. For each instance id in the result, insert an object element with its data attribute set to the URI for the summary role document of the instance with that idm, wrap that object element in a list item element, and insert it into the list.
     5. Return the string version of the processed HTML tree as the response for the endpoint.
+- Sketch of how to use parsing:
+  - We disallow any source HTML containing <!ENTITY since this can lead to malicious entity reference expansion.
+  - We use xml.dom.minidom.parseString to create a document.
+  - We walk the document ( just using a stack and childNodes ).
+  - At each node if there is a modification it works to do perform, it is performed.
+  - Once the tree is walked, the document's toxml method is called and the string produced is written to the response.
+
 
 ## Todo Sunday
 

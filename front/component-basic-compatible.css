@@ -12,13 +12,14 @@
   #component:not( scrollable ) {
     overflow: none;
   }
-  object {
+  iframe {
     display: inline-block;
     width:40%;
     height:33%;
     margin:16px;
+    border:0;
   }
-  object:not(.js-active) {
+  iframe:not(.js-active) {
     min-width: 255px;
     min-height: 127px;
   }
@@ -32,12 +33,12 @@
 /* layout two screen sizes screen */
   /* details */
     /*
-     objects basically just layout like cards that can tile across the screen 
+     iframes basically just layout like cards that can tile across the screen 
      if there is sufficient width
      and down the screen 
     */
   @media ( min-width: 600px ) {
-    object {
+    iframe {
       margin: 16px;
     }
   }
@@ -49,7 +50,7 @@
     #component > * {
       text-align: left;
     }
-    object {
+    iframe {
       margin: 16px auto;
     }
   }
