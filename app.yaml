@@ -4,8 +4,8 @@ threadsafe: true
 
 handlers:
 
-- url: /api
-  script: back.app
+- url: /api.*
+  script: back.api.app
   secure: always
 
 - url: /

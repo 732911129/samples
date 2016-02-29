@@ -5,16 +5,16 @@ from webapp2 import (
     RequestHandler as endpoint
   )
 
-class collection_handler( endpoint ):
+class collection_endpoint( endpoint ):
   pass
 
-class instance_handler( endpoint ):
+class instance_endpoint( endpoint ):
   pass
 
-class role_handler( endpoint ):
+class role_endpoint( endpoint ):
   pass
 
-class test_handler( endpoint ):
+class test_endpoint( endpoint ):
   def get( self, **kwargs ):
     self.response.write( 'GET' )
     self.response.write( kwargs )
@@ -24,11 +24,11 @@ class test_handler( endpoint ):
     self.response.write( kwargs )
 
 # An optimization is to group these paths under their common prefix
-routes = [
+paths = [
   path( '/api/model/type/<type>/role/<role>', handler=role_endpoint ),
   path( '/api/model/type/<type>/id/<id>', handler=instance_endpoint ),
   path( '/api/model/type/<type>', handler=collection_endpoint ),
-  path( '/api/test', handler=test_handler )
+  path( '/api/test', handler=test_endpoint )
 ]
 
 app = server( paths, debug = True )
