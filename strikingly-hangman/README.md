@@ -10,8 +10,11 @@ The progress tracking README for my creation for the Strikingly Hangman programm
   3. Collecting the counts of those candidates.
   4. Sorting the counts.
 2. This strategy will work where we have a non zero set of candidates.
-3. A fallback when the candidates set is empty is to use a global frequency count that we build over the whole word list.
-4. A fallback that may work better is to perform various relaxings of the query parameters so that the candidate set can be non zero. Some ideas for these parameter relaxings are:
+3. Some improvements:
+  1. Compute the letter counts only over the positions that are masked. 
+  2. Remove from the letter counts those letters which have already been guessed ( correctly and incorrectly )
+4. A fallback when the candidates set is empty is to use a global frequency count that we build over the whole word list.
+5. A fallback that may work better is to perform various relaxings of the query parameters so that the candidate set can be non zero. Some ideas for these parameter relaxings are:
   1. Take the union of sets instead of intersection.
   2. Relax the length paramter ( length + 1, length + 2, or no length )
   3. Do a pair wise incremental intersection of sets in order of decreasing size, and stop when the set drops below a certain threshold. 
