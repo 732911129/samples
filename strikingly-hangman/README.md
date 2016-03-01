@@ -2,6 +2,12 @@
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## todo
+
+- DONE - sketched first part of index server.
+- make API in ruby to query index server and the hangman game server
+- make front end
+
 ## product
 
 1. Python API to do word guessing.
@@ -10,7 +16,7 @@ The progress tracking README for my creation for the Strikingly Hangman programm
   - Can allow human input to see the best guesses, select one, or select something else. 
 3. JS/HTML/CSS front end. 
 
-## progress
+## progress plan
 
 1. Implemented basic parts of strategy.
   1. Indexing a word list.
