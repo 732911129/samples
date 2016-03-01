@@ -2,6 +2,21 @@
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## progress
+
+1. Implemented basic parts of strategy.
+  1. Indexing a word list.
+  2. Finding candidates.
+  3. Collecting the counts of those candidates.
+  4. Sorting the counts.
+2. This strategy will work where we have a non zero set of candidates.
+3. A fallback when the candidates set is empty is to use a global frequency count that we build over the whole word list.
+4. A fallback that may work better is to perform various relaxings of the query parameters so that the candidate set can be non zero. Some ideas for these parameter relaxings are:
+  1. Take the union of sets instead of intersection.
+  2. Relax the length paramter ( length + 1, length + 2, or no length )
+  3. Do a pair wise incremental intersection of sets in order of decreasing size, and stop when the set drops below a certain threshold. 
+  4. Do 3, and stop when some information measure of the frequency count distribution of the set drops below a certain threshold. 
+
 ## sketched strategy
 
 0. Use a word list.
