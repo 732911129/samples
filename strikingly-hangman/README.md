@@ -2,6 +2,14 @@
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## product
+
+1. Python API to do word guessing.
+2. Ruby script to run APIs: python API, and game API.
+  - Can play autonomously just selecting the best guess.
+  - Can allow human input to see the best guesses, select one, or select something else. 
+3. JS/HTML/CSS front end. 
+
 ## progress
 
 1. Implemented basic parts of strategy.
