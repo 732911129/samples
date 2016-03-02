@@ -1,3 +1,46 @@
+table = dict()
+length_table = dict()
+english = {
+    'E':26,
+    'T':25,
+    'A':24,
+    'O':23,
+    'I':22,
+    'N':21,
+    'S':20,
+    'R':19,
+    'H':18,
+    'D':17,
+    'L':16,
+    'U':15,
+    'C':14,
+    'M':13,
+    'F':12,
+    'Y':11,
+    'W':10,
+    'G':9,
+    'P':8,
+    'B':7,
+    'V':6,
+    'K':5,
+    'X':4,
+    'Q':3,
+    'J':2,
+    'Z':1
+}
+vowels = {
+    'E':5,
+    'A':4,
+    'O':3,
+    'I':2,
+    'U':1
+}
+LENGTH_SLACK = 4
+
+def vowel_score( letter ):
+  if letter in vowels:
+    return vowels[ letter ]
+  return 0
 
 def get_words():
   with open( 'words.txt', 'r' ) as words_file:
@@ -5,9 +48,26 @@ def get_words():
   return words
  
 def produce_keys( word ):
-  return zip( range(len(word)), word )
+  raw_keys = zip( range(len(word)), word )
+  new_keys = []
+  letters = {}
+  for key in raw_keys:
+    try:
+      positions = letters[ key[ 1 ] ]
+    except KeyError:
+      positions = letters[ key[ 1 ] ] = []
+      new_keys.append( [ key[ 1 ], positions ] )
+    positions.append( key[ 0 ] )
+  keys = [ tuple( [ k[ 0 ], tuple( k[ 1 ] ) ] ) for k in new_keys ]
+  return keys
 
 def index_word( word, table ):
+  length = len( word )
+  try:
+    word_set = length_table[ length ] 
+  except KeyError:
+    word_set = length_table[ length ] = set() 
+  word_set.add( word )
   keys = produce_keys( word )
   for key in keys:
     try:
@@ -22,25 +82,44 @@ def index_all_words( words ):
     index_word( word, table )
   return table
 
-def query( keys, table, length = None ):
+def overlap( lettersa, lettersb ):
+  return len( set( lettersa ) & set( lettersb ) )
+
+def query( mask, table, length = None, tried = '' ):
+  keys = mask_to_keys( mask )
+  excluded = set( tried ) - set( mask_to_letters( mask ) )
   sets = [ table[ key ] for key in keys ]
-  candidates = reduce( lambda a, b: a & b, sets )
+  if not sets:
+    candidates = length_table[ length ] 
+  else:
+    candidates = reduce( lambda a, b: a & b, sets )
   if length:
-    candidates = set( [ word for word in candidates if len( word ) <= length ] )
+    candidates = set( [ word for word in candidates if len( word ) == length ] )
+  if excluded:
+    candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
   return candidates
 
-def update_counts( word, counts ):
-  for letter in word:
-    try:
-      count = counts[ letter ]
-    except KeyError:
-      count = counts[ letter ] = { 'value' : 0 }
-    count[ 'value' ] += 1  
+def update_counts( word, counts, discounted_positions = {} ):
+  """ Square the count per word to value larger frequencies more highly """
+  word_counts = {}
+  for position, letter in enumerate( word ):
+    if position in discounted_positions:
+      continue
+    else:
+      try:
+        count = word_counts[ letter ]
+      except KeyError:
+        count = word_counts[ letter ] = { 'value' : 0 }
+      count[ 'value' ] += 1  
+  for letter, counter in word_counts.iteritems():
+    if letter not in counts:
+      counts[ letter ] = { 'value' : 0 }
+    counts[ letter ][ 'value' ] += counter[ 'value' ] ** 2
 
-def symbol_counts( words ):
+def symbol_counts( words, discounted_positions ):
   counts = dict()
   for word in words:
-    update_counts( word, counts )
+    update_counts( word, counts, discounted_positions )
   return counts
 
 def remove_entries( dic, keys ):
@@ -54,8 +133,14 @@ def remove_entries( dic, keys ):
 def mask_to_keys( mask ):
   """ Get the keys from a mask, such as **PP* """
   keys = produce_keys( mask )
-  keys = filter( lambda k: k[ 1 ] != '*', keys )
+  keys = filter( lambda k: k[ 0 ] != '*', keys )
   return keys
+
+def mask_to_positions( mask ):
+  """ Get the positions in a mask """
+  revealed_positions = filter( lambda k: k[ 1 ] != '*', mask_to_keys( mask ) )
+  positions = [ x[ 0 ] for x in revealed_positions ]
+  return positions
 
 def mask_to_letters( mask ):
   """ Get the letters in a mask """
@@ -63,24 +148,37 @@ def mask_to_letters( mask ):
   return letters
 
 def sort_counts( counts ):
+  """ We sort by the frequency of the candidate words
+  Then by the overall frequency of letters in English """
   counts = [ x for x in counts.iteritems() ]
-  counts = sorted( counts, key = lambda c: c[ 1 ][ 'value' ] )
+  counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ], english[ c[ 0 ] ] ) )
   return counts
 
-if __name__ == "__main__":
-  words = get_words()
-  print 'Building table...'
-  table = index_all_words( words )
-  print 'Table built.'
-  mask = '**PP*'
-  keys = mask_to_keys( mask )
-  print keys
-  result = query( keys, table, len( mask ) )
-  print result
-  counts = symbol_counts( result )
-  letters = mask_to_letters( mask )
-  print letters
-  counts = remove_entries( counts, letters )
-  counts = sort_counts( counts )
-  print counts
+def guess( mask, already_tried ):
+  candidate_words = query( mask, table, len( mask ), already_tried )
+  print candidate_words
+  discounted_positions = mask_to_positions( mask )
+  raw_counts = symbol_counts( candidate_words, discounted_positions )
+  untried_counts = remove_entries( raw_counts, already_tried ) 
+  sorted_counts = sort_counts( untried_counts )
+  return sorted_counts
 
+print 'Building table...'
+table = index_all_words( get_words() )
+print 'Table built.'
+
+def main():
+  import sys
+  try:
+    mask = sys.argv[ 1 ]
+  except:
+    return
+  try:
+    tried = sys.argv[ 2 ] or ''
+  except:
+    tried = ''
+  guesses = guess( mask, tried ) 
+  print guesses
+
+if __name__ == "__main__":
+  main()

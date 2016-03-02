@@ -2,6 +2,26 @@
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## improvement ideas
+
+- Always do vowels first
+- bigger word list
+- relax length restriction
+  - this does not work
+- There are a few stages of game. Vowel stage.
+  - Choose vowels until word is saturated with vowels. 
+  - Then choose consonants. 
+  - Sometimes the returned order is not correct. 
+  - It makes sense to order by information content. Like the ordering should be a product of the frequency in this set, and the inverse frequency of the letter over all. Like term frequency inverse document frequency.
+- Okay remove vowel sort.
+- Improve indexing. Indexes must not separate identical letters.
+- In terms of scoring frequencies I think we should square the number of times a letter appears in a word. Since double letters are more valuable to us.- Significant improvements with new word list, new indexing ( a key is a letter and all its positions which is way more specific ), and increasing the weight of letters that occur in a word more than once.
+
+- Fallback:
+  -- When a word is not in the dictionary, we need to fall back on a model.
+  -- So basically our model is we build up freuqnecy distributions of words that partially match our indexes. 
+  -- Let's try to get a bigger word list first.
+
 ## todo
 
 - DONE - sketched first part of index server.
