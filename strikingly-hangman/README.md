@@ -23,7 +23,9 @@ The progress tracking README for my creation for the Strikingly Hangman programm
     -- Let's try to get a bigger word list first.
     -- The model, the simple version, is just taking the union of the indexed word sets, and calculating a frequency over those. So if the intersection is empty, we still have a model. 
     -- And if the union is empty, then just use the english frequencies. 
-
+    -- Okay, let's try to improve the fallback. Some configurations we can alter:
+      -- Do we use discounted positions on fallback ? I intuit no, and it may work to experiment. 
+      -- Do we use length restriction on fallback ? I intuit no, and it may work to experiment.
 ## todo
 
   - DONE - sketched first part of index server.
