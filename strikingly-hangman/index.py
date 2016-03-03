@@ -1,27 +1,7 @@
+import math
+
 table = dict()
 length_table = dict()
-vowels = {
-  'A':1,
-  'E':1,
-  'I':1,
-  'O':1,
-  'U':1,
-  'Y':1
-}
-
-def vowel_score( letter ):
-  if letter in vowels:
-    return vowels[ letter ]
-  return 0
-
-def vowel_saturated( mask ):
-  if len( mask ) > 7:
-    return True
-  vowel_count = float( sum(( 1 for x in mask if x in vowels )) )
-  if vowel_count / len( mask ) > 0.5:
-    return True
-  return False
-
 def get_words():
   with open( 'words.txt', 'r' ) as words_file:
     words = set( [ x.strip().upper() for x in words_file.readlines() ] )
@@ -77,7 +57,7 @@ def query( mask, table, length = None, tried = '' ):
     extended_sets.append( length_table[ length ] )
     fallback = reduce( lambda a, b: a | b, extended_sets )
   if length:
-    candidates = set( [ word for word in candidates if len( word ) == length ] )
+    candidates = set( [ word for word in candidates if len( word ) == length  ] )
   if excluded:
     candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
   return ( candidates, fallback )
@@ -85,6 +65,7 @@ def query( mask, table, length = None, tried = '' ):
 def update_counts( word, counts, discounted_positions = {} ):
   """ Square the count per word to value larger frequencies more highly """
   word_counts = {}
+  total = 0
   for position, letter in enumerate( word ):
     if position in discounted_positions:
       continue
@@ -97,18 +78,18 @@ def update_counts( word, counts, discounted_positions = {} ):
   for letter, counter in word_counts.iteritems():
     if letter not in counts:
       counts[ letter ] = { 'value' : 0 }
-    if letter in vowels:
-      # because vowels are so common they don't have such great information content
-      # for identifying a word so down regulate them 
-      # consider scaling vowels by a fraction
-      counts[ letter ][ 'value' ] += counter[ 'value' ] ** 2
-    else:
-      counts[ letter ][ 'value' ] += counter[ 'value' ] ** 2
+    counts[ letter ][ 'value' ] += counter[ 'value' ] 
+  total += len( word )
+  return total
 
 def symbol_counts( words, discounted_positions = [] ):
   counts = dict()
+  total = 0
   for word in words:
-    update_counts( word, counts, discounted_positions )
+    total += update_counts( word, counts, discounted_positions )
+  for k in counts:
+    # scale by information content
+    counts[ k ][ 'value' ] = ( counts[ k ][ 'value' ] / float( total ) ) * math.log( float( total ) / counts[ k ][ 'value' ] )
   return counts
 
 def remove_entries( dic, keys ):
@@ -140,10 +121,7 @@ def sort_counts( counts, mask = None ):
   """ We sort by the frequency of the candidate words
   Then by the overall frequency of letters in English """
   counts = [ x for x in counts.iteritems() ]
-  if False and mask and not vowel_saturated( mask ):
-    counts = sorted( counts, key = lambda c: ( vowel_score( c[ 0 ] ), c[ 1 ][ 'value' ] ) )
-  else:
-    counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
+  counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
   return counts
 
 def guess( mask, already_tried, display_only = False ):
@@ -151,26 +129,17 @@ def guess( mask, already_tried, display_only = False ):
   print 'Fallback length ', len( fallback )
   discounted_positions = mask_to_positions( mask )
   raw_counts = symbol_counts( candidate_words, discounted_positions )
+  poly = length_table[ len( mask ) ]
+  poly_counts = symbol_counts( poly )
   untried_counts = remove_entries( raw_counts, already_tried ) 
   fallback_counts = remove_entries( symbol_counts( fallback ), already_tried )
   sorted_counts = sort_counts( untried_counts, mask )
   sorted_fallback_counts = sort_counts( fallback_counts, mask )
   if not display_only:
-    # median didn't work
-    # try mean 
-    # try mean * 2
-    # try geometric mean 
-    # try euclidean distance 
-    #lsc = len( sorted_counts )
-    #sumsc = sum( [ x[ 1 ][ 'value' ] for x in sorted_counts ] )
-    #meansc = sumsc / lsc * 2
-    #guesses = sorted( sorted_counts, key = lambda c : abs( meansc - c[ 1 ][ 'value' ] ), reverse = True )
-
-    #lsfc = len ( sorted_fallback_counts ) 
-    #sumsfc = sum( [ x[ 1 ][ 'value' ] for x in sorted_fallback_counts ] )
-    #meansfc = sumsfc / lsfc * 2
-    #fallbacks = sorted( sorted_fallback_counts, key = lambda c : abs( meansfc - c[ 1 ][ 'value' ] ), reverse = True )
-    return { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
+    guesses = sorted( sorted_counts, key = lambda c : ( c[ 1 ][ 'value' ] - 0.85 * ( fallback_counts[ c[ 0 ] ][ 'value' ] * poly_counts[ c[ 0 ] ][ 'value' ] )  ) )
+    val = { 'guesses': guesses, 'fallback': sorted_fallback_counts }
+    print val
+    return val
   else:
     print 'Counts ', sorted_counts
     print 'Fallback ', sorted_fallback_counts
