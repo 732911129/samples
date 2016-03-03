@@ -3,6 +3,15 @@
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
 ## improvement ideas
+
+- Rather than just sorting by frequency, I think we should sort by surprise, or entropy. Like, the entropy of a letter occuring, being somehow the probability of a letter in such a context general context (word of that legnth or with union, versus the probability of it occurring in that specific context ) 
+- SOrt by that.
+- Guess based on highest information content.
+- like how much do the new letters shift the probabilities from their expected values. 
+- or we could use bayes. Like how much is our expectation updated. 
+
+
+## improvement ideas
   
   - It's not about the most frequent letter, it's about the letter that maximally splits the subset. 
   - The letter that leads the subsets to shrink fastest, while maintaining the likelihood the word will be in them. Maybe the mean, or median, or letter with the closes to the mean ? 
@@ -92,5 +101,6 @@ The progress tracking README for my creation for the Strikingly Hangman programm
 
   - Consider adding words that are not in the word list, to the index, once they are discovered. ( adaptive index )
   - Consider updating the ETANORISH ordering to reflect the letter frequency distribution of the words seen from the system. ( adaptive frequency )
+
 
 

@@ -161,16 +161,16 @@ def guess( mask, already_tried, display_only = False ):
     # try mean * 2
     # try geometric mean 
     # try euclidean distance 
-    lsc = len( sorted_counts )
-    sumsc = sum( [ x[ 1 ][ 'value' ] for x in sorted_counts ] )
-    meansc = sumsc / lsc * 2
-    guesses = sorted( sorted_counts, key = lambda c : abs( meansc - c[ 1 ][ 'value' ] ), reverse = True )
+    #lsc = len( sorted_counts )
+    #sumsc = sum( [ x[ 1 ][ 'value' ] for x in sorted_counts ] )
+    #meansc = sumsc / lsc * 2
+    #guesses = sorted( sorted_counts, key = lambda c : abs( meansc - c[ 1 ][ 'value' ] ), reverse = True )
 
-    lsfc = len ( sorted_fallback_counts ) 
-    sumsfc = sum( [ x[ 1 ][ 'value' ] for x in sorted_fallback_counts ] )
-    meansfc = sumsfc / lsfc * 2
-    fallbacks = sorted( sorted_fallback_counts, key = lambda c : abs( meansfc - c[ 1 ][ 'value' ] ), reverse = True )
-    return { 'guesses': guesses, 'fallback': fallbacks }
+    #lsfc = len ( sorted_fallback_counts ) 
+    #sumsfc = sum( [ x[ 1 ][ 'value' ] for x in sorted_fallback_counts ] )
+    #meansfc = sumsfc / lsfc * 2
+    #fallbacks = sorted( sorted_fallback_counts, key = lambda c : abs( meansfc - c[ 1 ][ 'value' ] ), reverse = True )
+    return { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
   else:
     print 'Counts ', sorted_counts
     print 'Fallback ', sorted_fallback_counts
