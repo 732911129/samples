@@ -1,0 +1,29 @@
+<title>Hangman</title>
+<form id=controller method=GET action=http://localhost:8080/play>
+  <select id=command name=command>
+    <option value=init>Init</option>
+    <option value=nextWord>Next Word</option>
+    <option value=guessWord>Guess Word</option>
+  </select>
+  <input type=submit>
+</form>
+<output id=result></output>
+<script>
+  const 
+    result = document.querySelector( '#result' ),
+    command = document.querySelector( '#command' ),
+    constroller = document.querySelector( '#controller' );
+  controller.addEventListener( 'submit', requester );
+  function requester( e ) {
+    e.preventDefault();  
+    const
+      uri = controller.action + '?command=' + command.value,
+      exchange = new XMLHttpRequest();
+    exchange.type = 'application/json';
+    exchange.open( 'GET', uri );
+    exchange.addEventListener( 'readystatechange', () => 
+      ( result.innerText = exchange.readyState == 4 ? exchange.responseText : '...' )
+    )
+    exchange.send(); 
+  }
+</script>

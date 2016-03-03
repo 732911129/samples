@@ -1,3 +1,4 @@
+import json
 import tornado
 import tornado.ioloop
 
@@ -12,21 +13,20 @@ from tornado.web import (
 import index
 
 class query( endpoint ):
-  def get( self, *args, **kwargs ):
+  def post( self, *args, **kwargs ):
     """ Return the list of best guesses 
     given the mask and those already tried """
-    mask = args[ 0 ]
-    tried = args[ 1 ]
-    self.write( mask )
-    self.write( '<br>' )
-    self.write( tried )
+    body = json.loads( self.request.body )
+    mask = body[ "word" ]
+    tried = body[ "tried" ]
+    self.write( index.guess( mask, tried ) )
 
 paths = [
-  (r'/query/mask/([\*\w]+)/(.*)', query )
+  (r'/guess', query )
 ]
 
 app = server( paths )
 
 if __name__ == "__main__":
-  app.listen( 8080 )
+  app.listen( 8888 )
   looper().start()

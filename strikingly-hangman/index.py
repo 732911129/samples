@@ -116,7 +116,7 @@ def sort_counts( counts ):
   counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
   return counts
 
-def guess( mask, already_tried, display_only = True ):
+def guess( mask, already_tried, display_only = False ):
   candidate_words, fallback = query( mask, table, len( mask ), already_tried )
   print 'Fallback length ', len( fallback )
   discounted_positions = mask_to_positions( mask )
@@ -126,7 +126,7 @@ def guess( mask, already_tried, display_only = True ):
   sorted_counts = sort_counts( untried_counts )
   sorted_fallback_counts = sort_counts( fallback_counts )
   if not display_only:
-    return ( sorted_counts, sorted_fallback_counts )
+    return { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
   else:
     print 'Counts ', sorted_counts
     print 'Fallback ', sorted_fallback_counts
