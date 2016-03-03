@@ -4,6 +4,10 @@ The progress tracking README for my creation for the Strikingly Hangman programm
 
 ## improvement ideas
 
+- I want to do a Bayes one. I really feel this is a game which works to be player from a Bayes inspired model. 
+
+## improvement ideas
+
 - Rather than just sorting by frequency, I think we should sort by surprise, or entropy. Like, the entropy of a letter occuring, being somehow the probability of a letter in such a context general context (word of that legnth or with union, versus the probability of it occurring in that specific context ) 
 - SOrt by that.
 - Guess based on highest information content.
