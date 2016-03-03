@@ -6,6 +6,8 @@ The progress tracking README for my creation for the Strikingly Hangman programm
   
   - It's not about the most frequent letter, it's about the letter that maximally splits the subset. 
   - The letter that leads the subsets to shrink fastest, while maintaining the likelihood the word will be in them. Maybe the mean, or median, or letter with the closes to the mean ? 
+  - Tried mean * 2, seems to be okay. 
+  - Gonna submit zip file now, submit code later with maybe a few more tweaks. 
 
 ## improvement ideas
 
