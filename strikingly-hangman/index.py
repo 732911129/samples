@@ -48,22 +48,29 @@ def overlap( lettersa, lettersb ):
 def query( mask, table, length = None, tried = '' ):
   keys = mask_to_keys( mask )
   excluded = set( tried ) - set( mask_to_letters( mask ) )
-  sets = [ table[ key ] for key in keys ]
+  sets = [ table[ key ] for key in keys if key in table ]
   if not sets:
-    fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( length ) if x in length_table ] )
+    try:
+      fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( len( mask ) ) if x in length_table ] )
+    except:
+      fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2*len( mask ) ) if x in length_table ] )
   else:
     candidates = reduce( lambda a, b: a & b, sets )
     extended_sets = sets[::]
-    if length in length_table:
-      extended_sets.append( length_table[ length ] )
+    if len( mask ) in length_table:
+      extended_sets.append( length_table[ len( mask ) ] )
     else:
-      poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( length ) if x in length_table ] )
+      try:
+        poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( len( mask ) ) if x in length_table ] )
+      except:
+        poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2 * len( mask ) ) if x in length_table ] )
       extended_sets.append( poly )
     fallback = reduce( lambda a, b: a | b, extended_sets )
   if length:
     candidates = set( [ word for word in candidates if len( word ) == length  ] )
   if excluded:
     candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
+  print candidates
   return ( candidates, fallback )
 
 def update_counts( word, counts, discounted_positions = {} ):
@@ -83,7 +90,7 @@ def update_counts( word, counts, discounted_positions = {} ):
     if letter not in counts:
       counts[ letter ] = { 'value' : 0 }
     counts[ letter ][ 'value' ] += counter[ 'value' ] 
-  total += len( word )
+  total += len( word )  
   return total
 
 def symbol_counts( words, discounted_positions = [] ):
@@ -136,14 +143,17 @@ def guess( mask, already_tried, display_only = False ):
   if len( mask ) in length_table: 
     poly = length_table[ len( mask ) ]
   else:
-    poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( length ) if x in length_table ] )
+    try:
+      poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( len( mask ) ) if x in length_table ] )
+    except:
+      poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2 * len( mask ) ) if x in length_table ] )
   poly_counts = symbol_counts( poly )
   untried_counts = remove_entries( raw_counts, already_tried ) 
   fallback_counts = remove_entries( symbol_counts( fallback ), already_tried )
   sorted_counts = sort_counts( untried_counts, mask )
   sorted_fallback_counts = sort_counts( fallback_counts, mask )
   if not display_only:
-    guesses = sorted( sorted_counts, key = lambda c : ( c[ 1 ][ 'value' ] * 4 - ( fallback_counts[ c[ 0 ] ][ 'value' ] * poly_counts[ c[ 0 ] ][ 'value' ] )  ) )
+    guesses = sorted( sorted_counts, key = lambda c : ( c[ 1 ][ 'value' ] * 3 - ( fallback_counts[ c[ 0 ] ][ 'value' ] * poly_counts[ c[ 0 ] ][ 'value' ] )  ) )
     val = { 'guesses': guesses, 'fallback': sorted_fallback_counts }
     print val
     return val
