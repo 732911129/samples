@@ -3,6 +3,11 @@
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
 ## improvement ideas
+  
+  - It's not about the most frequent letter, it's about the letter that maximally splits the subset. 
+  - The letter that leads the subsets to shrink fastest, while maintaining the likelihood the word will be in them. Maybe the mean, or median, or letter with the closes to the mean ? 
+
+## improvement ideas
 
   - Always do vowels first
   - bigger word list

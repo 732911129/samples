@@ -41,6 +41,14 @@ def guessWord session, guess
   return command
 end
 
+def getResult session 
+  command = {
+    'sessionId' => session,
+    'action' => 'getResult'
+  }
+  return command
+end
+
 def handle response
   reply = response.body
   if reply[ "message" ] == "THE GAME IS ON"
@@ -107,6 +115,13 @@ def handleGuessWord req, response
   response.body = { "guess" => $guess, "tried" => $already_tried, "word" => $word }.to_json
 end
 
+def handleResult response
+  reply = JSON.parse nextTurn getResult $current_session
+  response['Access-Control-Allow-Origin'] = '*'
+  response.status = 200
+  response.body  = { "reply" => reply }.to_json
+end
+
 def handleError response
   response['Access-Control-Allow-Origin'] = '*'
   response.status = 400
@@ -123,6 +138,8 @@ class Player < WEBrick::HTTPServlet::AbstractServlet
       handleNextWord response
     when 'guessWord'
       handleGuessWord req, response
+    when 'getResult'
+      handleResult response
     else
       handleError response
     end

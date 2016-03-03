@@ -1,5 +1,26 @@
 table = dict()
 length_table = dict()
+vowels = {
+  'A':1,
+  'E':1,
+  'I':1,
+  'O':1,
+  'U':1,
+  'Y':1
+}
+
+def vowel_score( letter ):
+  if letter in vowels:
+    return vowels[ letter ]
+  return 0
+
+def vowel_saturated( mask ):
+  if len( mask ) > 7:
+    return True
+  vowel_count = float( sum(( 1 for x in mask if x in vowels )) )
+  if vowel_count / len( mask ) > 0.5:
+    return True
+  return False
 
 def get_words():
   with open( 'words.txt', 'r' ) as words_file:
@@ -76,7 +97,13 @@ def update_counts( word, counts, discounted_positions = {} ):
   for letter, counter in word_counts.iteritems():
     if letter not in counts:
       counts[ letter ] = { 'value' : 0 }
-    counts[ letter ][ 'value' ] += counter[ 'value' ] ** 2
+    if letter in vowels:
+      # because vowels are so common they don't have such great information content
+      # for identifying a word so down regulate them 
+      # consider scaling vowels by a fraction
+      counts[ letter ][ 'value' ] += counter[ 'value' ] ** 2
+    else:
+      counts[ letter ][ 'value' ] += counter[ 'value' ] ** 2
 
 def symbol_counts( words, discounted_positions = [] ):
   counts = dict()
@@ -109,11 +136,14 @@ def mask_to_letters( mask ):
   letters = filter( lambda l: l != '*', mask )
   return letters
 
-def sort_counts( counts ):
+def sort_counts( counts, mask = None ):
   """ We sort by the frequency of the candidate words
   Then by the overall frequency of letters in English """
   counts = [ x for x in counts.iteritems() ]
-  counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
+  if False and mask and not vowel_saturated( mask ):
+    counts = sorted( counts, key = lambda c: ( vowel_score( c[ 0 ] ), c[ 1 ][ 'value' ] ) )
+  else:
+    counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
   return counts
 
 def guess( mask, already_tried, display_only = False ):
@@ -123,10 +153,24 @@ def guess( mask, already_tried, display_only = False ):
   raw_counts = symbol_counts( candidate_words, discounted_positions )
   untried_counts = remove_entries( raw_counts, already_tried ) 
   fallback_counts = remove_entries( symbol_counts( fallback ), already_tried )
-  sorted_counts = sort_counts( untried_counts )
-  sorted_fallback_counts = sort_counts( fallback_counts )
+  sorted_counts = sort_counts( untried_counts, mask )
+  sorted_fallback_counts = sort_counts( fallback_counts, mask )
   if not display_only:
-    return { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
+    # median didn't work
+    # try mean 
+    # try mean * 2
+    # try geometric mean 
+    # try euclidean distance 
+    lsc = len( sorted_counts )
+    sumsc = sum( [ x[ 1 ][ 'value' ] for x in sorted_counts ] )
+    meansc = sumsc / lsc * 2
+    guesses = sorted( sorted_counts, key = lambda c : abs( meansc - c[ 1 ][ 'value' ] ), reverse = True )
+
+    lsfc = len ( sorted_fallback_counts ) 
+    sumsfc = sum( [ x[ 1 ][ 'value' ] for x in sorted_fallback_counts ] )
+    meansfc = sumsfc / lsfc * 2
+    fallbacks = sorted( sorted_fallback_counts, key = lambda c : abs( meansfc - c[ 1 ][ 'value' ] ), reverse = True )
+    return { 'guesses': guesses, 'fallback': fallbacks }
   else:
     print 'Counts ', sorted_counts
     print 'Fallback ', sorted_fallback_counts

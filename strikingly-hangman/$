@@ -10,12 +10,6 @@
     padding: 2.5rem;
     margin: 1rem;
   }
-  #output_list {
-    margin-left: 4rem;
-  }
-  .output {
-    white-space: pre;
-  }
   input, select, button, pre {
     font: inherit;
   }
@@ -30,18 +24,13 @@
   <input type=submit id=doit> 
 </form>
 <button id=automate>Automate</button>
-<div id=result>
-  [
-    <div id=output_list>
-      <div class=output>"Click submit to get going."</div>
-    </div>
-  ]
+<div>
+  <pre id=result></pre>
 </div>
 <script>
   const 
     doit = document.querySelector( '#doit' ),
     result = document.querySelector( '#result' ),
-    output_list = document.querySelector( '#output_list' ),
     command = document.querySelector( '#command' ),
     constroller = document.querySelector( '#controller' ),
     results = { result : {} };
@@ -57,9 +46,11 @@
     exchange.open( 'GET', uri );
     exchange.addEventListener( 'readystatechange', () => 
       ( 
-        output_list.insertAdjacentHTML( 'afterbegin', 
+        result.insertAdjacetHTML( 'afterbegin', 
           `
-            <div class=output>${ exchange.readyState == 4 ? JSON.stringify( exchange.response, null, 2 ) : '"..."' },</div>` 
+            <div>
+              ${ exchange.readyState == 4 ? JSON.stringify( exchange.response, null, 2 ) : '...' }
+            </div>` 
         ),
         results.branching = exchange.readyState == 4 ? false : true,
         results.result = exchange.response ? exchange.response : results.result,
@@ -67,13 +58,11 @@
       )
     )
     exchange.send(); 
-    output_list.insertAdjacentHTML( 'afterbegin', 
-      `
-        <div class=output>"...",</div>` 
-    );
+    result.innerText = '...';
   }
 
   function branch() {
+    if ( command.value == 'init' ) return;
     if( results.branching ) return;
     results.branching = true;
     let
@@ -104,7 +93,7 @@
         task = nextWord;
         break;
     }
-    setTimeout( () => task(), 100 );
+    setTimeout( () => task(), 1500 );
   }
 
   function nextWord() {
