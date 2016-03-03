@@ -50,11 +50,15 @@ def query( mask, table, length = None, tried = '' ):
   excluded = set( tried ) - set( mask_to_letters( mask ) )
   sets = [ table[ key ] for key in keys ]
   if not sets:
-    fallback = candidates = length_table[ length ] 
+    fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( length ) if x in length_table ] )
   else:
     candidates = reduce( lambda a, b: a & b, sets )
     extended_sets = sets[::]
-    extended_sets.append( length_table[ length ] )
+    if length in length_table:
+      extended_sets.append( length_table[ length ] )
+    else:
+      poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( length ) if x in length_table ] )
+      extended_sets.append( poly )
     fallback = reduce( lambda a, b: a | b, extended_sets )
   if length:
     candidates = set( [ word for word in candidates if len( word ) == length  ] )
@@ -129,14 +133,17 @@ def guess( mask, already_tried, display_only = False ):
   print 'Fallback length ', len( fallback )
   discounted_positions = mask_to_positions( mask )
   raw_counts = symbol_counts( candidate_words, discounted_positions )
-  poly = length_table[ len( mask ) ]
+  if len( mask ) in length_table: 
+    poly = length_table[ len( mask ) ]
+  else:
+    poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( length ) if x in length_table ] )
   poly_counts = symbol_counts( poly )
   untried_counts = remove_entries( raw_counts, already_tried ) 
   fallback_counts = remove_entries( symbol_counts( fallback ), already_tried )
   sorted_counts = sort_counts( untried_counts, mask )
   sorted_fallback_counts = sort_counts( fallback_counts, mask )
   if not display_only:
-    guesses = sorted( sorted_counts, key = lambda c : ( c[ 1 ][ 'value' ] - 0.85 * ( fallback_counts[ c[ 0 ] ][ 'value' ] * poly_counts[ c[ 0 ] ][ 'value' ] )  ) )
+    guesses = sorted( sorted_counts, key = lambda c : ( c[ 1 ][ 'value' ] * 4 - ( fallback_counts[ c[ 0 ] ][ 'value' ] * poly_counts[ c[ 0 ] ][ 'value' ] )  ) )
     val = { 'guesses': guesses, 'fallback': sorted_fallback_counts }
     print val
     return val
