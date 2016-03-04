@@ -5,6 +5,13 @@ ICED
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## improvement ideas
+
+- Can improve entropy scoring. Somehow it seems that entropy directed guesses are still not maximally optimal. Perhaps they are not considering the entropy if the guess is incorrect? 
+- Consider the number of guesses remaining?
+- Consider a way to combine entropy and the number of keys? 
+- Consider other factors? 
+
 ## other models
 
 Another model of hangman could train on letter trigams ( or other n-grams ) inside words, and learn things like:
