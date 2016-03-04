@@ -50,27 +50,22 @@ def query( mask, table, length = None, tried = '' ):
   excluded = set( tried ) - set( mask_to_letters( mask ) )
   sets = [ table[ key ] for key in keys if key in table ]
   if not sets:
-    try:
-      fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 1 + len( mask ) ) if x in length_table ] )
-    except:
-      fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2*len( mask ) ) if x in length_table ] )
+    model_len = len( mask )
+    while( model_len not in length_table and model_len ):
+      model_len -= 1
+    if model_len:
+      fallback = candidates = length_table[ model_len ] 
+    else:
+      candidates = fallback = set()
   else:
     candidates = reduce( lambda a, b: a & b, sets )
-    extended_sets = sets[::]
-    if len( mask ) in length_table:
-      extended_sets.append( length_table[ len( mask ) ] )
-    else:
-      try:
-        poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( len( mask ) ) if x in length_table ] )
-      except:
-        poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2 * len( mask ) ) if x in length_table ] )
-      extended_sets.append( poly )
-    fallback = reduce( lambda a, b: a | b, extended_sets )
+    fallback = reduce( lambda a, b: a | b, sets )
   if length:
     candidates = set( [ word for word in candidates if len( word ) == length  ] )
+    fallback = set( [ word for word in fallback if len( word ) == length  ] )
   if excluded:
     candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
-  print candidates
+    fallback = set( [ word for word in fallback if overlap( word, excluded ) == 0 ] )
   return ( candidates, fallback )
 
 def update_counts( word, counts, discounted_positions = {} ):
@@ -147,12 +142,6 @@ def count_keys_per_letter( key_set ):
 
 def guess( mask, already_tried, display_only = False ):
   candidate_words, fallback = query( mask, table, len( mask ), already_tried )
-  # the weird metric I want now is that I pick the letter
-  # the keys of which when taken over all the words of the table 
-  # are most numerous. 
-  # so convert each candidate or fallback word to keys
-  # then score the keys by their letter 
-  # the distinct keys so first take a set of all keys
   try:
     unique_candidate_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in candidate_words ] ) )
   except:
