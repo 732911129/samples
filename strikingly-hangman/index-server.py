@@ -1,32 +1,18 @@
 import json
-import tornado
-import tornado.ioloop
-
-looper = tornado.ioloop.IOLoop.instance
-
-from tornado.web import (
-  RequestHandler as endpoint,
-  asynchronous as async,
-  Application as server,
-)
-
 import index
 
-class query( endpoint ):
-  def post( self, *args, **kwargs ):
-    """ Return the list of best guesses 
-    given the mask and those already tried """
-    body = json.loads( self.request.body )
-    mask = body[ "word" ]
-    tried = body[ "tried" ]
-    self.write( index.guess( mask, tried ) )
+from klein import Klein
 
-paths = [
-  (r'/guess', query )
-]
+class Guesser(object):
+  app = Klein()
 
-app = server( paths )
+  @app.route('/guess', methods=['POST'])
+  def save_item(self, request):
+    request.setHeader('Content-Type', 'application/json')
+    body = json.loads(request.content.read())
+    data = index.guess( body[ "word" ], body[ "tried" ] )
+    return json.dumps( data )
 
-if __name__ == "__main__":
-  app.listen( 8888 )
-  looper().start()
+if __name__ == '__main__':
+  store = Guesser()
+  store.app.run('localhost', 8888)

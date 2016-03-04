@@ -51,7 +51,7 @@ def query( mask, table, length = None, tried = '' ):
   sets = [ table[ key ] for key in keys if key in table ]
   if not sets:
     try:
-      fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( len( mask ) ) if x in length_table ] )
+      fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 1 + len( mask ) ) if x in length_table ] )
     except:
       fallback = candidates = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2*len( mask ) ) if x in length_table ] )
   else:
@@ -99,8 +99,8 @@ def symbol_counts( words, discounted_positions = [] ):
   for word in words:
     total += update_counts( word, counts, discounted_positions )
   for k in counts:
-    # scale by information content
-    counts[ k ][ 'value' ] = ( counts[ k ][ 'value' ] / float( total ) ) * math.log( float( total ) / counts[ k ][ 'value' ] )
+    # information content by probability of any word
+    counts[ k ][ 'value' ] = ( 1.0 / float( total ) ) * math.log( float( total ) / counts[ k ][ 'value' ] )
   return counts
 
 def remove_entries( dic, keys ):
@@ -135,26 +135,38 @@ def sort_counts( counts, mask = None ):
   counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
   return counts
 
+def count_keys_per_letter( key_set ):
+  counts = dict()
+  for key in key_set:
+    try:
+      count = counts[ key[ 0 ] ]
+    except:
+      count = counts[ key[ 0 ] ] = { 'value' : 0 }
+    count[ 'value' ] += 1
+  return counts
+
 def guess( mask, already_tried, display_only = False ):
   candidate_words, fallback = query( mask, table, len( mask ), already_tried )
-  print 'Fallback length ', len( fallback )
-  discounted_positions = mask_to_positions( mask )
-  raw_counts = symbol_counts( candidate_words, discounted_positions )
-  if len( mask ) in length_table: 
-    poly = length_table[ len( mask ) ]
-  else:
-    try:
-      poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( len( mask ) ) if x in length_table ] )
-    except:
-      poly = reduce( lambda a, b: a | b, [ length_table[ x ] for x in xrange( 2 * len( mask ) ) if x in length_table ] )
-  poly_counts = symbol_counts( poly )
-  untried_counts = remove_entries( raw_counts, already_tried ) 
-  fallback_counts = remove_entries( symbol_counts( fallback ), already_tried )
-  sorted_counts = sort_counts( untried_counts, mask )
-  sorted_fallback_counts = sort_counts( fallback_counts, mask )
+  # the weird metric I want now is that I pick the letter
+  # the keys of which when taken over all the words of the table 
+  # are most numerous. 
+  # so convert each candidate or fallback word to keys
+  # then score the keys by their letter 
+  # the distinct keys so first take a set of all keys
+  try:
+    unique_candidate_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in candidate_words ] ) )
+  except:
+    unique_candidate_keys = set()
+  try:
+    unique_fallback_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in fallback ] ) )
+  except:
+    unique_fallback_keys = set()
+  candidate_letter_counts = remove_entries( count_keys_per_letter( unique_candidate_keys ), already_tried )
+  fallback_letter_counts = remove_entries( count_keys_per_letter( unique_fallback_keys ), already_tried )
+  sorted_counts = sort_counts( candidate_letter_counts )
+  sorted_fallback_counts = sort_counts( fallback_letter_counts )
   if not display_only:
-    guesses = sorted( sorted_counts, key = lambda c : ( c[ 1 ][ 'value' ] * 3 - ( fallback_counts[ c[ 0 ] ][ 'value' ] * poly_counts[ c[ 0 ] ][ 'value' ] )  ) )
-    val = { 'guesses': guesses, 'fallback': sorted_fallback_counts }
+    val = { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
     print val
     return val
   else:

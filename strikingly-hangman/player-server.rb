@@ -12,6 +12,8 @@ end
 
 require 'unirest'
 
+Unirest.timeout( 120 )
+
 $current_session = ''
 $already_tried = ''
 $guess = ''
