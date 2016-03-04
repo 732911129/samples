@@ -148,7 +148,7 @@ def guess( mask, already_tried, display_only = False ):
     unique_candidate_keys = set()
   candidate_letter_counts = remove_entries( count_keys_per_letter( unique_candidate_keys ), already_tried )
   sorted_counts = sort_counts( candidate_letter_counts )
-  sorted_fallback_counts = set()
+  sorted_fallback_counts = []
   if not sorted_counts:
     try:
       unique_fallback_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in fallback ] ) )

@@ -7,6 +7,12 @@ The progress tracking README for my creation for the Strikingly Hangman programm
 
 ## improvement ideas
 
+- A measure of how it splits the set. Yes we take the number of different arrangements for a letter. Yet what if we also score them by how many different words correspond to those arrangements. The size of the subset that letter is involved in could also be part of the scoring. Or the entropy of the distribution of that subset ( as in, sum of the product of probabilities and their log of each of the arrangements ). 
+- Also a measure that says how many guesses we have left. 
+- I know there is some way of doing this like an optimization function. Like linear optimization.  Given these splitting powers, and the number of guesses remaining we can find an optimum next guess. We can score it somehow. 
+
+## improvement ideas
+
 - As well as the letter that maximally splits the set, it would also work to consider letters by their frquency. Since ther are a limited number of guesses available. 
 - It will likely work to experiment ways to combine splitting power and commoness. 
 
