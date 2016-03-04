@@ -2,6 +2,14 @@
 
 This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Todo Friday / Saturday / Sunday
+
+- Finish for Monday.
+- Implement back end. 
+- Render HTML on server using minidom. 
+- Update styles so that it can work with no javascript. 
+- Update markup so it can work with no or minimal HTML.
+
 ## Todo Sunday
 
 - Embedding tags are responsive.
