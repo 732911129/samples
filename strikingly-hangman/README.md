@@ -5,6 +5,18 @@ ICED
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## other models
+
+Another model of hangman could train on letter trigams ( or other n-grams ) inside words, and learn things like:
+
+  if we have *A* the next letter is most likely to be K
+  in other words given some trigram ( which can include * ), we can easily learn the distribution of the next letter from the dictionary. 
+  the cool thing about this is it can handle unknown words. 
+
+## what i like about this
+
+The thing I like about hangman is it's very general. It's really just optimal codes and reconstruction fo words, given some alphabet and dictionary. The trick of hangman lies in that not all possible combinations of letters ( all words for an alphabet ) are present. The cool thing about it is it's really a way of optimally thinking about the structure of the dictionary. If you can do hangman optimally ( the absolute minimal number of moves ), then you optimally understand ( deeply understand ), the structure of the dictionary. That's cool.
+
 ## improvement ideas
 
 - A measure of how it splits the set. Yes we take the number of different arrangements for a letter. Yet what if we also score them by how many different words correspond to those arrangements. The size of the subset that letter is involved in could also be part of the scoring. Or the entropy of the distribution of that subset ( as in, sum of the product of probabilities and their log of each of the arrangements ). 
