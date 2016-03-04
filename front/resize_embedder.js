@@ -34,10 +34,10 @@ self.resize_off = false;
                                                             // tho it can also catch cases not caught
                                                             // by others such as '../'
         embed = parent.querySelector( `
-            object[data="${ full_src }"],
-            object[data="${ absolute_src }"],
-            object[data="${ relative_src }"],
-            object[data$="${ relative_src }"]               
+            iframe[src="${ full_src }"],
+            iframe[src="${ absolute_src }"],
+            iframe[src="${ relative_src }"],
+            iframe[src$="${ relative_src }"]               
           `);
       if( embed ) {
         setTimeout( () => {  
