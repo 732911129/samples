@@ -146,14 +146,16 @@ def guess( mask, already_tried, display_only = False ):
     unique_candidate_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in candidate_words ] ) )
   except:
     unique_candidate_keys = set()
-  try:
-    unique_fallback_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in fallback ] ) )
-  except:
-    unique_fallback_keys = set()
   candidate_letter_counts = remove_entries( count_keys_per_letter( unique_candidate_keys ), already_tried )
-  fallback_letter_counts = remove_entries( count_keys_per_letter( unique_fallback_keys ), already_tried )
   sorted_counts = sort_counts( candidate_letter_counts )
-  sorted_fallback_counts = sort_counts( fallback_letter_counts )
+  sorted_fallback_counts = set()
+  if not sorted_counts:
+    try:
+      unique_fallback_keys = set( reduce( lambda a, b : [ x for x in set( a + b ) ], [ produce_keys( word ) for word in fallback ] ) )
+    except:
+      unique_fallback_keys = set()
+    fallback_letter_counts = remove_entries( count_keys_per_letter( unique_fallback_keys ), already_tried )
+    sorted_fallback_counts = sort_counts( fallback_letter_counts )
   if not display_only:
     val = { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
     print val
