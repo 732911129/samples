@@ -4,6 +4,11 @@ The progress tracking README for my creation for the Strikingly Hangman programm
 
 ## improvement ideas
 
+- As well as the letter that maximally splits the set, it would also work to consider letters by their frquency. Since ther are a limited number of guesses available. 
+- It will likely work to experiment ways to combine splitting power and commoness. 
+
+## improvement ideas
+
 - Try two things, change coefficient to 4.25 and 0.75
 - And do squaring.
 - I want to do a Bayes one. I really feel this is a game which works to be player from a Bayes inspired model. 
