@@ -133,88 +133,37 @@ def sort_counts( counts, mask = None ):
 def count_keys_per_letter( key_set ):
   counts = dict()
   for key in key_set:
-    try:  
+    try:
       count = counts[ key[ 0 ] ]
     except:
       count = counts[ key[ 0 ] ] = { 'value' : 0 }
     count[ 'value' ] += 1
   return counts
 
-def count_keys_per_key( keys ):
-  counts = dict()
-  for key in keys:
-    try:  
-      count = counts[ key ]
-    except:
-      count = counts[ key ] = { 'value' : 0 }
-    count[ 'value' ] += 1
-  return counts
-
-def calculate_letter_entropies( keys ):
-  """ For each key, its probability is
-  key_count / total_keys
-  And its entropy follows
-  For each letter, its entropy is
-  - sum ( probability of key for letter, for all keys per letter )
-  """
-  key_counts = count_keys_per_key( keys )
-  letter_scores = dict()
-  letter_entropies = dict()
-  letter_key_counts = dict()
-  for key in key_counts:
-    count = key_counts[ key ][ 'value' ]
-    letter = key[ 0 ]
-    try:
-      letter_score = letter_scores[ letter ]
-    except:
-      letter_score = letter_scores[ letter ] = { 
-          'total' : 0, 
-          'keys' : dict() 
-        }
-    try:
-      key_counter = letter_score[ 'keys' ][ key ] 
-    except:
-      key_counter = letter_score[ 'keys' ][ key ] = { 'value' : count }
-    letter_score[ 'total' ] += count
-  for letter in letter_scores:
-    letter_score = letter_scores[ letter ]
-    letter_keys = letter_score[ 'keys' ]
-    letter_entropy = letter_entropies[ letter ] = { 'value' : 0 }
-    total = float( letter_score[ 'total' ] )
-    letter_key_counts[ letter ] = { 'value' : total }
-    for key in letter_keys:
-      key_count = letter_keys[ key ]
-      p_key = key_count[ 'p' ] = key_count[ 'value' ] / total
-      letter_entropy[ 'value' ] -= p_key * math.log( p_key )
-  print letter_scores
-  return letter_entropies, letter_key_counts
-
 def merge_and_score( keys ):
   # return a set
-  # sort then count 
+  # sort
   keys = sorted( keys, key=lambda c : ( c[ 0 ], c[ 1 ] ) )
-  letter_entropies, letter_key_counts = calculate_letter_entropies( keys )
-  return ( letter_entropies, letter_key_counts )
+  
 
 def guess( mask, already_tried, display_only = False ):
-  candidate_words, fallback = query( mask, table, len( mask ), already_tried )
-  letter_entropies, letter_key_counts = merge_and_score( [ key for word in candidate_words for key in produce_keys( word ) ] ) 
-  sorted_counts = sort_counts( remove_entries( letter_key_counts, already_tried ) )
-  sorted_entropies = sort_counts( remove_entries( letter_entropies, already_tried ) )
+   candidate_words, fallback = query( mask, table, len( mask ), already_tried )
+  try:
+    unique_candidate_keys = merge_and_score( [ produce_keys( word ) for word in candidate_words ] ) 
+  except:
+    unique_candidate_keys = set()
+  candidate_letter_counts = remove_entries( count_keys_per_letter( unique_candidate_keys ), already_tried )
+  sorted_counts = sort_counts( candidate_letter_counts )
   sorted_fallback_counts = []
   if not sorted_counts:
     try:
-      unique_fallback_keys = merge_and_score( [ key for word in fallback for key in produce_keys( word ) ] )
+      unique_fallback_keys = merge_and_score( [ produce_keys( word ) for word in fallback ] )
     except:
       unique_fallback_keys = set()
     fallback_letter_counts = remove_entries( count_keys_per_letter( unique_fallback_keys ), already_tried )
     sorted_fallback_counts = sort_counts( fallback_letter_counts )
   if not display_only:
-    val = { 
-      'guesses': sorted_entropies, 
-      'key_counts' : sorted_counts,
-      'fallback': sorted_fallback_counts 
-    }
+    val = { 'guesses': sorted_counts, 'fallback': sorted_fallback_counts }
     print val
     return val
   else:
