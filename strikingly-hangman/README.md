@@ -5,6 +5,12 @@ ICED
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## improvement notes
+
+- Getting solid results. However the numbers seem off. If we are really finding entropy deltas, how come these are not reflected? I guess we can look at the average entropy delta, something like that. Rather than just summing over keys, since the real value is the expected value of all keys, given their probabilities. The real deltas should then be in line with these expected vaues.
+- Improve the speed.
+- Score a result > 1000 and write it up.
+
 ## improvement ideas
 
 - Can improve entropy scoring. Somehow it seems that entropy directed guesses are still not maximally optimal. Perhaps they are not considering the entropy if the guess is incorrect? 
