@@ -48,11 +48,20 @@
 
   controller.addEventListener( 'submit', requester );
 
+  function jumpout() {
+    throw new TypeError( 'Jumping out' );
+  }
+
+  function none(){}
+
   function requester( e ) {
     e.preventDefault();  
+    if ( results.inplay ) return;
+    results.inplay = true;
     const
       uri = controller.action + '?command=' + command.value,
       exchange = new XMLHttpRequest();
+    let f;
     exchange.responseType = 'json';
     exchange.timeout = 650000;
     exchange.open( 'GET', uri );
@@ -62,7 +71,9 @@
           `
             <div class=output>${ exchange.readyState == 4 ? JSON.stringify( exchange.response, null, 2 ) : '"..."' },</div>` 
         ),
-        results.branching = exchange.readyState == 4 ? false : true,
+        f = results.branching ? jumpout : none,
+        f(),
+        results.branching = exchange.readyState == 4 ? true : false,
         results.result = exchange.response ? exchange.response : results.result,
         branch()
       )
@@ -88,8 +99,7 @@
   }
 
   function branch() {
-    if( results.branching ) return;
-    results.branching = true;
+    if( ! results.branching ) return;
     let
       task = null;
     switch( command.value ) {
@@ -118,21 +128,24 @@
         task = nextWord;
         break;
     }
-    setTimeout( () => task(), 100 );
+    setTimeout( () => { results.branching = false; task(); }, 100 );
   }
 
   function nextWord() {
     command.value = 'nextWord';
+    results.inplay = false;
     doit.click();
   }
 
   function getResult( ) {
     command.value = 'getResult';
+    results.inplay = false;
     doit.click();
   }
 
   function guessWord() {
     command.value = 'guessWord'; 
+    results.inplay = false;
     doit.click();
   }
 

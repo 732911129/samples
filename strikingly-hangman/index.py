@@ -232,24 +232,33 @@ def calculate_total_entropies( words ):
     total_letter_entropy += letter_score[ 'p' ] * letter_score[ 'letter_entropy' ]
   return ( total_keys_entropy, total_letter_entropy )
 
+def get_backup( len_table, length_ceiling ):
+  model_len = length_ceiling
+  candidates = set()
+  while( model_len not in len_table and model_len ):
+    model_len -= 1
+  if model_len:
+    floor_len = max( 1, model_len - 3 )
+    while( model_len >= floor_len and model_len > 0 ):
+      try:
+        candidates |= len_table[ model_len ]
+      except:
+        floor_len -= 1
+      model_len -= 1
+  return candidates
+
 def query( mask, table, len_table, length = None, tried = '' ):
   keys = mask_to_keys( mask )
   excluded = set( tried ) - set( mask_to_letters( mask ) )
   sets = [ table[ key ] for key in keys if key in table ]
   if not sets:
-    model_len = len( mask )
-    while( model_len not in len_table and model_len ):
-      model_len -= 1
-    if model_len:
-      fallback = candidates = len_table[ model_len ] 
-    else:
-      candidates = fallback = set()
+    fallback = candidates = get_backup( len_table, length )
   else:
     candidates = reduce( lambda a, b: a & b, sets )
     fallback = reduce( lambda a, b: a | b, sets )
-  if length:
-    candidates = set( [ word for word in candidates if len( word ) == length  ] )
-    fallback = set( [ word for word in fallback if len( word ) == length  ] )
+    if length:
+      candidates = set( [ word for word in candidates if len( word ) == length  ] )
+      fallback = set( [ word for word in fallback if len( word ) == length  ] )
   if excluded:
     candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
     fallback = set( [ word for word in fallback if overlap( word, excluded ) == 0 ] )
@@ -270,22 +279,33 @@ def calculate_entropy_deltas( correct, incorrect ):
     }
   return guess_deltas
 
-def guess( mask, already_tried ):
-  already_tried = set( already_tried )
-  words, fallback = query( mask, key_table, length_table, len( mask ), already_tried )
+def get_guesses( words, remaining_letters, length ):
   keys = [ key for word in words for key in produce_keys( word ) ]
-  remaining_letters = all_letters - already_tried 
   unique_keys = set( keys )
-  correct_guesses = correct_guess_sets( words, unique_keys, len( mask ) )
+  correct_guesses = correct_guess_sets( words, unique_keys, length )
   incorrect_guesses = incorrect_guess_sets( words, remaining_letters )
+  return ( correct_guesses, incorrect_guesses )
+
+def get_entropies( words, remaining_letters, length ):
+  correct_guesses, incorrect_guesses = get_guesses( words, remaining_letters, length )
   entropy_deltas_per_guess = calculate_entropy_deltas( correct_guesses, incorrect_guesses )
   sorted_deltas = sort_counts( entropy_deltas_per_guess )
   total_key_entropy, total_letter_entropy = calculate_total_entropies( words )
+  return sorted_deltas, total_key_entropy, total_letter_entropy
+
+def guess( mask, already_tried ):
+  remaining_letters = all_letters - set( already_tried )
+  words, fallback = query( mask, key_table, length_table, len( mask ), already_tried )
+  sorted_fallback_deltas = []
+  length = len( mask )
+  sorted_deltas, total_key_entropy, total_letter_entropy = get_entropies( words, remaining_letters, length )
+  if not sorted_deltas:
+    sorted_fallback_deltas, total_key_entropy, total_letter_entropy = get_entropies( fallback, remaining_letters, length )
   val = {
     'total_key_entropy' : total_key_entropy,
     'total_letter_entropy' : total_letter_entropy,
     'guesses' : sorted_deltas,
-    'fallback' : sorted_deltas
+    'fallback' : sorted_fallback_deltas
   }
   print val
   return val
