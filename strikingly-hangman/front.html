@@ -54,7 +54,7 @@
       uri = controller.action + '?command=' + command.value,
       exchange = new XMLHttpRequest();
     exchange.responseType = 'json';
-    exchange.timeout = 65000;
+    exchange.timeout = 650000;
     exchange.open( 'GET', uri );
     exchange.addEventListener( 'readystatechange', () => 
       ( 

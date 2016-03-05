@@ -161,9 +161,10 @@ def correct_guess_sets( words, keys, length ):
     key_set = correct_sets[ 'keys' ]
     letter_words = correct_sets[ 'words' ]
     total_letter_words = float( len( letter_words ) )
+    correct_sets[ 'p' ] = total_letter_words / total_words
     for key in key_set:
       key_score = key_set[ key ]
-      key_score[ 'p' ] = p_key = len( key_score[ 'words' ] ) / total_letter_words
+      key_score[ 'p' ] = p_key = len( key_score[ 'words' ] ) / total_words
       correct_sets[ 'entropy' ] += p_key * key_score[ 'entropy' ]
   return correct
 
@@ -227,8 +228,8 @@ def calculate_total_entropies( words ):
   total_letter_entropy = 0.0
   for letter in letter_scores:
     letter_score = letter_scores[ letter ]  
-    total_keys_entropy += letter_score[ 'keys_entropy' ]
-    total_letter_entropy += letter_score[ 'letter_entropy' ]
+    total_keys_entropy += letter_score[ 'p' ] * letter_score[ 'keys_entropy' ]
+    total_letter_entropy += letter_score[ 'p' ] * letter_score[ 'letter_entropy' ]
   return ( total_keys_entropy, total_letter_entropy )
 
 def query( mask, table, len_table, length = None, tried = '' ):

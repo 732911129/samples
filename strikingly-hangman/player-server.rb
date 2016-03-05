@@ -12,7 +12,7 @@ end
 
 require 'unirest'
 
-Unirest.timeout( 120 )
+Unirest.timeout( 600 )
 
 $current_session = ''
 $already_tried = ''
