@@ -7,6 +7,7 @@ The progress tracking README for my creation for the Strikingly Hangman programm
 
 ## improvement notes
 
+- For computing expected entropy per letter, does it work to use the probability of the key over keys for that letter ( key_words / letter_words ) or, as currently doing it, over all words ( key_words / total_words ). In this first case, with respect to total_words the value is not a probability, so it is unclear to me currently if it works to use that non probability value in the expected value we will be summing later to compute the expected value over all letters. In the second case, with respect to the words containing the letter, it is not a probability. And again, it is unclear to me currently if it works to use that non probability value in the summation calculation of th eexpected value of the entropy for the letter. The issue arises in part because we are summing expected values ( of letters ), into an expected value of the entire word set. I am currently unclear as to the ways that expected values work to be combined to produce new epxected values. 
 - Getting solid results. However the numbers seem off. If we are really finding entropy deltas, how come these are not reflected? I guess we can look at the average entropy delta, something like that. Rather than just summing over keys, since the real value is the expected value of all keys, given their probabilities. The real deltas should then be in line with these expected vaues.
 - Improve the speed.
 - Score a result > 1000 and write it up.
