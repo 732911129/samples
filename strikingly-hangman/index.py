@@ -261,7 +261,6 @@ def query( mask, table, len_table, length = None, tried = '' ):
       fallback = set( [ word for word in fallback if len( word ) == length  ] )
   if excluded:
     candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
-    fallback = set( [ word for word in fallback if overlap( word, excluded ) == 0 ] )
   return ( candidates, fallback )
 
 def calculate_entropy_deltas( correct, incorrect ):
