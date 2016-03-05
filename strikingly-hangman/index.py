@@ -107,7 +107,7 @@ def sort_counts( counts, mask = None ):
   """ We sort by the frequency of the candidate words
   Then by the overall frequency of letters in English """
   counts = [ x for x in counts.iteritems() ]
-  counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ) )
+  counts = sorted( counts, key = lambda c: ( c[ 1 ][ 'value' ] ), reverse = True )
   return counts
 
 def count_keys_per_letter( key_set ):
@@ -156,9 +156,15 @@ def correct_guess_sets( words, keys, length ):
         'words' : key_words 
       }
     correct_sets[ 'words' ] |= key_words
-    p_key = len( key_words ) / total_words
-    correct_sets[ 'p' ] += p_key
-    correct_sets[ 'entropy' ] += p_key * total_key_entropy
+  for letter in correct:
+    correct_sets = correct[ letter ]
+    key_set = correct_sets[ 'keys' ]
+    letter_words = correct_sets[ 'words' ]
+    total_letter_words = float( len( letter_words ) )
+    for key in key_set:
+      key_score = key_set[ key ]
+      key_score[ 'p' ] = p_key = len( key_score[ 'words' ] ) / total_letter_words
+      correct_sets[ 'entropy' ] += p_key * key_score[ 'entropy' ]
   return correct
 
 def incorrect_guess_sets( words, letters ):
