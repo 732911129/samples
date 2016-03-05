@@ -74,6 +74,19 @@
     );
   }
 
+  function wrong_guesses( result ) {
+    const
+      correct_guesses = [ ...new Set ( 
+          result.word.
+            split( '' ).
+            filter( l => l != '*' )
+        ) ],
+      total_guesses = result.tried,
+      wrong = total_guesses.length - correct_guesses.length;
+    console.log( correct_guesses, total_guesses, wrong );
+    return wrong;
+  }
+
   function branch() {
     if( results.branching ) return;
     results.branching = true;
@@ -86,7 +99,7 @@
       case 'nextWord':
         if( results.result.word && 
             results.result.word.includes( '*' ) &&
-            results.result.tried.length < 10 
+            wrong_guesses( results.result )  < 10 
           )
           task = guessWord;
         else 
@@ -95,7 +108,7 @@
       case 'guessWord':
         if( results.result.word && 
             results.result.word.includes( '*' ) &&
-            results.result.tried.length < 10 
+            wrong_guesses( results.result )  < 10 
           )
           task = guessWord;
         else
