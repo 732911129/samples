@@ -1,7 +1,10 @@
 import math
 
-table = dict()
+key_table = dict()
 length_table = dict()
+alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+all_letters = set( [ l for l in alphabet ] )
+
 def get_words():
   with open( 'words.txt', 'r' ) as words_file:
     words = set( [ x.strip().upper() for x in words_file.readlines() ] )
@@ -21,12 +24,12 @@ def produce_keys( word ):
   keys = [ tuple( [ k[ 0 ], tuple( k[ 1 ] ) ] ) for k in new_keys ]
   return keys
 
-def index_word( word, table ):
+def index_word( word, table, len_table ):
   length = len( word )
   try:
-    word_set = length_table[ length ] 
+    word_set = len_table[ length ] 
   except KeyError:
-    word_set = length_table[ length ] = set() 
+    word_set = len_table[ length ] = set() 
   word_set.add( word )
   keys = produce_keys( word )
   for key in keys:
@@ -39,34 +42,11 @@ def index_word( word, table ):
 def index_all_words( words ):
   table = dict()
   for word in words:
-    index_word( word, table )
+    index_word( word, key_table, length_table )
   return table
 
 def overlap( lettersa, lettersb ):
   return len( set( lettersa ) & set( lettersb ) )
-
-def query( mask, table, length = None, tried = '' ):
-  keys = mask_to_keys( mask )
-  excluded = set( tried ) - set( mask_to_letters( mask ) )
-  sets = [ table[ key ] for key in keys if key in table ]
-  if not sets:
-    model_len = len( mask )
-    while( model_len not in length_table and model_len ):
-      model_len -= 1
-    if model_len:
-      fallback = candidates = length_table[ model_len ] 
-    else:
-      candidates = fallback = set()
-  else:
-    candidates = reduce( lambda a, b: a & b, sets )
-    fallback = reduce( lambda a, b: a | b, sets )
-  if length:
-    candidates = set( [ word for word in candidates if len( word ) == length  ] )
-    fallback = set( [ word for word in fallback if len( word ) == length  ] )
-  if excluded:
-    candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
-    fallback = set( [ word for word in fallback if overlap( word, excluded ) == 0 ] )
-  return ( candidates, fallback )
 
 def update_counts( word, counts, discounted_positions = {} ):
   """ Square the count per word to value larger frequencies more highly """
@@ -150,20 +130,59 @@ def count_keys_per_key( keys ):
     count[ 'value' ] += 1
   return counts
 
-def calculate_letter_entropies( keys, words ):
-  """ For each key, its probability is
-  key_count / total_keys
-  And its entropy follows
-  For each letter, its entropy is
-  - sum ( probability of key for letter, for all keys per letter )
-  """
+def retrieve_words( key, length ):
+  return set( [ w for w in key_table.get( key, set() ) if len( w ) == length ] )
+
+def correct_guess_sets( words, keys, length ):
+  correct = dict()
+  words = set( words )
+  empty = set()
+  total_words = float( len( words ) )
+  for key in keys:
+    letter = key[ 0 ]
+    try:
+      correct_sets = correct[ letter ] 
+    except:
+      correct_sets = correct[ letter ] = { 
+          'p' : 0.0,
+          'keys' : dict(), 
+          'words' : set(),
+          'entropy' : 0.0 
+        }
+    key_words = words & retrieve_words( key, length )
+    total_key_entropy, total_letter_entropy = calculate_total_entropies( key_words )
+    correct_sets[ 'keys' ][ key ] = { 
+        'entropy' : total_key_entropy,
+        'words' : key_words 
+      }
+    correct_sets[ 'words' ] |= key_words
+    correct_sets[ 'p' ] += len( key_words ) / total_words
+    correct_sets[ 'entropy' ] += total_key_entropy
+  return correct
+
+def incorrect_guess_sets( words, letters ):
+  incorrect = dict()
+  total_words = float( len( words ) )
+  for letter in letters:
+    letter_words = [ w for w in words if letter not in w ] 
+    total_key_entropy, total_letter_entropy = calculate_total_entropies( letter_words )
+    if total_words:
+      p = len( letter_words ) / total_words 
+    else:
+      p = 0.0000001
+    incorrect[ letter ] = { 
+        'p' : p,
+        'words' :  letter_words, 
+        'entropy' : total_key_entropy 
+      }
+  return incorrect
+
+def calculate_letter_scores( words ):
+  keys = [ key for word in words for key in produce_keys( word ) ]
   key_counts = count_keys_per_key( keys )
   letter_scores = dict()
-  letter_entropies = dict()
-  letter_key_counts = dict()
-  total_keys = 0
+  total_keys = float( len( keys ) )
   total_words = float( len( words ) )
-  total_entropy = 0
   for key in key_counts:
     count = key_counts[ key ][ 'value' ]
     letter = key[ 0 ]
@@ -171,75 +190,97 @@ def calculate_letter_entropies( keys, words ):
       letter_score = letter_scores[ letter ]
     except:
       letter_score = letter_scores[ letter ] = { 
-          'total' : 0, 
+          'total_keys' : 0.0, 
+          'keys_entropy' : 0.0,
+          'letter_entropy' : 0.0,
+          'p' : 0.0,
           'keys' : dict() 
         }
     try:
       key_counter = letter_score[ 'keys' ][ key ] 
     except:
       key_counter = letter_score[ 'keys' ][ key ] = { 'value' : count }
-    letter_score[ 'total' ] += count
-    total_keys += count
+    letter_score[ 'total_keys' ] += count
   for letter in letter_scores:
     letter_score = letter_scores[ letter ]
+    total_letter_keys = letter_score[ 'total_keys' ]
+    p_letter = total_letter_keys / total_keys 
+    letter_score[ 'p' ] = p_letter
+    letter_score[ 'letter_entropy' ] = -math.log( p_letter ) * p_letter
     letter_keys = letter_score[ 'keys' ]
-    letter_entropy = letter_entropies[ letter ] = { 'value' : 0 }
-    total = float( letter_score[ 'total' ] )
-    p_letter = total / total_keys 
-    letter_key_counts[ letter ] = { 'value' : p_letter }
     for key in letter_keys:
-      key_count = letter_keys[ key ]
-      p_key = key_count[ 'p' ] = key_count[ 'value' ] / total_words
-      letter_entropy[ 'value' ] -= p_key * math.log( p_key )
-    total_entropy += letter_entropy[ 'value' ]
-  S = max( 1, total_entropy )
-  for letter in letter_entropies:
-    letter_entropy = letter_entropies[ letter ]
-    E = letter_entropy[ 'value' ]
-    p = letter_key_counts[ letter ][ 'value' ]
-    # convert to ( pE ) + ( 1 - p ) ( S - E )
-    letter_entropy[ 'value' ]  = E/S
-  print letter_scores
-  return letter_entropies, letter_key_counts
+      key_counter = letter_keys[ key ]
+      p_key = key_counter[ 'value' ] / total_keys
+      letter_score[ 'keys_entropy' ] -= p_key * math.log( p_key )
+  return letter_scores
 
-def merge_and_score( keys, words ):
-  # return a set
-  # sort then count 
-  keys = sorted( keys, key=lambda c : ( c[ 0 ], c[ 1 ] ) )
-  letter_entropies, letter_key_counts = calculate_letter_entropies( keys, words )
-  return ( letter_entropies, letter_key_counts )
+def calculate_total_entropies( words ):
+  letter_scores = calculate_letter_scores( words )
+  total_keys_entropy = 0.0
+  total_letter_entropy = 0.0
+  for letter in letter_scores:
+    letter_score = letter_scores[ letter ]  
+    total_keys_entropy += letter_score[ 'keys_entropy' ]
+    total_letter_entropy += letter_score[ 'letter_entropy' ]
+  return ( total_keys_entropy, total_letter_entropy )
 
-def guess( mask, already_tried, display_only = False ):
-  candidate_words, fallback = query( mask, table, len( mask ), already_tried )
-  letter_entropies, letter_key_counts = merge_and_score( [ key for word in candidate_words for key in produce_keys( word ) ], candidate_words ) 
-  sorted_counts = sort_counts( remove_entries( letter_key_counts, already_tried ) )
-  sorted_entropies = sort_counts( remove_entries( letter_entropies, already_tried ) )
-  sorted_fallback_entropies = []
-  if not sorted_counts:
-    try:
-      fallback_entropies, fallback_key_counts = merge_and_score( [ key for word in fallback for key in produce_keys( word ) ], fallback )
-    except:
-      unique_fallback_keys = set()
-    sorted_fallback_entropies = sort_counts( remove_entries( fallback_entropies, already_tried ) )
-  if not display_only:
-    guesses = sorted( sorted_entropies, key = lambda c : ( 
-        c[ 1 ][ 'value' ] )
-      )
-    fallback_guesses = sorted_fallback_entropies
-    if not guesses:
-      fallback_guesses = sorted( sorted_fallback_entropies, key = lambda c : ( 
-          c[ 1 ][ 'value' ] ) 
-        )
-    val = { 
-      'guesses': guesses, 
-      'key_counts' : sorted_counts,
-      'fallback': fallback_guesses
-    }
-    print val
-    return val
+def query( mask, table, len_table, length = None, tried = '' ):
+  keys = mask_to_keys( mask )
+  excluded = set( tried ) - set( mask_to_letters( mask ) )
+  sets = [ table[ key ] for key in keys if key in table ]
+  if not sets:
+    model_len = len( mask )
+    while( model_len not in len_table and model_len ):
+      model_len -= 1
+    if model_len:
+      fallback = candidates = len_table[ model_len ] 
+    else:
+      candidates = fallback = set()
   else:
-    print 'Counts ', sorted_counts
-    print 'Fallback ', sorted_fallback_counts
+    candidates = reduce( lambda a, b: a & b, sets )
+    fallback = reduce( lambda a, b: a | b, sets )
+  if length:
+    candidates = set( [ word for word in candidates if len( word ) == length  ] )
+    fallback = set( [ word for word in fallback if len( word ) == length  ] )
+  if excluded:
+    candidates = set( [ word for word in candidates if overlap( word, excluded ) == 0 ] )
+    fallback = set( [ word for word in fallback if overlap( word, excluded ) == 0 ] )
+  return ( candidates, fallback )
+
+def calculate_entropy_deltas( correct, incorrect ):
+  guess_deltas = dict()
+  letters = set( correct.keys() ) & set ( incorrect.keys() )
+  for letter in letters:
+    correct_scores = correct[ letter ]
+    incorrect_scores = incorrect[ letter ]
+    correct_entropy = correct_scores[ 'entropy' ]
+    incorrect_entropy = incorrect_scores[ 'entropy' ]
+    correct_p = correct_scores[ 'p' ]
+    incorrect_p = incorrect_scores[ 'p' ]
+    guess_deltas[ letter ] = { 
+      'value' : correct_p * correct_entropy + incorrect_p * incorrect_entropy 
+    }
+  return guess_deltas
+
+def guess( mask, already_tried ):
+  already_tried = set( already_tried )
+  words, fallback = query( mask, key_table, length_table, len( mask ), already_tried )
+  keys = [ key for word in words for key in produce_keys( word ) ]
+  remaining_letters = all_letters - already_tried 
+  unique_keys = set( keys )
+  correct_guesses = correct_guess_sets( words, unique_keys, len( mask ) )
+  incorrect_guesses = incorrect_guess_sets( words, remaining_letters )
+  entropy_deltas_per_guess = calculate_entropy_deltas( correct_guesses, incorrect_guesses )
+  sorted_deltas = sort_counts( entropy_deltas_per_guess )
+  total_key_entropy, total_letter_entropy = calculate_total_entropies( words )
+  val = {
+    'total_key_entropy' : total_key_entropy,
+    'total_letter_entropy' : total_letter_entropy,
+    'guesses' : sorted_deltas,
+    'fallback' : sorted_deltas
+  }
+  print val
+  return val
 
 print 'Building table...'
 table = index_all_words( get_words() )
