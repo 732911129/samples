@@ -7,7 +7,7 @@ class Guesser(object):
   app = Klein()
 
   @app.route('/guess', methods=['POST'])
-  def save_item(self, request):
+  def guess(self, request):
     request.setHeader('Content-Type', 'application/json')
     body = json.loads(request.content.read())
     data = index.guess( body[ "word" ], body[ "tried" ] )
