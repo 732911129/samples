@@ -16,6 +16,7 @@ handlers:
 - url: /
   static_dir: front
   secure: always
+  application_readable: true
 
 
 

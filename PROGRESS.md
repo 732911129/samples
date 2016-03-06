@@ -2,9 +2,9 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
-## Todo Friday / Saturday / Sunday
+## Todo from Monday
 
-  - Finish for Monday.
+  - Finish for this week.
   - Implement back end. 
   - Render HTML on server using minidom. 
   - Update styles so that it can work with no javascript. 
