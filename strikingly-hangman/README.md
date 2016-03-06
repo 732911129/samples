@@ -7,6 +7,16 @@ The progress tracking README for my creation for the Strikingly Hangman programm
 
 ## improvement notes
 
+- Okay totally killed it with 78/80. 1313. WOO. Top score.
+- I think we can improve incorrect guesses. 
+- Here's some ideas:
+  - Use Bayes top update entropy deltas.
+  - Incorporate score ( 20 for correct, -1 for incorrect ) into expected entropy for correct and incorrect calculation.
+  - Incorporate number of guesses remaining using some kind of likely exponential measure.
+  
+
+## improvement notes
+
 - Just got 11/11. 
 - Some glitch causes there to be 0 candidates at one point. 
 - So it works to form a backup and choose from that. 
