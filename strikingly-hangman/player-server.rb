@@ -14,7 +14,7 @@ require 'unirest'
 
 Unirest.timeout( 600 )
 
-$current_session = 'bc5af682e9f9f3ad2dd8f1e183ef2fdf'
+$current_session = ''
 $already_tried = ''
 $guess = ''
 

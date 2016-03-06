@@ -4,6 +4,7 @@ key_table = dict()
 length_table = dict()
 alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 all_letters = set( [ l for l in alphabet ] )
+opening_cache = dict()
 
 def get_words():
   with open( 'words.txt', 'r' ) as words_file:
@@ -293,19 +294,24 @@ def get_entropies( words, remaining_letters, length ):
   return sorted_deltas, total_key_entropy, total_letter_entropy
 
 def guess( mask, already_tried ):
-  remaining_letters = all_letters - set( already_tried )
-  words, fallback = query( mask, key_table, length_table, len( mask ), already_tried )
-  sorted_fallback_deltas = []
-  length = len( mask )
-  sorted_deltas, total_key_entropy, total_letter_entropy = get_entropies( words, remaining_letters, length )
-  if not sorted_deltas:
-    sorted_fallback_deltas, total_key_entropy, total_letter_entropy = get_entropies( fallback, remaining_letters, length )
-  val = {
-    'total_key_entropy' : total_key_entropy,
-    'total_letter_entropy' : total_letter_entropy,
-    'guesses' : sorted_deltas,
-    'fallback' : sorted_fallback_deltas
-  }
+  key = ( mask, already_tried )
+  if key in opening_cache:
+    val = opening_cache[ key ]
+  else:
+    remaining_letters = all_letters - set( already_tried )
+    words, fallback = query( mask, key_table, length_table, len( mask ), already_tried )
+    sorted_fallback_deltas = []
+    length = len( mask )
+    sorted_deltas, total_key_entropy, total_letter_entropy = get_entropies( words, remaining_letters, length )
+    if not sorted_deltas:
+      sorted_fallback_deltas, total_key_entropy, total_letter_entropy = get_entropies( fallback, remaining_letters, length )
+    val = {
+      'total_key_entropy' : total_key_entropy,
+      'total_letter_entropy' : total_letter_entropy,
+      'guesses' : sorted_deltas,
+      'fallback' : sorted_fallback_deltas
+    }
+    opening_cache[ key ] = val
   print val
   return val
 

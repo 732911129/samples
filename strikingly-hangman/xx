@@ -1,1 +1,1 @@
-curl -vX POST https://strikingly-hangman.herokuapp.com/game/on  -H "Content-Type:application/json" --data '{"sessionId":"bc5af682e9f9f3ad2dd8f1e183ef2fdf", "action":"submitScore"}'
+curl -vX POST https://strikingly-hangman.herokuapp.com/game/on  -H "Content-Type:application/json" --data '{"sessionId":"693b6d5b07252ea2e9fe762cca986a7f", "action":"submitResult"}'

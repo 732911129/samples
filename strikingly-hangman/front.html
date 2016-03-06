@@ -23,7 +23,7 @@
 <form id=controller method=GET action=http://localhost:8080/play>
   <select id=command name=command>
     <option value=init>Init</option>
-    <option selected value=nextWord>Next Word</option>
+    <option value=nextWord>Next Word</option>
     <option value=guessWord>Guess Word</option>
     <option value=getResult>Get Result</option>
   </select>
@@ -44,7 +44,7 @@
     output_list = document.querySelector( '#output_list' ),
     command = document.querySelector( '#command' ),
     constroller = document.querySelector( '#controller' ),
-    results = { result : { word : '*', tried : '' } };
+    results = { result : { } };
 
   controller.addEventListener( 'submit', requester );
 
