@@ -5,6 +5,10 @@ ICED
 
 The progress tracking README for my creation for the Strikingly Hangman programming test.
 
+## improvement ideas
+
+- perhaps somehow normalize the correct and incorrect entropies to ensure they are both correct and of the same scale. 
+
 ## improvement notes
 
 - Okay totally killed it with 78/80. 1313. WOO. Top score.
