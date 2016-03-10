@@ -13,6 +13,7 @@ class collection_endpoint( endpoint ):
 class instance_endpoint( endpoint ):
   def get( self, type, id ):
     """ Get a specific instance """
+    self.response.headers[ 'Content-Type' ] = 'application/json'
     self.response.write( Feature.render( id = id ) )
 
   def post( self, type, id = 'new' ):

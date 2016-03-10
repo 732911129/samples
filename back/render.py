@@ -6,5 +6,5 @@ import render
 instance_blank = files.read( paths.instance )
 collection_blank = files.read( paths.collection )
 
-def print( model ):
+def imprint( model ):
   pass
