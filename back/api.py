@@ -3,22 +3,21 @@ from webapp2 import (
     Route as path,
     RequestHandler as endpoint
   )
-from models import Feature, Features
+from models import Media
 
 class collection_endpoint( endpoint ):
   def get( self, type, cursor = None ):
     """Get the first or next page of the collection"""
-    self.response.write( Features.render( cursor = cursor ) )
+    self.response.write( Media.render( type = type, cursor = cursor ) )
 
 class instance_endpoint( endpoint ):
   def get( self, type, id ):
     """ Get a specific instance """
-    self.response.headers[ 'Content-Type' ] = 'application/json'
-    self.response.write( Feature.render( id = id ) )
+    self.response.write( Media.render( type = type, id = id ) )
 
   def post( self, type, id = 'new' ):
     """ Create or update a specific instance """
-    self.response.write( Feature.render( id = id, params = self.request.POST.mixed() ) )
+    self.response.write( Media.render( type = type, id = id, params = self.request.POST.mixed() ) )
 
 # An optimization is to group these paths under their common prefix
 paths = [

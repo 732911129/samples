@@ -1,3 +1,4 @@
+import views
 import render
 import paths
 import files
