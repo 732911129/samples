@@ -2,6 +2,7 @@ import re
 import os
 import paths
 import files
+from models import Collection
 from HTMLParser import HTMLParser as html
 
 instance_id_regex = re.compile( r"new$" )
@@ -112,4 +113,10 @@ class ImprintingParser( html ):
 imprinter = ImprintingParser()
 
 def imprint( model, view ):
-  return imprinter.imprint( model, view )
+  if type( model ) is Collection:
+    print model.models
+    print model.cursor
+    print model.more
+    return view
+  else:
+    return imprinter.imprint( model, view )

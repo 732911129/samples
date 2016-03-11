@@ -1,7 +1,14 @@
+from google.appengine.datastore.datastore_query import Cursor
 from google.appengine.ext import ndb
 import json
 import render
 import views
+
+class Collection( object ):
+  def __init__( self, models, cursor, more ):
+    self.models = models
+    self.cursor = cursor
+    self.more = more
 
 class Slot( ndb.Expando ):
   slot_type = ndb.StringProperty()
@@ -30,9 +37,9 @@ class Media( ndb.Expando ):
     return None
 
   @classmethod
-  def _instance( cls, type = None, id = None, params = None, cursor = None ):
+  def _instance( cls, media_type = None, id = None, params = None, cursor = None ):
     if params and id == 'new':
-      m = cls( media_type = type )
+      m = cls( media_type = media_type )
       for key in params.keys():
         value = params[ key ]
         s = Slot( slot_type = 'string', slot_name = key, value = value )
@@ -42,7 +49,7 @@ class Media( ndb.Expando ):
       m.put()
       return m
     elif id and not params:
-      print type, id, params, cursor
+      print media_type, id, params, cursor
       longid = long( id )
       q = cls.get_by_id( longid )
       return q
@@ -57,13 +64,21 @@ class Media( ndb.Expando ):
       q.slots = new_slots
       q.put()
       return q
+    elif media_type:
+      if cursor:
+        cursor = Cursor( urlsafe = cursor )
+      q, next_cursor, more = cls.query( cls.media_type == media_type ).fetch_page( 10, cursor = cursor )
+      return Collection( q, next_cursor, more )
     else:
       return None
 
   @classmethod
-  def render( cls, type = None, id = None, params = None, cursor = None ):
-    m = cls._instance( type = type, id = id, params = params, cursor = cursor )
-    v = views[ type ]
+  def render( cls, media_type = None, id = None, params = None, cursor = None ):
+    m = cls._instance( media_type = media_type, id = id, params = params, cursor = cursor )
+    if type( m ) is Collection:
+      v = views[ media_type + 's' ] 
+    else:
+      v = views[ media_type ]
     if m and v:
       doc = render.imprint( m, v )
       return doc
