@@ -6,6 +6,13 @@ from HTMLParser import HTMLParser as html
 
 instance_id_regex = re.compile( r"new$" )
 
+self_closing_tags = {
+    'input' : True,
+    'img' : True,
+    'link' : True,
+    'meta' : True
+  }
+
 def get_value_or_data_bind_name( attr ):
   return attr[ 1 ]
 
@@ -51,6 +58,7 @@ class ImprintingParser( html ):
           tag == 'form' and
           attr[ 0 ] == 'action'
        ):
+      self.output += " " + attr[ 0 ]
       key_id = unicode( self.model.key_id )
       attr_value = instance_id_regex.sub( key_id, attr[ 1 ] )
       self.output += "=" + "\"" + attr_value + "\""
@@ -61,7 +69,8 @@ class ImprintingParser( html ):
 
   def handle_starttag( self, tag, attrs ):
     self.depth += 1
-    self.output += self.depth * "\t"
+    #self.output += "\n"
+    #self.output += self.depth * "  "
     self.output += "<" + tag
     for attr in attrs:
       self.bind_attr_if_binder( tag, attr )
@@ -70,19 +79,20 @@ class ImprintingParser( html ):
     if self.next_data:
       self.output += self.next_data
       self.next_data = None
+    if tag in self_closing_tags:
+      self.depth -= 1
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )
-    self.output += "\n"
     self.depth -= 1
 
   def handle_data( self, data ):
     self.output += data 
 
   def handle_endtag( self, tag ):
-    self.output += self.depth * "\t"
+    #self.output += "\n"
+    #self.output += self.depth * "  "
     self.output += "</" + tag + ">"
-    self.output += "\n"
     self.depth -= 1
 
   def reset( self ):
