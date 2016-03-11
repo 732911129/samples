@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
-import render
 import json
+import render
 import views
 
 class Slot( ndb.Expando ):
@@ -14,7 +14,7 @@ class Media( ndb.Expando ):
   slots = ndb.StructuredProperty( Slot, repeated = True )
 
   @classmethod
-  def _model( cls, type = None, id = None, params = None, cursor = None ):
+  def _instance( cls, type = None, id = None, params = None, cursor = None ):
     if params and id == 'new':
       m = cls( media_type = type )
       for key in params.keys():
@@ -35,9 +35,9 @@ class Media( ndb.Expando ):
   @classmethod
   def render( cls, type = None, id = None, params = None, cursor = None ):
     m = cls._instance( type = type, id = id, params = params, cursor = cursor )
-    v = views.get( type )
+    v = views[ type ]
     if m and v:
-      doc = cls.imprint( m, v )
+      doc = render.imprint( m, v )
       return doc
     else:
       return views.get( '404' )
