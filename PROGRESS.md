@@ -2,6 +2,13 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Progress Update
+
+  - A lot more completed.
+  - Viewes and templating are sketched in rough versions.
+  - Tested on Windows and Mac, works in Chrome.
+  - Edge has issue with resizing, and sizing of stand alone feature. 
+
 ## Todo from Monday
 
   - Finish for this week.
