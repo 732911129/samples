@@ -33,11 +33,11 @@ class ImprintingParser( html ):
     name = get_value_or_data_bind_name( attr )
     value = model.getslot( name )
     if tag == 'input':
-      self.output += " " + 'value="' + value + '"'
+      self.output += " " + 'value="' + unicode( value ) + '"'
     elif tag == 'textarea':
-      self.next_data = value
+      self.next_data = unicode( value )
     elif tag == 'select':
-      self.next_select_value = value
+      self.next_select_value = unicode( value )
     else:
       print attr, model
       raise TypeError( 'Bound data on %s which is not input or textarea' % tag )

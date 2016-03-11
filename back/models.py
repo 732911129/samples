@@ -14,12 +14,16 @@ class Media( ndb.Expando ):
   slots = ndb.StructuredProperty( Slot, repeated = True )
 
   def hasslot( self, name ):
+    if self.__class__._properties.get( name ):
+      return True
     for slot in self.slots:
       if slot.slot_name == name:
         return True
     return False
 
   def getslot( self, name ):
+    if self.__class__._properties.get( name ):
+      return self.__getattribute__( name )
     for slot in self.slots:
       if slot.slot_name == name:
           return slot.value
