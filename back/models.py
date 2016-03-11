@@ -13,6 +13,18 @@ class Media( ndb.Expando ):
   key_id = ndb.IntegerProperty()
   slots = ndb.StructuredProperty( Slot, repeated = True )
 
+  def hasslot( self, name ):
+    for slot in self.slots:
+      if slot.slot_name == name:
+        return True
+    return False
+
+  def getslot( self, name ):
+    for slot in self.slots:
+      if slot.slot_name == name:
+          return slot.value
+    return None
+
   @classmethod
   def _instance( cls, type = None, id = None, params = None, cursor = None ):
     if params and id == 'new':
@@ -26,8 +38,20 @@ class Media( ndb.Expando ):
       m.put()
       return m
     elif id and not params:
+      print type, id, params, cursor
       longid = long( id )
       q = cls.get_by_id( longid )
+      return q
+    elif id and params:
+      longid = long( id )
+      q = cls.get_by_id( longid )
+      new_slots = []
+      for key in params.keys():
+        value = params[ key ]
+        s = Slot( slot_type = 'string', slot_name = key, value = value )
+        new_slots.append( s )
+      q.slots = new_slots
+      q.put()
       return q
     else:
       return None
