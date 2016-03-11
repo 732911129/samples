@@ -67,7 +67,9 @@ class Media( ndb.Expando ):
     elif media_type:
       if cursor:
         cursor = Cursor( urlsafe = cursor )
-      q, next_cursor, more = cls.query( cls.media_type == media_type ).fetch_page( 10, cursor = cursor )
+      q, next_cursor, more = cls.                               \
+        query( cls.media_type == media_type ).                  \
+        fetch_page( 10, keys_only = True, cursor = cursor )     
       return Collection( q, next_cursor, more )
     else:
       return None

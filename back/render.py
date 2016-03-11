@@ -115,6 +115,7 @@ imprinter = ImprintingParser()
 def imprint( model, view ):
   if type( model ) is Collection:
     # TODO : logic for imprinting collection
+    print model.models
     return view
   else:
     return imprinter.imprint( model, view )
