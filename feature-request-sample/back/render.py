@@ -58,14 +58,6 @@ class ImprintingParser( html ):
       self.next_select_value = None
 
     if (
-          tag == 'form' and
-          attr[ 0 ] == 'action'
-        ):
-      self.output += " " + attr[ 0 ]
-      key_id = unicode( self.model.key_id )
-      attr_value = instance_id_regex.sub( key_id, attr[ 1 ] )
-      self.output += "=" + "\"" + attr_value + "\""
-    elif (
           tag == 'ul' and
           attr[ 0 ] == 'name' and
           attr[ 1 ] == 'models' and
@@ -82,6 +74,15 @@ class ImprintingParser( html ):
               src=/api/model/type/%(media_type)s/id/%(key_id)s>
           </iframe>
         </li>""" % data
+    
+    if (
+          tag == 'form' and
+          attr[ 0 ] == 'action'
+        ):
+      self.output += " " + attr[ 0 ]
+      key_id = unicode( self.model.key_id )
+      attr_value = instance_id_regex.sub( key_id, attr[ 1 ] )
+      self.output += "=" + "\"" + attr_value + "\""
     else:
       self.output += " " + attr[ 0 ]
       if attr[ 1 ]:

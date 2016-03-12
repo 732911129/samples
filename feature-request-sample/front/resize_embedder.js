@@ -100,6 +100,7 @@ self.resize_off = false;
             if( ! embed.classList.contains( 'js-active' ) ) {
               embed.classList.add( 'js-active' );
             }
+            emit_resize( embed );
           }
         }, 40 );
       } else throw new TypeError( 'Embedding tag not found! ' );

@@ -17,6 +17,7 @@
     width:40%;
     height:33%;
     margin:16px;
+    vertical-align: top;
     border:0;
   }
   iframe:not(.js-active) {

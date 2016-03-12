@@ -3,8 +3,14 @@
     width: min-content;
     width: -moz-min-content; /* for firefox */
     height: min-content;
+  }
+  form[fit], #component[fit] {
+    width: fit-content;
+    width: -moz-fit-content;
+  }
+  form, #component {
     padding: 0.5rem;
-    margin: 0;
+    margin: 0 auto;
   }
   label.explainer {
     display: none;
@@ -25,4 +31,7 @@
   }
   textarea, input {
     padding: 0.2rem 0.5rem 0.3rem;
+  }
+  ul[name="models"] > li {
+    list-style-type: none;
   }
