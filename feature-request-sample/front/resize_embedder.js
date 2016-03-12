@@ -17,28 +17,15 @@ self.resize_off = false;
   (function () {
     // the function to resize
     function resize( event, block_resize ) {
-      var 
-        parent = self.parent.document,
-        parent_uri = parent.location.href,
-        my_uri = self.document.location,
-        absolute_src = my_uri.pathname,
-        full_src = my_uri.href,
-        relative_src = my_uri.href.subtract( parent_uri ),  // string subtraction
-
-                                                            // in the below, the last value
-                                                            // the suffix selector $=
-                                                            // is a fallback, 
-                                                            // it can error ( because there may be 
-                                                            // more than 1 embed tags that share the 
-                                                            // same suffix yet are different documents
-                                                            // tho it can also catch cases not caught
-                                                            // by others such as '../'
-        embed = parent.querySelector( `
-            iframe[src="${ full_src }"],
-            iframe[src="${ absolute_src }"],
-            iframe[src="${ relative_src }"],
-            iframe[src$="${ relative_src }"]               
-          `);
+      if( ! self.embedding_tag ) {
+        let
+          parent = self.parent.document,
+          embed_candidates = Array.from( parent.querySelectorAll( 'iframe' ) ),
+          embed = embed_candidates.filter( f => f.contentWindow == self )[ 0 ]
+        self.embedding_tag = embed;
+      }
+      const
+        embed = self.embedding_tag;
       if( embed ) {
         setTimeout( () => {  
           var
@@ -115,7 +102,7 @@ self.resize_off = false;
             }
           }
         }, 40 );
-      }
+      } else throw new TypeError( 'Embedding tag not found! ' );
     }
     resize();
     self.resize = resize;
