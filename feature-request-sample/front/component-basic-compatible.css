@@ -1,0 +1,64 @@
+/* layout */
+  :root, body {
+    /* these settings make it easy to calculate the size of the embedding tag */
+    padding:0;
+    margin:0;
+    border:0;
+  }
+  #component {
+    padding: 8px 16px;
+    margin: 0 auto;
+  }
+  #component:not( scrollable ) {
+    overflow: none;
+  }
+  iframe {
+    display: inline-block;
+    width:40%;
+    height:33%;
+    margin:16px;
+    border:0;
+  }
+  iframe:not(.js-active) {
+    min-width: 255px;
+    min-height: 127px;
+  }
+  textarea {
+    resize: vertical;
+  }
+/* type annotations */
+  .type {
+    display: none;
+  }
+/* layout two screen sizes screen */
+  /* details */
+    /*
+     iframes basically just layout like cards that can tile across the screen 
+     if there is sufficient width
+     and down the screen 
+    */
+  @media ( min-width: 600px ) {
+    iframe {
+      margin: 16px;
+    }
+  }
+  @media ( max-width: 599px ) {
+    *{}
+    #component {
+      text-align: center;
+    }
+    #component > * {
+      text-align: left;
+    }
+    iframe {
+      margin: 16px auto;
+    }
+  }
+/* fonts */
+  :root {
+    font-family: Tahoma, Geneva;
+    font-family: "Trebuchet MS", Helvetica;
+  }
+  textarea, input, select, option {
+    font: inherit;
+  }

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>Feature</title>
+    <link rel=stylesheet href=/component-test-colors.css>
+    <link rel=stylesheet href=/component-basic-compatible.css>
+    <link rel=stylesheet href=/component-modern-upgrade.css>
+    <style id=layout>
+      form {
+        width: min-content;
+        width: -moz-min-content; /* for firefox */
+        height: min-content;
+        padding: 0.5rem;
+        margin: 0;
+      }
+      label.explainer {
+        display: none;
+      }
+      dd {
+        padding: 0.25rem;
+        margin: 0;
+        margin-left: 0.25rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      dd label {
+        margin-right: 1.5rem;
+      }
+      dd input {
+        align-self: flex-start;
+      }
+      textarea, input {
+        padding: 0.2rem 0.5rem 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <form id=component method=POST action=/api/model/type/feature/id/new>
+      <dl>
+        <dt><h1>Feature</h1></dt>
+        <dd>
+          <label for=key_id>Key ID</label>
+          <input name=key_id id=key_id disabled>
+        <dd>
+          <label for=feature class=type>Feature</label>
+          <input type=url class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
+        </dd>
+        <dd>
+          <label for=title>Title</label>
+          <label class=explainer for=title>
+            A short, descriptive name of the feature request. 
+          </label>
+          <input required type=text name=title id=title pattern=".{3,60}"
+            title="Good titles are between 3 and 50 characters">
+        </dd>
+        <dd>
+          <label for=description>Description</label>
+          <label class=explainer for=description>
+            A long description of the feature request.
+          </label>
+          <textarea required resize-triggers="mouseup" name=description id=description></textarea>
+        </dd>
+        <dd>
+          <label for=client>Client</label>
+          <label class=explainer for=client>
+            A selection list of clients
+          </label>
+          <select required name=client id=client>
+            <option value="">Select a client</option>
+            <option value="Client_A">Client A</option>
+            <option value="Client_B">Client B</option>
+            <option value="Client_C">Client C</option>
+          </select>
+        </dd>
+        <dd>
+          <label for=client_priority>Client Priority</label>
+          <label class=explainer for=client_priority>
+            A numbered priority scoped to the client. Smaller numbers are worked on earlier, and so smaller numbers indicate greater importance.
+          </label>
+          <input required type=number min=1 name=client_priority id=client_priority>
+        </dd>
+        <dd>
+          <label for=target_date>Target Date</label>
+          <label class=explainer for=target_date>
+            The date that the client is hoping to have the feature.
+          </label>
+          <input required type=date id=target_date name=target_date>
+        </dd>
+        <dd>
+          <label for=ticket_url>Ticket URL</label>
+          <label class=explainer for=ticket_url>
+            A field for storing any URL ( such as that of the ticket for this feature ).
+          </label>
+          <input required type=url placeholder="https://" id=ticket_url name=ticket_url>
+        </dd>
+        <dd>
+          <label for=product_area>Product Area</label>
+          <label class=explainer for=product_area>
+            A selection list of product areas, such as Policies, Billing, and so on.
+          </label>
+          <input type=text pattern="^((Policies|Reports|Billing|Claims)[,\s]*)+$"
+            required
+            title="Please list one or more of: Policies, Reports, Billing or Claims"
+            id=product_area
+            name=product_area>
+        </dd>
+        <dd>
+          <details>
+            <summary resize-triggers=click>Additional Informations</summary>
+            <dl>
+              <dt value="Additional Information"></dt>
+              <dd>
+                <dl>
+                  <dt>Client Contact Person</dt>
+                  <dd>
+                    <label for=client_contact_person class=type>ClienContactPerson</label>
+                    <input type=url formnovalidate class=type value="https://dosaygo.com/types/ClientContactPerson" id=client_contact_person name=client_contact_person>
+                  </dd>
+                  <dd>
+                    <label for=client_contact_person-name>Name</label>
+                    <label class=explainer for=client_contact_person-name>
+                      The person at the client who requested this feature, or the point of contact for interaction about this feature.
+                    </label>
+                    <input type=text name=client_contact_person-name id=client_contact_person-name 
+                      pattern=".{2,60}"
+                      title="Good client contact names are between 2 and 60 characters">
+                  </dd>
+                  <dd>
+                    <label for=client_contact_person-contact_information>Contact Information</label>
+                    <label class=explainer for=client_contact_person-contact_information>
+                      The contact details of this person.
+                    </label>
+                    <input type=text name=client_contact_person-contact_information id=client_contact_person-contact_information
+                      pattern=".{5,140}"
+                      title="Good client contact details are between 5 and 140 characters">
+                  </dd>
+                  <dd>
+                    <label for=client_contact_person-role>Role</label>
+                    <label class=explainer for=client_contact_person-role>
+                      The role at the client, or with regard to this project, of the client contact person.
+                    </label>
+                    <input type=text name=client_contact_person-role id=client_contact_person-role pattern=".{3,60}"
+                      title="Good client contact person roles are between 3 and 60 characters.">
+                  </dd>
+                </dl>
+              </dd>
+              <dd>
+                <dl>
+                  <dt>Receiver Notes</dt>
+                  <dd>
+                    <label for=reciever_notes class=type>ReceiverNotes</label>
+                    <input type=url formnovalidate class=type value="https://dosaygo.com/types/ReceiverNotes" id=receiver_notes name=receiver_notes>
+                  </dd>
+                  <dd>
+                    <label for=receiver_notes-interactions>Interaction Notes</label>
+                    <label class=explainer for=receiver_notes-interactions>
+                      Notes for the interaction, if any.
+                    </label>
+                    <textarea resize-triggers="mouseup" name=reciever_notes-interactions id=receiver_notes-interactions></textarea>
+                  </dd>
+                  <dd>
+                    <label for=receiver_notes-human>Human</label>
+                    <label class=explainer for=receiver_notes-human>
+                      The human who received the feature request and entered it.
+                    </label>
+                    <input type=text name=receiver_notes-human id=receiver_notes-human pattern=".{2,60}"
+                      title="Good human names are between 2 and 60 characters">
+                  </dd>
+                  <dd>
+                    <label for=receiver_notes-priority>Priority</label>
+                    <label class=explainer for=receiver_notes-priority>
+                      A numbered priority with regards to the receiver of this feature request.
+                    </label>
+                    <input type=number min=1 id=receiver_notes-priority name=recever_notes-priority>
+                  </dd>
+                </dl>
+              </dd>
+            </dl>
+          </details>
+        </dd>
+        <dd>
+          <button>Report Feature Request</button>
+        </dd>
+      </dl>
+    </form>
+    <script src=/resize_embedder.js></script>
+  </body>
+</html>
+
