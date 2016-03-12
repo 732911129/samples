@@ -3,7 +3,7 @@
 // doing so on load and also on resize
 self.resize_off = false;
   (function () {
-    Object.defineProperty( String.prototype, 'subtract', { get : () => subtract } );
+    Object.defineProperty( String.prototype, 'subtract', { get : function() { return subtract; } } );
 
     function subtract( subtractand ) {
       var i = 0;
@@ -18,16 +18,16 @@ self.resize_off = false;
     // the function to resize
     function resize( event, block_resize ) {
       if( ! self.embedding_tag ) {
-        let
+        var
           parent = self.parent.document,
           embed_candidates = Array.from( parent.querySelectorAll( 'iframe' ) ),
-          embed = embed_candidates.filter( f => f.contentWindow == self )[ 0 ]
+          embed = embed_candidates.filter( function( f ) { return f.contentWindow == self } )[ 0 ]
         self.embedding_tag = embed;
       }
-      const
+      var
         embed = self.embedding_tag;
       if( embed ) {
-        setTimeout( () => {  
+        setTimeout( function () {  
           var
             component = document.querySelector( '#component' ),
             doc_style = getComputedStyle( component ),
@@ -130,12 +130,22 @@ self.resize_off = false;
 
     console.log( `Parts with resize triggers `, resize_triggers );
 
-    resize_triggers.forEach( el => {
-      var
-        events_to_resize_on = el.getAttribute( 'resize-triggers' ).split( /\s+/g );
-      // set timeout is necessary so that redraw can happen before we measure the size 
-      events_to_resize_on.forEach( name => el.addEventListener( name, () => setTimeout( () => emit_resize( el ) , 0 ) ) );
-    } );
+    resize_triggers.forEach( function ( el ) {
+        var
+          events_to_resize_on = el.getAttribute( 'resize-triggers' ).split( /\s+/g );
+        // set timeout is necessary so that redraw can happen before we measure the size 
+        events_to_resize_on.forEach( 
+          function ( name ) { 
+            return el.addEventListener( name, 
+              function () { 
+                setTimeout( 
+                  function () { emit_resize( el ) } , 0 );
+              } 
+            ) 
+          } 
+        );
+      } 
+    );
   }());
   (function () {
     // new ideas : resize negotiation
