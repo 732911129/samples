@@ -1,0 +1,28 @@
+/* layout */
+  li, form, #component {
+    width: min-content;
+    width: -moz-min-content; /* for firefox */
+    height: min-content;
+    padding: 0.5rem;
+    margin: 0;
+  }
+  label.explainer {
+    display: none;
+  }
+  dd {
+    padding: 0.25rem;
+    margin: 0;
+    margin-left: 0.25rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  dd label {
+    margin-right: 1.5rem;
+  }
+  dd input {
+    align-self: flex-start;
+  }
+  textarea, input {
+    padding: 0.2rem 0.5rem 0.3rem;
+  }

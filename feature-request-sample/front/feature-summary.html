@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>Feature</title>
+    <link rel=stylesheet href=/component-test-colors.css>
+    <link rel=stylesheet href=/component-basic-compatible.css>
+    <link rel=stylesheet href=/component-modern-upgrade.css>
+    <link rel=stylesheet href=/component-basic-layout.css>
+  </head>
+  <body>
+    <main id=component>
+      <form action=/api/model/type/feature/id/new>
+        <dl>
+          <dt><h1>Feature</h1></dt>
+          <dd>
+            <label for=feature class=type>Feature</label>
+            <input type=url class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
+          </dd>
+          <dd>
+            <label for=title>Title</label>
+            <label class=explainer for=title>
+              A short, descriptive name of the feature request. 
+            </label>
+            <input disabled type=text name=title id=title pattern=".{3,60}"
+              title="Good titles are between 3 and 50 characters">
+          </dd>
+          <dd>
+            <button>More</button>
+          </dd>
+        </dl>
+      </form>
+    </main>
+    <script src=/resize_embedder.js></script>
+  </body>
+</html>
+

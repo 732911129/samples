@@ -5,7 +5,8 @@ import render
 import views
 
 class Collection( object ):
-  def __init__( self, models, cursor, more ):
+  def __init__( self, media_type, models, cursor, more ):
+    self.media_type = media_type
     self.models = models
     self.cursor = cursor
     self.more = more
@@ -70,13 +71,16 @@ class Media( ndb.Expando ):
       q, next_cursor, more = cls.                               \
         query( cls.media_type == media_type ).                  \
         fetch_page( 10, keys_only = True, cursor = cursor )     
-      return Collection( q, next_cursor, more )
+      return Collection( media_type, q, next_cursor, more )
     else:
       return None
 
   @classmethod
   def render( cls, media_type = None, id = None, params = None, cursor = None ):
-    m = cls._instance( media_type = media_type, id = id, params = params, cursor = cursor )
+    if id == 'new' and not params:
+      m = None
+    else:
+      m = cls._instance( media_type = media_type, id = id, params = params, cursor = cursor )
     if type( m ) is Collection:
       v = views[ media_type + 's' ] 
     else:
@@ -84,5 +88,7 @@ class Media( ndb.Expando ):
     if m and v:
       doc = render.imprint( m, v )
       return doc
+    elif v:
+      return v
     else:
-      return views.get( '404' )
+      return views.view404

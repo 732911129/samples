@@ -18,6 +18,8 @@ def get_value_or_data_bind_name( attr ):
   return attr[ 1 ]
 
 def is_value_or_data_binder( attr, model ):
+  if type( model ) is Collection:
+    return False
   if attr[ 0 ] == 'name':
     result = model.hasslot( get_value_or_data_bind_name( attr ) )
     return result
@@ -58,11 +60,28 @@ class ImprintingParser( html ):
     if (
           tag == 'form' and
           attr[ 0 ] == 'action'
-       ):
+        ):
       self.output += " " + attr[ 0 ]
       key_id = unicode( self.model.key_id )
       attr_value = instance_id_regex.sub( key_id, attr[ 1 ] )
       self.output += "=" + "\"" + attr_value + "\""
+    elif (
+          tag == 'ul' and
+          attr[ 0 ] == 'name' and
+          attr[ 1 ] == 'models' and
+          type( self.model ) is Collection
+        ):
+      models = self.model.models    
+      data = { 'media_type' : self.model.media_type + '-summary', 'key_id' : 'new' }
+      self.next_data = ""
+      for model in models:
+        data[ 'key_id' ] = unicode( model.id() )
+        self.next_data += """<li>
+          <iframe 
+              resize-triggers="mouseup"
+              src=/api/model/type/%(media_type)s/id/%(key_id)s>
+          </iframe>
+        </li>""" % data
     else:
       self.output += " " + attr[ 0 ]
       if attr[ 1 ]:
@@ -110,12 +129,11 @@ class ImprintingParser( html ):
     self.reset()
     return result
 
-imprinter = ImprintingParser()
 
 def imprint( model, view ):
+  imprinter = ImprintingParser()
   if type( model ) is Collection:
     # TODO : logic for imprinting collection
-    print model.models
-    return view
+    return imprinter.imprint( model, view )
   else:
     return imprinter.imprint( model, view )
