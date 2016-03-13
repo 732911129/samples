@@ -31,9 +31,8 @@ class ImprintingParser( html ):
   model = None
   next_data = None
   next_select_value = None
-  next_radio_value = None
 
-  def bind_value_or_data( self, tag, attr, model ):
+  def bind_value_or_data( self, tag, attr, attrs, model ):
     name = get_value_or_data_bind_name( attr )
     value = model.getslot( name )
     if tag == 'input':
@@ -45,6 +44,7 @@ class ImprintingParser( html ):
     else:
       print attr, model
       raise TypeError( 'Bound data on %s which is not input or textarea' % tag )
+  
 
   def bind_radio_if_binder( self, tag, attrs ):
     is_binder = filter( lambda a : is_value_or_data_binder( a, self.model ), attrs )
@@ -55,9 +55,9 @@ class ImprintingParser( html ):
       if ( 'value', value ) in attrs:
         self.output += " checked "  
 
-  def bind_attr_if_binder( self, tag, attr ):
+  def bind_attr_if_binder( self, tag, attr, attrs ):
     if is_value_or_data_binder( attr, self.model ):
-      self.bind_value_or_data( tag, attr, self.model )
+      self.bind_value_or_data( tag, attr, attrs, self.model )
     if (
           tag == 'option' and
           attr[ 0 ] == 'value' and
@@ -110,8 +110,20 @@ class ImprintingParser( html ):
       for attr in attrs:
         self.print_attr( attr )
     else:
+      binder_exists = filter( lambda a : is_value_or_data_binder( a, self.model ), attrs )
+      """ if we are going to bind a value
+      let's remove any other value attributes
+      so that our value is not over written by any such defaults 
+      FIXME: this will remove value attributes if we are binding data 
+      """
+      if binder_exists:
+        value_attr_indexes = [i for i,a in enumerate(attrs) if a[ 0 ] == 'value' ]
+        while value_attr_indexes:
+          del attrs[ value_attr_indexes.pop() ]
+
+      # then just print all bind any attributes
       for attr in attrs:
-        self.bind_attr_if_binder( tag, attr )
+        self.bind_attr_if_binder( tag, attr, attrs )
         
     self.output += ">"
     if self.next_data:
