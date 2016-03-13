@@ -2,6 +2,14 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## How to improve ?
+
+Ideas for future:
+
+  - Incorporate link stylesheet rewriting to inline the css. Do this before the view cache. 
+  - Incorporate boilerplate ( document head ) rewriting to allow a basic framework for all views. Do this before the view cache.
+  - Optimize cache expiry timings ( perhaps using versioned URLs ). 
+
 ## Progress Update
 
   - A lot more completed.
