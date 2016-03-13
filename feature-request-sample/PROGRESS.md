@@ -2,6 +2,14 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Thoughts
+
+Should every input ever just be a search box?
+
+Because it gives maximum power multiplication with minimum space.
+It is the minimum general entry input, and it can have the maximum possible values.
+
+Different forms of search box, search to select single option, search to select multiple options, could possible be the best user input ever. However, for cases where there are a small number of options, drop down or radio is likely better, since the time increase in typing is not compensated for, as the ease of selection from a small number of options is easily faciliated by selecting options or by radio buttons or checkboxes. Past a certain point, a certain number, or nature of options, search becomes the optimal way. For cases like a number, date or range input, search is probably not optimal. Tho for something like date and time search and autocomplete is likely more efficient than date and time input. 
 ## How to improve ?
 
 Ideas for future:
