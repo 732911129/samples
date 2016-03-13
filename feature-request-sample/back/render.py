@@ -31,6 +31,7 @@ class ImprintingParser( html ):
   model = None
   next_data = None
   next_select_value = None
+  next_radio_value = None
 
   def bind_value_or_data( self, tag, attr, model ):
     name = get_value_or_data_bind_name( attr )
@@ -44,6 +45,15 @@ class ImprintingParser( html ):
     else:
       print attr, model
       raise TypeError( 'Bound data on %s which is not input or textarea' % tag )
+
+  def bind_radio_if_binder( self, tag, attrs ):
+    is_binder = filter( lambda a : is_value_or_data_binder( a, self.model ), attrs )
+    if is_binder:
+      attr = is_binder[ 0 ]
+      name = get_value_or_data_bind_name( attr )
+      value = self.model.getslot( name )
+      if ( 'value', value ) in attrs:
+        self.output += " checked "  
 
   def bind_attr_if_binder( self, tag, attr ):
     if is_value_or_data_binder( attr, self.model ):
@@ -79,22 +89,29 @@ class ImprintingParser( html ):
           tag == 'form' and
           attr[ 0 ] == 'action'
         ):
-      self.output += " " + attr[ 0 ]
       key_id = unicode( self.model.key_id )
       attr_value = instance_id_regex.sub( key_id, attr[ 1 ] )
-      self.output += "=" + "\"" + attr_value + "\""
-    else:
-      self.output += " " + attr[ 0 ]
-      if attr[ 1 ]:
-        self.output += "=" + "\"" + attr[ 1 ] + "\""
+      attr = ( attr[ 0 ], attr_value )
+
+    self.print_attr( attr )
+
+  def print_attr( self, attr ):
+    self.output += " " + attr[ 0 ]
+    if attr[ 1 ]:
+      self.output += "=" + "\"" + attr[ 1 ] + "\""
 
   def handle_starttag( self, tag, attrs ):
     self.depth += 1
     #self.output += "\n"
     #self.output += self.depth * "  "
     self.output += "<" + tag
-    for attr in attrs:
-      self.bind_attr_if_binder( tag, attr )
+    if ( 'type', 'radio' ) in attrs:
+      self.bind_radio_if_binder( tag, attrs )
+      for attr in attrs:
+        self.print_attr( attr )
+    else:
+      for attr in attrs:
+        self.bind_attr_if_binder( tag, attr )
         
     self.output += ">"
     if self.next_data:
@@ -129,7 +146,6 @@ class ImprintingParser( html ):
     result = self.output
     self.reset()
     return result
-
 
 def imprint( model, view ):
   imprinter = ImprintingParser()

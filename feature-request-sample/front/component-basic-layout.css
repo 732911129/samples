@@ -30,6 +30,9 @@
     flex-direction: row;
     justify-content: space-between;
   }
+  label {
+    -webkit-user-select: none;  
+  } 
   dd label {
     margin-right: 1.5rem;
   }
@@ -41,4 +44,18 @@
   }
   ul[name="models"] > li {
     list-style-type: none;
+  }
+  ol[horizontal] li {
+    display: inline-block; 
+    list-style-type: none;
+  }
+  li[input-label-unit-horizontal] {
+    text-align: center;
+    margin: 0.5rem;
+  }
+  li[input-label-unit-horizontal] label {
+    margin: 0;
+  }
+  summary {
+    cursor: pointer;
   }
