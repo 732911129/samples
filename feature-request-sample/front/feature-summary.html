@@ -10,9 +10,9 @@
   </head>
   <body>
     <main id=component>
-      <form action=/api/model/type/feature/id/new>
+      <form>
         <dl>
-          <dt><h1>Feature</h1></dt>
+          <dt><h2>Feature</h2></dt>
           <dd>
             <label for=feature class=type>Feature</label>
             <input type=url class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
@@ -31,10 +31,10 @@
             </label>
             <input disabled type=text name=work_status id=work_status>
           </dd>
-          <dd>
-            <button>More</button>
-          </dd>
         </dl>
+      </form>
+      <form action=/api/model/type/feature/id/new>
+        <button>More</button>
       </form>
     </main>
     <script src=/resize_embedder.js></script>
