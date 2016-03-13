@@ -50,7 +50,6 @@ class Media( ndb.Expando ):
       m.put()
       return m
     elif id and not params:
-      print media_type, id, params, cursor
       longid = long( id )
       q = cls.get_by_id( longid )
       return q
