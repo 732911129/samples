@@ -1,5 +1,5 @@
 module: feature-request-sample
-runtime: python
+runtime: python27
 threadsafe: true
 
 handlers:
