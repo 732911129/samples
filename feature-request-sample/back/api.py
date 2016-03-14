@@ -19,23 +19,34 @@ class instance_endpoint( endpoint ):
     """ Create or update a specific instance """
     self.response.write( Media.render( media_type = media_type, id = id, params = self.request.POST.mixed() ) )
 
+class catchall_endpoint( endpoint ):
+  def get( self, *args, **kwargs ):
+    self.response.write( Media.render() )
+
+  def post( self, *args, **kwargs ):
+    self.response.write( Media.render() )
+
 # An optimization is to group these paths under their common prefix
 paths = [
-  path( '/api/model/type/<media_type><:/?>', 
+  path( '/api/media/type/<media_type><:/?>', 
       methods=['GET'],
       handler=collection_endpoint
     ),
-  path( '/api/model/type/<media_type>/cursor/<cursor><:/?>', 
+  path( '/api/media/type/<media_type>/cursor/<cursor><:/?>', 
       methods=['GET'],
       handler=collection_endpoint
     ),
-  path( '/api/model/type/<media_type><:/?>',
+  path( '/api/media/type/<media_type><:/?>',
       methods=['POST'],
       handler=instance_endpoint
     ),
-  path( '/api/model/type/<media_type>/id/<id><:/?>', 
+  path( '/api/media/type/<media_type>/id<:/?><id:.*><:/?>', 
       methods=['GET','POST'],
       handler=instance_endpoint
+    ),
+  path( '<:.*>',
+      methods=['GET','POST'],
+      handler=catchall_endpoint
     )
 ]
 

@@ -81,13 +81,14 @@ class ImprintingParser( html ):
         self.next_data += """<li>
           <iframe 
               resize-triggers="mouseup"
-              src=/api/model/type/%(media_type)s/id/%(key_id)s>
+              src=/api/media/type/%(media_type)s/id/%(key_id)s>
           </iframe>
         </li>""" % data
     
     if (
           tag == 'form' and
-          attr[ 0 ] == 'action'
+          attr[ 0 ] == 'action' and 
+          type( self.model ) is not Collection
         ):
       key_id = unicode( self.model.key_id )
       attr_value = instance_id_regex.sub( key_id, attr[ 1 ] )

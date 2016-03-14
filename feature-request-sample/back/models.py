@@ -49,21 +49,24 @@ class Media( ndb.Expando ):
       m.key_id = m.key.id()
       m.put()
       return m
-    elif id and not params:
-      longid = long( id )
-      q = cls.get_by_id( longid )
-      return q
-    elif id and params:
-      longid = long( id )
-      q = cls.get_by_id( longid )
-      new_slots = []
-      for key in params.keys():
-        value = params[ key ]
-        s = Slot( slot_type = 'string', slot_name = key, value = value )
-        new_slots.append( s )
-      q.slots = new_slots
-      q.put()
-      return q
+    elif id: 
+      try:
+        longid = long( id )
+      except:
+        return None
+      if not params:
+        q = cls.get_by_id( longid )
+        return q
+      else:
+        q = cls.get_by_id( longid )
+        new_slots = []
+        for key in params.keys():
+          value = params[ key ]
+          s = Slot( slot_type = 'string', slot_name = key, value = value )
+          new_slots.append( s )
+        q.slots = new_slots
+        q.put()
+        return q
     elif media_type:
       if cursor:
         cursor = Cursor( urlsafe = cursor )

@@ -8,6 +8,6 @@ class paths( object ):
     return self[ name ]
 
   def __getitem__( self, name ):
-    return self.root + "/" + name
+    return self.root + "/" + unicode( name )
 
 sys.modules[ __name__ ] = paths()
