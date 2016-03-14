@@ -30,7 +30,7 @@
     flex-direction: row;
     justify-content: space-between;
   }
-  label {
+  dt, summary, label {
     -webkit-user-select: none;  
   } 
   dd label {
