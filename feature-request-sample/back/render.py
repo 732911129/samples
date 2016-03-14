@@ -80,6 +80,7 @@ class ImprintingParser( html ):
           self.next_data += """<li>
             <iframe 
                 resize-triggers="mouseup"
+                name="%(media_type)s %(key_id)s"
                 src=/api/media/type/%(media_type)s/id/%(key_id)s>
             </iframe>
           </li>""" % data
