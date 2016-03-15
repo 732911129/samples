@@ -1,43 +1,29 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset=utf-8>
-    <title>Feature</title>
-    <link rel=stylesheet href=/component-test-colors.css>
-    <link rel=stylesheet href=/component-basic-compatible.css>
-    <link rel=stylesheet href=/component-modern-upgrade.css>
-    <link rel=stylesheet href=/component-basic-layout.css>
-  </head>
-  <body>
-    <main id=component>
-      <form>
-        <dl>
-          <dt><h2>Feature</h2></dt>
-          <dd>
-            <label for=feature class=type>Feature</label>
-            <input type=url required disabled class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
-          </dd>
-          <dd>
-            <label for=title>Title</label>
-            <label class=explainer for=title>
-              A short, descriptive name of the feature request. 
-            </label>
-            <input disabled type=text name=title id=title>
-          </dd>
-          <dd>
-            <label for=work_status>Work Status</label>
-            <label class=explainer for=work_status>
-              Where the work is up to on this. 
-            </label>
-            <input disabled type=text name=work_status id=work_status>
-          </dd>
-        </dl>
-      </form>
-      <form action=/api/media/type/feature/id/new>
-        <button>More</button>
-      </form>
-    </main>
-    <script src=/resize_embedder.js></script>
-  </body>
-</html>
+<main id=component title="Feature Summary">
+  <form>
+    <dl>
+      <dt><h2>Feature</h2></dt>
+      <dd>
+        <label for=feature class=type>Feature</label>
+        <input type=url required disabled class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
+      </dd>
+      <dd>
+        <label for=title>Title</label>
+        <label class=explainer for=title>
+          A short, descriptive name of the feature request. 
+        </label>
+        <input disabled type=text name=title id=title>
+      </dd>
+      <dd>
+        <label for=work_status>Work Status</label>
+        <label class=explainer for=work_status>
+          Where the work is up to on this. 
+        </label>
+        <input disabled type=text name=work_status id=work_status>
+      </dd>
+    </dl>
+  </form>
+  <form action=/api/media/type/feature/id/new>
+    <button>More</button>
+  </form>
+</main>
 
