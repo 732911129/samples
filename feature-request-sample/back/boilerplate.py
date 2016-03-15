@@ -7,14 +7,14 @@ head_after_begin_meta_viewport_boilerplate = """
   """
 
 head_before_end_styles_boilerplate = [
-    """<link rel=stylesheet href=/component-test-colors.css />""",
-    """<link rel=stylesheet href=/component-basic-compatible.css />""",
-    """<link rel=stylesheet href=/component-modern-upgrade.css />""",
-    """<link rel=stylesheet href=/component-basic-layout.css />"""
+    """<link rel=stylesheet href=/front/component-test-colors.css />""",
+    """<link rel=stylesheet href=/front/component-basic-compatible.css />""",
+    """<link rel=stylesheet href=/front/component-modern-upgrade.css />""",
+    """<link rel=stylesheet href=/front/component-basic-layout.css />"""
   ]
 
 body_after_end_scripts_boilerplate = """
-  <script src=/resize_embedder.js></script>
+  <script src=/front/resize_embedder.js></script>
 """
 
 boilerplate = {

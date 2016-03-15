@@ -87,8 +87,7 @@ class Media( ndb.Expando ):
       v = views[ media_type + 's' ] 
     else:
       v = views[ media_type ]
-    if v:
-      doc = render.imprint( m, v )
-      return doc
-    else:
-      return views.view404
+    if not v:
+      v = views[ 'app' ]
+    doc = render.imprint( m, v )
+    return doc

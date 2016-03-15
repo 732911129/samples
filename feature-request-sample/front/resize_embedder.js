@@ -105,8 +105,8 @@ self.resize_off = false;
         }, 40 );
       } else throw new TypeError( 'Embedding tag not found! ' );
     }
-    resize();
     self.resize = resize;
+    resize();
   }());
   (function () {
     // the function to emit custom resize event
