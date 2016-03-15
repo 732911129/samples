@@ -36,8 +36,16 @@ class ImprintingParser( html ):
     return None
 
   def handle_starttag( self, tag, attrs ):
-    tag, attrs, data = self.binder.try_bind( self, tag, attrs, self.model )
+    data = None
+    bound_data = self.binder.try_bind( self, tag, attrs, self.model )
+
+    try:
+      tag, attrs, data = bound_data
+    except:
+      pass
+
     self.printer.print_tag( tag, attrs )
+
     if data:
       self.printer.print_data( data )
 

@@ -50,12 +50,12 @@ class Binder( object ):
     bind_type = self.bind_type( tag, attrs )
     if not bind_type:
       return None
-    bind_name = self.requested_bind_name( tag, attrs )
+    bind_name = self.requested_bind_name( attrs )
     if not bind_name:
       return None
     model_can_bind = self.model_can_bind( bind_name, model )
     if not model_can_bind:
-      throw TypeError( 'Model can not bind %s' % bind_name )
+      raise TypeError( 'Model can not bind %s' % bind_name )
     else:
       try:        
         return self.__getitem__( 'bind_' + bind_type )( parser, tag, attrs, model, bind_name )
