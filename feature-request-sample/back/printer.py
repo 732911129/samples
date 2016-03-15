@@ -110,10 +110,15 @@ class Printer( object ):
   def print_attr( self, attr ):
     self.print_space()
     self.doc += attr[ 0 ] 
-    self.doc += "="
-    self.print_quote()
-    self.doc += self.escape_attribute_value( attr[ 1 ] )
-    self.print_quote()
+    try:
+      value = attr[ 1 ]
+      if value is not None:
+        self.doc += "="
+        self.print_quote()
+        self.doc += self.escape_attribute_value( value )
+        self.print_quote()
+    except:
+      pass
 
   def print_start_tag_opener( self, tag ):
     self.doc += '<' + tag
