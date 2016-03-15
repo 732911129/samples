@@ -27,6 +27,7 @@ self.resize_off = false;
       var
         embed = self.embedding_tag;
       if( embed ) {
+        console.log( embed );
         setTimeout( function () {  
           var
             component = document.querySelector( '#component' ),
@@ -88,11 +89,11 @@ self.resize_off = false;
 
           if( ! block_resize && ! self.resize_off ) {
             if( ! component.hasAttribute( 'ignore-content-height' ) )
-              embed.style.height = content.height + border.embed.height;
+              embed.style.height = content.height + border.embed.height + "px";
             else
               embed.style.minHeight = 127;
             if( ! component.hasAttribute( 'ignore-content-width' ) )
-              embed.style.width = content.width + border.embed.width;
+              embed.style.width = content.width + border.embed.width + "px";
             else
               embed.style.minWidth = 255;
             //embed.style.minHeight = content.height + border.embed.height;

@@ -3,6 +3,7 @@ from google.appengine.ext import ndb
 import json
 import render
 import views
+import files
 
 class Collection( object ):
   def __init__( self, media_type, models, cursor, more ):
@@ -10,6 +11,14 @@ class Collection( object ):
     self.models = models
     self.cursor = cursor
     self.more = more
+
+  def getslot( self, name ):
+    if self.hasslot( name ):
+      return self.__getattribute__( name )
+    return None
+
+  def hasslot( self, name ):
+    return hasattr( self, name )
 
 class Slot( ndb.Expando ):
   slot_type = ndb.StringProperty()
@@ -31,10 +40,10 @@ class Media( ndb.Expando ):
 
   def getslot( self, name ):
     if self.__class__._properties.get( name ):
-      return self.__getattribute__( name )
+      return unicode( self.__getattribute__( name ) )
     for slot in self.slots:
       if slot.slot_name == name:
-          return slot.value
+          return unicode( slot.value )
     return None
 
   @classmethod
@@ -78,16 +87,26 @@ class Media( ndb.Expando ):
       return None
 
   @classmethod
-  def render( cls, media_type = None, id = None, params = None, cursor = None ):
+  def render( cls, media_type = None, id = None, params = None, cursor = None, path = None ):
+    v = None
     if id == 'new' and not params:
       m = None
     else:
       m = cls._instance( media_type = media_type, id = id, params = params, cursor = cursor )
     if type( m ) is Collection:
       v = views[ media_type + 's' ] 
-    else:
+    elif media_type:
       v = views[ media_type ]
-    if not v:
+
+    if not v and path == '':
       v = views[ 'app' ]
-    doc = render.imprint( m, v )
-    return doc
+
+    if v:
+      doc = render.imprint( m, v )
+      return doc
+    else:
+      try:
+        v = files.read( path )
+      except:
+        return views.view404
+      return v

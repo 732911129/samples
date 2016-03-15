@@ -25,6 +25,15 @@ class Binder( object ):
         return 'radio'
       else:
         return tag
+    elif (
+        ( 
+            tag == 'ul' or 
+            tag == 'ol' or 
+            tag == 'dl' 
+          ) and 
+        ( 'name', 'models' ) in attrs
+      ):
+      return 'collection'
     elif ( 
         tag == 'textarea' or
         tag == 'select' or
@@ -52,10 +61,9 @@ class Binder( object ):
     if not bind_type:
       return None
     bind_name = self.requested_bind_name( attrs )
-    if not bind_name:
-      return None
-    model_can_bind = self.model_can_bind( bind_name, model )
-    if model and not model_can_bind:
+    if bind_name:
+      model_can_bind = self.model_can_bind( bind_name, model )
+    if bind_name and model and not model_can_bind:
       print model
       raise TypeError( 'Model can not bind %s' % bind_name )
     else:
@@ -77,7 +85,8 @@ class Binder( object ):
   def bind_option( self, parser, tag, attrs, model, bind_name ):
     option_value = parser.get_attribute_value( 'value', attrs )
     if self.next_select_value and option_value == self.next_select_value:
-      attrs.append( ( 'selected' ) )
+      attrs.append( ( 'selected', ) )
+      print attrs
     return self.bind_data( tag, attrs )
 
   def bind_textarea( self, parser, tag, attrs, model, bind_name ):
@@ -88,18 +97,40 @@ class Binder( object ):
 
   def bind_radio( self, parser, tag, attrs, model, bind_name ):
     if model:
-      radio_value = parser.get_attribute_value( 'value', attrs )
+      radio_value = parser.get_attribute_value( 'value', attrs ) 
       model_value = model.getslot( bind_name )
       if radio_value == model_value:
-        attrs.append( ( 'checked' ) )
+        attrs.append( ( 'checked', ) )
+        print attrs
     return self.bind_data( tag, attrs )
 
   def bind_form( self, parser, tag, attrs, model, bind_name ):
     if model:
-      action_value = parser.get_attribute_value( 'action', attrs )
+      action_value = parser.get_attribute_value( 'action', attrs ) or ''
       model_key_id = model.getslot( 'key_id' )
-      transformed_action_value = instance_id_regex.sub( model_key_id, action_value )
-      self.remote_attrs( 'action', attrs )
-      attrs.append( ( 'action', transformed_action_value ) )
+      if model_key_id:
+        transformed_action_value = instance_id_regex.sub( model_key_id, action_value )
+        self.remove_attrs( 'action', attrs )
+        attrs.append( ( 'action', transformed_action_value ) )
     return self.bind_data( tag, attrs )
 
+  def bind_collection( self, parser, tag, attrs, model, bind_name ):
+    bind_data = []
+    if model:
+      models = model.models  
+      media_type = model.media_type + '-summary'
+      tag = 'iframe'
+      endtag = '/iframe'
+      for instance_key in model.models:
+        name_attr = ( 'name', model.media_type ) 
+        src_attr = ( 'src', '/api/media/type/%(media_type)s/id/%(key_id)s/' % 
+            {
+              'key_id' : instance_key.id(),
+              'media_type' : media_type 
+            } 
+          )
+        bind_data.append( self.bind_data( tag, [ name_attr, src_attr ] ) ) 
+        bind_data.append( self.bind_data( endtag, [] ) )   
+
+    return bind_data
+       

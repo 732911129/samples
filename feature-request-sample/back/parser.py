@@ -1,4 +1,5 @@
 from HTMLParser import HTMLParser as html
+import logging
 from binder import Binder
 from printer import Printer
 from specialty_utils import superclass
@@ -37,17 +38,31 @@ class ImprintingParser( html ):
 
   def handle_starttag( self, tag, attrs ):
     data = None
-    bound_data = self.binder.try_bind( self, tag, attrs, self.model )
-
+    tags = []
+    bound_data = None
     try:
-      tag, attrs, data = bound_data
-    except:
-      pass
+      bound_data = self.binder.try_bind( self, tag, attrs, self.model )
+    except BaseException as e:
+      logging.warn( e ) 
 
-    self.printer.print_tag( tag, attrs )
+    if type( bound_data ) is tuple:
+      tags = [ bound_data ]
+    elif type( bound_data ) is list:
+      tags = bound_data
+    elif bound_data is None:
+      tags = [ ( tag, attrs, data ) ]
 
-    if data:
-      self.printer.print_data( data )
+    for tag_bound_data in tags:
+      try:
+        tag, attrs, data = tag_bound_data
+      except:
+        pass
+      if tag:
+        self.printer.print_tag( tag, attrs )
+      if data:
+        self.printer.print_data( data )
+      tag = None
+      data = None
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )

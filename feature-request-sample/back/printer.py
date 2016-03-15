@@ -117,7 +117,7 @@ class Printer( object ):
         self.print_quote()
         self.doc += self.escape_attribute_value( value )
         self.print_quote()
-    except:
+    except IndexError:
       pass
 
   def print_start_tag_opener( self, tag ):

@@ -4,12 +4,20 @@ threadsafe: true
 
 handlers:
 
-- url: /front
-  static_dir: front
-  secure: always
-  application_readable: true
-
-- url: /.*
+- url: .*
   script: back.api.app
   secure: always
+
+error_handlers:
+  - file: error/viewErrorError.html
+
+  - error_code: over_quota
+    file: error/viewOverQuota.html
+
+  - error_code: dos_api_denial
+    file: error/viewDOSApiDenial.html
+
+  - error_code: timeout
+    file: error/viewTimeout.html
+
 
