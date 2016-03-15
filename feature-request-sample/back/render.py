@@ -4,15 +4,16 @@ import paths
 import files
 from models import Collection
 from HTMLParser import HTMLParser as html
+from binder import Binder
+from printer import Printer
 
 instance_id_regex = re.compile( r"new$" )
 
-self_closing_tags = {
-    'input' : True,
-    'img' : True,
-    'link' : True,
-    'meta' : True
-  }
+""" 
+Knows about binder, printer, HTMLParser, our models
+and our framework format
+"""
+
 
 def attr_is_binder( attr ):
   return attr[ 0 ] == 'name'
@@ -29,9 +30,24 @@ def attr_is_binder_for_model( attr, model ):
     return result
   return False
 
+def slot_type( tag, attrs ):
+  if tag == 'input':
+    if ( 'type', 'radio' ) in attrs:
+      return "radio"
+    else:
+      return "input"
+  elif tag == 'textarea':
+    return "textarea"
+  elif tag == 'select':
+    return "select"
+  elif tag == 'option':
+    return "option"
+  elif tag == 'form':
+    return "form"
+
 class ImprintingParser( html ):
-  depth = 0
-  output = ""
+  binder = Binder()
+  printer = Printer()
   model = None
   next_data = None
   next_select_value = None
@@ -112,10 +128,6 @@ class ImprintingParser( html ):
     """ print the attribute """
     self.print_attr( attr )
 
-  def print_attr( self, attr ):
-    self.output += " " + attr[ 0 ]
-    if attr[ 1 ]:
-      self.output += "=" + "\"" + attr[ 1 ] + "\""
 
   def handle_starttag( self, tag, attrs ):
     self.depth += 1
@@ -150,8 +162,6 @@ class ImprintingParser( html ):
     if self.next_data:
       self.output += self.next_data
       self.next_data = None
-    if tag in self_closing_tags:
-      self.depth -= 1
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )
@@ -171,6 +181,7 @@ class ImprintingParser( html ):
     superclass.reset( self )
     self.depth = 0
     self.output = ""
+    self.binder = Binder()
 
   def imprint( self, model, view ):
     self.reset()
