@@ -2,6 +2,10 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Ideas
+
+- What if we make a way to autoamtically ( like page break ) split forms into separate pages and parts and you can progress through ? Linearly or not. Fieldsets need be the only unified unit of data entry that needs to be entered at once. Otherwise forms are partial. Can be completed in any order, and making linear flows, or non linear parts of them is really easy. We organize all this with field set, and we can make a widget containing a particular part of a form for a particular intance simply using the url and a simple referencing scheme. Nice. Smaller units of data entry are what work. Having linear or non linear flows for entering data also works. Nice. The most basic is every slot can be in its own fieldset. In this case the form can be fully distributed, allowing updates of only a single slot at a time. Cool! 
+
 ## Todo
 
   - FIXME: improve rendering logic. One matter is that if we are binding data, we will remove any value attributes on that tag.
