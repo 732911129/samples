@@ -8,5 +8,5 @@
   #component {
     background: blue;
     color: yellow;
-    border: 2px solid white;
+    border: 1px solid transparent;
   }
