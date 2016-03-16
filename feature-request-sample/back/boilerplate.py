@@ -7,6 +7,17 @@ head_after_begin_meta_viewport_boilerplate = """
   """
 
 head_before_end_styles_boilerplate = [
+    """
+      <style>
+        iframe {
+          width: 25ch;
+          height: 3ex;
+        }
+      </style>
+    """
+  ]
+
+body_before_end_styles_boilerplate = [
     """<link rel=stylesheet href=/front/component-test-colors.css />""",
     """<link rel=stylesheet href=/front/component-basic-compatible.css />""",
     """<link rel=stylesheet href=/front/component-modern-upgrade.css />""",
@@ -28,6 +39,9 @@ boilerplate = {
     ]
   },
   'body' : {
+    'before_end' : [
+      body_before_end_styles_boilerplate
+    ],
     'after_end' : [
       body_after_end_scripts_boilerplate
     ]
