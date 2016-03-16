@@ -1,4 +1,8 @@
 /* layout */
+  iframe {
+    padding: 0;
+    margin: 0;
+  }   
   h1,h2,h3 {
     margin: 0.25em 0;
   }
@@ -36,7 +40,7 @@
     height: fit-content;
   }
   form, #component {
-    padding: 0.125rem;
+    padding: 0;
     margin: 0 auto;
   }
   label.explainer {

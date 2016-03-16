@@ -6,14 +6,14 @@
     border:0;
   }
   #component {
-    padding: 0.125em 0.25em;
+    padding: 0;
     margin: 0 auto;
   }
   #component:not( scrollable ) {
     overflow: none;
   }
   dl, ol, ul {
-    margin: 0.5em 0;
+    margin: 0;
   }
   iframe {
     display: inline-block;

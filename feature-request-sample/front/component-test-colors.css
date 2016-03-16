@@ -8,7 +8,7 @@
   #component {
     background: transparent;
     color: black;
-    border: 1px solid transparent;
+    border: 0;
   }
   iframe[name^="feature/"] {
     background: rgba( 0, 0, 150, 0.5 );

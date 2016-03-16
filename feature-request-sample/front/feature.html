@@ -1,14 +1,13 @@
-<main id=component title=Feature>
+<main id=component title=feature>
   <form method=POST action=/api/media/type/feature/id/new>
     <dl>
-      <dt><h2>Feature</h2></dt>
+      <dt>
+        <label for=feature class=type>Feature</label>
+        <input type=url required readonly class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
+      </dt>
       <dd>
         <label for=key_id>Key ID</label>
         <input name=key_id id=key_id readonly>
-      </dd>
-      <dd>
-        <label for=feature class=type>Feature</label>
-        <input type=url required readonly class=type value="https://dosaygo.com/types/Feature" id=feature name=feature>
       </dd>
       <dd>
         <label for=title>Title</label>
