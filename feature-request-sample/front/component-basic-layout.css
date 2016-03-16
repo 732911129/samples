@@ -1,4 +1,21 @@
 /* layout */
+  :root {
+    font-size: 80%;
+  }
+  input, textarea, select {
+    width:12em;
+    box-sizing:border-box;
+    padding: 0.25em;
+  }
+  label {
+    width: 12ch;
+    height: 4ex;
+  }
+  input[type="radio"] {
+    width: min-content;
+  }
+  input[type="radio"] + label {
+  }
   li, form, #component {
     width: -webkit-min-content;
     width: -moz-min-content; /* for firefox */
@@ -50,7 +67,7 @@
     list-style-type: none;
   }
   li[input-label-unit-horizontal] {
-    text-align: center;
+    text-align: left;
     margin: 0.5rem;
   }
   li[input-label-unit-horizontal] label {
