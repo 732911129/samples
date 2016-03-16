@@ -1,12 +1,15 @@
 /* test colors */
   :root {
-    background: red;
+    background: transparent;
   }
   body {
-    background: lime;
+    background: transparent;
   }
   #component {
-    background: blue;
-    color: yellow;
+    background: transparent;
+    color: black;
     border: 1px solid transparent;
+  }
+  iframe[name^="feature/"] {
+    background: rgba( 0, 0, 150, 0.5 );
   }

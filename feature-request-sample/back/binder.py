@@ -122,10 +122,11 @@ class Binder( object ):
       tag = 'iframe'
       endtag = '/iframe'
       for instance_key in model.models:
-        name_attr = ( 'name', model.media_type ) 
+        key_id = instance_key.id()
+        name_attr = ( 'name', model.media_type + "/" + key_id ) 
         src_attr = ( 'src', '/api/media/type/%(media_type)s/id/%(key_id)s/' % 
             {
-              'key_id' : instance_key.id(),
+              'key_id' : key_id,
               'media_type' : media_type 
             } 
           )
