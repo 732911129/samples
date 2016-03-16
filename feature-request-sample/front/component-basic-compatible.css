@@ -15,6 +15,9 @@
   dl, ol, ul {
     margin: 0;
   }
+  iframe[ gapped ] {
+    margin: 0.5rem;
+  }
   iframe {
     display: inline-block;
     width:40%;

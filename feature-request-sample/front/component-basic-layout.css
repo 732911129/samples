@@ -66,6 +66,10 @@
   textarea, input {
     padding: 0.2rem 0.5rem 0.3rem;
   }
+  ul[name="models"] {
+    -webkit-margin-before: 0;
+    -webkit-padding-start:0;
+  }
   ul[name="models"] > li {
     list-style-type: none;
   }

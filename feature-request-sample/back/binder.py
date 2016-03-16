@@ -116,6 +116,7 @@ class Binder( object ):
 
   def bind_collection( self, parser, tag, attrs, model, bind_name ):
     bind_data = []
+    bind_data.append( self.bind_data( 'ul', [ ( 'name', 'models' ) ] ) )
     if model:
       models = model.models  
       media_type = model.media_type + '-summary'
@@ -130,8 +131,13 @@ class Binder( object ):
               'media_type' : media_type 
             } 
           )
-        bind_data.append( self.bind_data( tag, [ name_attr, src_attr ] ) ) 
+        gap_attr = ( 'gapped', )
+        bind_data.append( self.bind_data( 'li', [] ) )
+        bind_data.append( self.bind_data( tag, 
+                          [ name_attr, src_attr, gap_attr ] ) ) 
         bind_data.append( self.bind_data( endtag, [] ) )   
+        bind_data.append( self.bind_data( '/li', [] ) )
+    bind_data.append( self.bind_data( '/ul', [ ] ) )
 
     return bind_data
        
