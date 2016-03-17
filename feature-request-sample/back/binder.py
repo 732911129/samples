@@ -130,7 +130,7 @@ class Binder( object ):
         src_attr = ( 'src', 
           '/api/media/type/%(media_type)s/id/%(key_id)s/' % src_binder )
         gap_attr = ( 'gapped', )
-        bind_data.append( self.bind_data( 'li', ) )
+        bind_data.append( self.bind_data( 'li' ) )
         bind_data.append( self.bind_data( tag, 
                           [ name_attr, src_attr, gap_attr ] ) ) 
         bind_data.append( self.bind_data( tag, None, None, True ) )

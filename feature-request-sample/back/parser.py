@@ -40,10 +40,11 @@ class ImprintingParser( html ):
     for tag_bound_data in tags:
       tag, attrs, data, close_tag = None, None, None, None
       tag, attrs, data, close_tag = tag_bound_data
-      if tag:
+      if tag and not close_tag:
         self.printer.print_tag( tag, attrs )
       if data:
         self.printer.print_data( data )
+      print close_tag
       if close_tag:
         self.printer.print_end_tag( tag )
 
