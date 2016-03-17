@@ -4,6 +4,7 @@
 
 ## Todo 
 
+- Clean up framework code even more in prep for significantly extending framework in ways possibly including some roughly sketched below. 
 - Do presentation view of form, not just edit view. 
 - Use fieldsets to split up forms. 
 - Add more design to the form and its layout, at the same time, keeping it semantic. A guide is a component should work as a 1 page full page thing, and also as a component. 
