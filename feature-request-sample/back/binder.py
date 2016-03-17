@@ -64,7 +64,7 @@ class Binder( object ):
     if bind_name:
       model_can_bind = self.model_can_bind( bind_name, model )
     if bind_name and model and not model_can_bind:
-      print model
+      logging.warning( model )
       raise TypeError( 'Model can not bind %s' % bind_name )
     else:
       return self.__getattribute__( 'bind_' + bind_type )( parser, tag, attrs, model, bind_name )
@@ -86,7 +86,6 @@ class Binder( object ):
     option_value = parser.get_attribute_value( 'value', attrs )
     if self.next_select_value and option_value == self.next_select_value:
       attrs.append( ( 'selected', ) )
-      print attrs
     return self.bind_data( tag, attrs )
 
   def bind_textarea( self, parser, tag, attrs, model, bind_name ):
@@ -101,7 +100,6 @@ class Binder( object ):
       model_value = model.getslot( bind_name )
       if radio_value == model_value:
         attrs.append( ( 'checked', ) )
-        print attrs
     return self.bind_data( tag, attrs )
 
   def bind_form( self, parser, tag, attrs, model, bind_name ):

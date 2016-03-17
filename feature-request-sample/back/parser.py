@@ -39,9 +39,7 @@ class ImprintingParser( html ):
   def perform_bind( self, tags ):
     for tag_bound_data in tags:
       tag, attrs, data, close_tag = None, None, None, None
-      print tag_bound_data
       tag, attrs, data, close_tag = tag_bound_data
-      print tag, close_tag, data
       if tag:
         self.printer.print_tag( tag, attrs )
       if data:
