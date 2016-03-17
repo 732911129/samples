@@ -13,11 +13,11 @@ class Binder( object ):
     for index in to_remove:
       del attrs[ index ]
 
-  def bind_data( self, tag, attrs, 
-                  next_data = None, next_select_value = None ):
+  def bind_data( self, tag, attrs = None, 
+                  next_data = None, close_tag = None, next_select_value = None ):
     if next_select_value:
       self.next_select_value = next_select_value
-    return tag, attrs, next_data
+    return tag, attrs, next_data, close_tag 
 
   def bind_type( self, tag, attrs ):
     if tag == 'input':
@@ -121,23 +121,22 @@ class Binder( object ):
       models = model.models  
       media_type = model.media_type + '-summary'
       tag = 'iframe'
-      endtag = '/iframe'
+      src_binder = {
+          'key_id' : '',
+          'media_type' : media_type
+        }
       for instance_key in model.models:
         key_id = unicode( instance_key.id() )
         name_attr = ( 'name', model.media_type + "/" + key_id ) 
-        src_attr = ( 'src', '/api/media/type/%(media_type)s/id/%(key_id)s/' % 
-            {
-              'key_id' : key_id,
-              'media_type' : media_type 
-            } 
-          )
+        src_binder[ 'key_id' ] = key_id
+        src_attr = ( 'src', 
+          '/api/media/type/%(media_type)s/id/%(key_id)s/' % src_binder )
         gap_attr = ( 'gapped', )
-        bind_data.append( self.bind_data( 'li', [] ) )
+        bind_data.append( self.bind_data( 'li', ) )
         bind_data.append( self.bind_data( tag, 
                           [ name_attr, src_attr, gap_attr ] ) ) 
-        bind_data.append( self.bind_data( endtag, [] ) )   
-        bind_data.append( self.bind_data( '/li', [] ) )
-    bind_data.append( self.bind_data( '/ul', [ ] ) )
-
+        bind_data.append( self.bind_data( tag, None, None, True ) )
+        bind_data.append( self.bind_data( 'li', None, None, True ) )
+    bind_data.append( self.bind_data( 'ul', None, None, True ) )
     return bind_data
        

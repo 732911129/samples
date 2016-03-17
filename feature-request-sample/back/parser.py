@@ -36,8 +36,20 @@ class ImprintingParser( html ):
       return self.MULTIPLE_ATTRIBUTE_VALUE_SEPARATOR.join( selected )
     return None
 
+  def perform_bind( self, tags ):
+    for tag_bound_data in tags:
+      tag, attrs, data, close_tag = None, None, None, None
+      print tag_bound_data
+      tag, attrs, data, close_tag = tag_bound_data
+      print tag, close_tag, data
+      if tag:
+        self.printer.print_tag( tag, attrs )
+      if data:
+        self.printer.print_data( data )
+      if close_tag:
+        self.printer.print_end_tag( tag )
+
   def handle_starttag( self, tag, attrs ):
-    data = None
     tags = []
     bound_data = None
     try:
@@ -50,19 +62,9 @@ class ImprintingParser( html ):
     elif type( bound_data ) is list:
       tags = bound_data
     elif bound_data is None:
-      tags = [ ( tag, attrs, data ) ]
+      tags = [ ( tag, attrs, None, None ) ]
 
-    for tag_bound_data in tags:
-      try:
-        tag, attrs, data = tag_bound_data
-      except:
-        pass
-      if tag:
-        self.printer.print_tag( tag, attrs )
-      if data:
-        self.printer.print_data( data )
-      tag = None
-      data = None
+    self.perform_bind( tags )
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )

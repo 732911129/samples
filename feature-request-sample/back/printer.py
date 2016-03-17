@@ -135,8 +135,9 @@ class Printer( object ):
     self.leaf = True
     self.print_new_indented_line()
     self.print_start_tag_opener( tag )
-    for attr in attrs:
-      self.print_attr( attr )
+    if attrs:
+      for attr in attrs:
+        self.print_attr( attr )
     if tag in self.SELF_CLOSING_TAGS:
       self.print_self_closing_tag_closer()
     else:
