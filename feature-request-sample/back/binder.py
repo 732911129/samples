@@ -56,7 +56,7 @@ class Binder( object ):
     if not bind_type:
       return None
     bind_name = parser.get_attribute_value( 'name', attrs )
-    no_bind = parser.has_attribute( 'no-bind' )
+    no_bind = parser.has_attribute( 'no-bind', attrs )
     if bind_name:
       model_can_bind = self.model_can_bind( bind_name, model )
     elif tag == 'input':
