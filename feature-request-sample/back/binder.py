@@ -1,4 +1,5 @@
 import re
+import logging
 
 instance_id_regex = re.compile( r"new$" )
 
@@ -44,12 +45,6 @@ class Binder( object ):
     else:
       return None
 
-  def requested_bind_name( self, attrs ):
-    for attr in attrs:
-      if attr[ 0 ] == 'name':
-        return attr[ 1 ]
-    return None
-
   def model_can_bind( self, bind_name, model ):
     try:
       return model.hasslot( bind_name )
@@ -60,9 +55,11 @@ class Binder( object ):
     bind_type = self.bind_type( tag, attrs )
     if not bind_type:
       return None
-    bind_name = self.requested_bind_name( attrs )
+    bind_name = parser.get_attribute_value( 'name', attrs )
     if bind_name:
       model_can_bind = self.model_can_bind( bind_name, model )
+    elif tag == 'input':
+      raise TypeError( 'Input tag with attrs %s has no name attribute' % ( attrs, ) )
     if bind_name and model and not model_can_bind:
       logging.warning( model )
       raise TypeError( 'Model can not bind %s' % bind_name )

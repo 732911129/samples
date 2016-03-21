@@ -1,5 +1,5 @@
-from HTMLParser import HTMLParser as html
 import logging
+from HTMLParser import HTMLParser as html
 from binder import Binder
 from printer import Printer
 from specialty_utils import superclass
@@ -132,7 +132,6 @@ class ImprintingParser( ParserBase ):
         self.printer.print_tag( tag, attrs )
       if data:
         self.printer.print_data( data )
-      print close_tag
       if close_tag:
         self.printer.print_end_tag( tag )
 
@@ -141,7 +140,7 @@ class ImprintingParser( ParserBase ):
     try:
       bound_data = self.binder.try_bind( self, tag, attrs, self.model )
     except BaseException as e:
-      logging.warn( e ) 
+      logging.warning( e ) 
     else:
       if type( bound_data ) is tuple:
         tags = [ bound_data ]

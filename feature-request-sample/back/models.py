@@ -4,6 +4,7 @@ import json
 import render
 import views
 import files
+import logging
 
 class Collection( object ):
   def __init__( self, media_type, models, cursor, more ):
