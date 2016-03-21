@@ -4,6 +4,23 @@ from binder import Binder
 from printer import Printer
 from specialty_utils import superclass
 
+class ProjectionRequestParser( html ):
+  """
+    Understands parsing sections of HTML in the for attribute
+    of an input element to project that input to different other
+    tags. Builds the table used for this projection from the data
+    in these attributes
+
+    Understands: p-tag, p-attr, p-data and their attributes.
+  """
+  pass
+
+class ProjectionPointParser( html ):
+  """
+    Parses attributes or HTML data that contains p-value tags, and replaces those tags with their values
+  """
+  pass
+
 class ImprintingParser( html ):
   MULTIPLE_ATTRIBUTE_VALUE_SEPARATOR = " "
   binder = Binder()

@@ -2,6 +2,26 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Add support for projection points and templated attributes and data.
+
+Format
+
+Templated attributes
+
+<tag attr="This is some attr with <value>, where <value> is a templated value.">
+
+Projection points
+
+<input for="
+  <p-tag id=<id-1>>
+    <p-attr name=href mode=print>
+    <p-data mode=print>
+  </p-tag>
+  <p-tag id=<id-2>>
+    <p-attr name=value mode=print>
+    <p-attr name=checked mode=set>
+  </p-tag>
+  " value=hello>
 ## Todo 
 
 - Clean up framework code even more in prep for significantly extending framework in ways possibly including some roughly sketched below. 
