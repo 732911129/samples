@@ -45,6 +45,28 @@ class ProjectionRequestParser( ParserBase ):
   """
   projections = dict()
 
+  def handle_p_tag( self, attrs ):
+    pass
+
+  def handle_p_attr( self, attrs ):
+    pass
+
+  def handle_p_data( self, attrs ):
+    pass
+
+  def handle_starttag( self, tag, attrs ):
+    if tag == 'p-tag':
+      return self.handle_p_tag( attrs )
+    elif tag == 'p-attr':
+      return self.handle_p_attr( attrs )
+    elif tag == 'p-data':
+      return self.handle_p_data( attrs )
+    else:
+      logging.warning( tag )
+      logging.warning( attrs )
+      raise TypeError( 'Tag %s with attrs %s is not valid inside an input tag\'s for attribute' \
+                      % ( tag, attrs, ) )
+
   def reset( self ):
     superclass( self ).reset( self )
     projections = dict()
