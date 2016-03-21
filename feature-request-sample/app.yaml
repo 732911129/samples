@@ -9,7 +9,7 @@ handlers:
   secure: always
 
 error_handlers:
-  - file: error/viewErrorError.html
+  - file: error/ourErrorError.html
 
   - error_code: over_quota
     file: error/viewOverQuota.html
