@@ -34,6 +34,8 @@ class ParserBase( html ):
 
 class ProjectionRequestParser( ParserBase ):
   """
+    input.for attribute parser, takes a string of html and the existing projection table.
+    returns the projection table.
     Understands parsing sections of HTML in the for attribute
     of an input element to project that input to different other
     tags. Builds the table used for this projection from the data
@@ -41,17 +43,28 @@ class ProjectionRequestParser( ParserBase ):
 
     Understands: p-tag, p-attr, p-data and their attributes.
   """
-  output = ""
+  projections = dict()
 
   def reset( self ):
     superclass( self ).reset( self )
-    self.output = ""
+    projections = dict()
 
   def get_output( self ):
-    self.output
-
+    return self.projections
+ 
+  def imprint( self, for_attr_value, all_projections = None ):
+    self.reset()
+    self.projections = all_projections or self.projections
+    self.feed( for_attr_value )
+    self.close()
+    result = self.get_output()
+    self.reset()
+    return result
+ 
 class ProjectionPointParser( ParserBase ):
   """
+    Attribute and data p-value parser.
+    Returns printed value of the attribute or data.
     Parses attributes or HTML data that contains p-value tags, and replaces those tags with their values
   """
   VALUE_TAG = 'p-value'
@@ -94,8 +107,8 @@ class ProjectionPointParser( ParserBase ):
     self.reset()
     try:
       self.projections = all_projections[ id ]
-    except KeyError as e:
-      logging.warning( 'Requested projections for id %s but' % ( id, )  +
+    except keyerror as e:
+      logging.warning( 'requested projections for id %s but' % ( id, )  +
                         'no such projectiosn registered' )
       raise e
     else:
