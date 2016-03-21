@@ -4,29 +4,8 @@ from binder import Binder
 from printer import Printer
 from specialty_utils import superclass
 
-class ProjectionRequestParser( html ):
-  """
-    Understands parsing sections of HTML in the for attribute
-    of an input element to project that input to different other
-    tags. Builds the table used for this projection from the data
-    in these attributes
-
-    Understands: p-tag, p-attr, p-data and their attributes.
-  """
-  pass
-
-class ProjectionPointParser( html ):
-  """
-    Parses attributes or HTML data that contains p-value tags, and replaces those tags with their values
-  """
-  pass
-
-class ImprintingParser( html ):
+class ParserBase( html ):
   MULTIPLE_ATTRIBUTE_VALUE_SEPARATOR = " "
-  binder = Binder()
-  printer = Printer()
-  model = None
-  next_data = None
 
   def has_attribute( self, attr_name, attrs ):
     for attr in attrs:
@@ -53,6 +32,85 @@ class ImprintingParser( html ):
       return self.MULTIPLE_ATTRIBUTE_VALUE_SEPARATOR.join( selected )
     return None
 
+class ProjectionRequestParser( ParserBase ):
+  """
+    Understands parsing sections of HTML in the for attribute
+    of an input element to project that input to different other
+    tags. Builds the table used for this projection from the data
+    in these attributes
+
+    Understands: p-tag, p-attr, p-data and their attributes.
+  """
+  output = ""
+
+  def reset( self ):
+    superclass( self ).reset( self )
+    self.output = ""
+
+  def get_output( self ):
+    self.output
+
+class ProjectionPointParser( ParserBase ):
+  """
+    Parses attributes or HTML data that contains p-value tags, and replaces those tags with their values
+  """
+  VALUE_TAG = 'p-value'
+  NAME_ATTR = 'name'
+  printer = Printer()
+  projections = dict()
+
+  def handle_starttag( self, tag, attrs ):
+    if tag != VALUE_TAG:
+      self.printer.print_tag( tag, attrs )
+    else:
+      name = self.get_attribute_value( 'name', attrs )
+      try:
+        projected_value = self.projection[ name ]
+      except KeyError:
+        logging.warning( '%s requests projection %s but no such entry in projects.' %
+                          ( self.VALUE_TAG, name ) )
+      else:
+        self.printer.print_data( projected_value )
+
+  def handle_startendtag( self, tag, attrs ):
+    self.handle_starttag( tag, attrs )
+
+  def handle_data( self, data ):
+    self.printer.print_data( data )
+
+  def handle_endtag( self, tag ):
+    self.printer.print_end_tag( tag )
+
+  def reset( self ):
+    superclass( self ).reset( self )
+    printer = Printer()
+    requests = dict()
+    self.printer.start_new_fragment()
+
+  def get_output( self ):
+    return self.printer.get_fragment()
+
+  def imprint( self, id, raw, all_projections ):
+    self.reset()
+    try:
+      self.projections = all_projections[ id ]
+    except KeyError as e:
+      logging.warning( 'Requested projections for id %s but' % ( id, )  +
+                        'no such projectiosn registered' )
+      raise e
+    else:
+      self.feed( raw )
+      self.close()
+      result = self.printer.get_fragment()
+      self.reset()
+      return result
+
+class ImprintingParser( ParserBase ):
+  binder = Binder()
+  printer = Printer()
+  model = None
+  next_data = None
+
   def perform_bind( self, tags ):
     for tag_bound_data in tags:
       tag, attrs, data, close_tag = None, None, None, None
@@ -67,20 +125,19 @@ class ImprintingParser( html ):
 
   def handle_starttag( self, tag, attrs ):
     tags = []
-    bound_data = None
     try:
       bound_data = self.binder.try_bind( self, tag, attrs, self.model )
     except BaseException as e:
       logging.warn( e ) 
+    else:
+      if type( bound_data ) is tuple:
+        tags = [ bound_data ]
+      elif type( bound_data ) is list:
+        tags = bound_data
+      elif bound_data is None:
+        tags = [ ( tag, attrs, None, None ) ]
 
-    if type( bound_data ) is tuple:
-      tags = [ bound_data ]
-    elif type( bound_data ) is list:
-      tags = bound_data
-    elif bound_data is None:
-      tags = [ ( tag, attrs, None, None ) ]
-
-    self.perform_bind( tags )
+      self.perform_bind( tags )
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )
