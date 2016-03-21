@@ -56,11 +56,15 @@ class Binder( object ):
     if not bind_type:
       return None
     bind_name = parser.get_attribute_value( 'name', attrs )
+    no_bind = parser.has_attribute( 'no-bind' )
     if bind_name:
       model_can_bind = self.model_can_bind( bind_name, model )
     elif tag == 'input':
       raise TypeError( 'Input tag with attrs %s has no name attribute' % ( attrs, ) )
-    if bind_name and model and not model_can_bind:
+    if ( 
+          bind_name and not no_bind and
+          model and not model_can_bind
+        ):
       logging.warning( model )
       raise TypeError( 'Model can not bind %s' % bind_name )
     else:
