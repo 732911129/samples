@@ -2,6 +2,10 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Do something cool.
+
+Capture the key based opening of details' summary and resize the embedder when this happens.
+
 ## Add support for projection points and templated attributes and data.
 
 Format

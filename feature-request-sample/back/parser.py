@@ -44,34 +44,35 @@ class ProjectionRequestParser( ParserBase ):
     Understands: p-tag, p-attr, p-data and their attributes.
   """
   projections = dict()
+  tag_stack = list()
+  children = list()
 
-  def handle_p_tag( self, attrs ):
-    pass
-
-  def handle_p_attr( self, attrs ):
-    pass
-
-  def handle_p_data( self, attrs ):
-    pass
+  def new_tag( self, tag, attrs ):
+    return {
+        'tag' : tag,
+        'attrs' : attrs,
+        'children' : list()
+      }
 
   def handle_starttag( self, tag, attrs ):
-    if tag == 'p-tag':
-      return self.handle_p_tag( attrs )
-    elif tag == 'p-attr':
-      return self.handle_p_attr( attrs )
-    elif tag == 'p-data':
-      return self.handle_p_data( attrs )
-    else:
-      logging.warning( tag )
-      logging.warning( attrs )
-      raise TypeError( 'Tag %s with attrs %s is not valid inside an input tag\'s for attribute' \
-                      % ( tag, attrs, ) )
+    new_tag = self.new_tag( tag, attrs )
+    self.tag_stack.append( new_tag )
+    self.children = list()
+
+  def handle_endtag( self, tag ):
+    top_tag = self.tag_stack.pop() 
+    top_tag[ 'children' ] = self.children
+    self.children = self.tag_stack[ -1 ][ 'children' ]
+    self.children.append( top_tag )
 
   def reset( self ):
     superclass( self ).reset( self )
-    projections = dict()
+    self.projections = dict()
+    self.tag_stack = [ self.new_tag( ':root', [] ) ]
+    self.children = list()
 
   def get_output( self ):
+    print self.tag_stack
     return self.projections
  
   def imprint( self, for_attr_value, all_projections = None ):
@@ -118,8 +119,8 @@ class ProjectionPointParser( ParserBase ):
 
   def reset( self ):
     superclass( self ).reset( self )
-    printer = Printer()
-    requests = dict()
+    self.printer = Printer()
+    self.requests = dict()
     self.printer.start_new_fragment()
 
   def get_output( self ):
