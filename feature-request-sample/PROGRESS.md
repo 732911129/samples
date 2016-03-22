@@ -2,6 +2,36 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## Matching algorithm for rules ?
+
+    Find intersection of attribute names present in tag and attribute names present in the projection rule table.
+
+    Any AND rule with multiple attributes is indexed like this
+
+    {
+      attr1 : { 'rule' : 'is', 'value' : '1', 'and' : {
+          attr2 : { 'rule' : 'is' , value : '2', 'projection' : <projection> },
+          attr3 : { 'rule' : 'contains', value : '3', 'and' : {
+              attr4 : { 'rule' : 'contains', value : '4', 'projection' : <projection> }
+            }
+          }
+         }
+      },
+      attr2 : { 'rule' : 'contains', 'value' : '2', 'projection' : <projection> }
+    }
+
+    Which encodes
+
+    """
+      attr1 is 1 and attr2 is 2 or
+      attr1 is 1 and attr3 contains 3 and attr4 contains 4 or
+      attr2 contains 2
+    """
+
+    Nice. 
+
+  How is this matched ?
+
 ## How do we index the rules ?
 
   Order them. 
