@@ -2,6 +2,17 @@
 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
+## How do we index the rules ?
+
+  Order them. 
+  Index the first rule at the top level.
+  Any and rules at the subsequent levels.
+  It should be possible to match based on this.
+
+## Parsing algorithm for element matching
+
+Split on "OR" then split on "AND"
+
 ## Do something cool.
 
 Capture the key based opening of details' summary and resize the embedder when this happens.
