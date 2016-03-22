@@ -32,20 +32,13 @@ class ParserBase( html ):
       return self.MULTIPLE_ATTRIBUTE_VALUE_SEPARATOR.join( selected )
     return None
 
-class ProjectionRequestParser( ParserBase ):
+class TreeBuilder( ParserBase ):
   """
-    input.for attribute parser, takes a string of html and the existing projection table.
-    returns the projection table.
-    Understands parsing sections of HTML in the for attribute
-    of an input element to project that input to different other
-    tags. Builds the table used for this projection from the data
-    in these attributes
-
-    Understands: p-tag, p-attr, p-data and their attributes.
+    Builds a tree from some HTML tags.
   """
-  projections = dict()
   tag_stack = list()
   children = list()
+  root = {}
 
   def new_tag( self, tag, attrs ):
     return {
@@ -67,12 +60,47 @@ class ProjectionRequestParser( ParserBase ):
 
   def reset( self ):
     superclass( self ).reset( self )
-    self.projections = dict()
-    self.tag_stack = [ self.new_tag( ':root', [] ) ]
+    self.root = self.new_tag( ':root', [] )
+    self.tag_stack = [ self.root ]
     self.children = list()
 
   def get_output( self ):
-    print self.tag_stack
+    return self.root
+
+  def imprint( self, html_string ):
+    self.reset()
+    self.feed( html_string )
+    self.close()
+    result = self.get_output()
+    self.reset()
+    return result
+    
+class ProjectionRequestParser( TreeBuilder ):
+  """
+    input.for attribute parser, takes a string of html and the existing projection table.
+    returns the projection table.
+    Understands parsing sections of HTML in the for attribute
+    of an input element to project that input to different other
+    tags. Builds the table used for this projection from the data
+    in these attributes
+
+    Understands: p-tag, p-attr, p-data and their attributes.
+  """
+  projections = dict()
+
+  def reset( self ):
+    superclass( self ).reset( self )
+    self.projections = dict()
+
+  def extract_projections( self, tree ):
+    pass
+
+  def combine_projections( self, p1, p2 ):
+    pass
+
+  def get_output( self ):
+    new_projections = self.extract_projections( self.root )
+    self.projections = self.combine_projections( self.projections, new_projections )
     return self.projections
  
   def imprint( self, for_attr_value, all_projections = None ):
