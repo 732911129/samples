@@ -11,37 +11,12 @@ class RuleParser( object ):
   """
   AND_TOKEN = re.compile( r'\s+and\s' )
   OR_TOKEN = re.compile( r'\s+or\s' )
+  COMMA_TOKEN = re.compile( r'\s*,\s*' )
   SPACE_TOKEN = re.compile( r'\s+' )
-  rules = dict()
-
-  def reset( self ):
-    self.rules = dict()
-
-  def new_rule( self, raw ):
-    raw = raw.strip()
-    expression = self.SPACE_TOKEN.split( raw )
-    attr, rule, value = expression
-    return {
-        'rule' : rule,
-        'attr' : attr,
-        'value' : value
-      }
-
-  def feed( self, text ):
-    and_rules = self.OR_TOKEN.split( text )
-    or_rules = map( lambda and_rule : self.AND_TOKEN.split( and_rule ), and_rules )
-    for and_rules in or_rules:
-      for and_rule in and_rules:  
-        rule = self.new_rule( and_rule )
-        try:
-          rule_list = self.rules[ rule[ 'attr' ] ]
-        except KeyError:
-          rule_list = self.rules[ rule[ 'attr' ] ] = list()
-        finally:
-          rule_list.append( rule )
+  root_OR_expression = dict()
 
   def get_output( self ):
-    return self.rules
+    return self.root_OR_expression
 
   def imprint( self, text ):
     self.reset()
@@ -49,6 +24,46 @@ class RuleParser( object ):
     result = self.get_output()
     self.reset()
     return result
+
+  def new_operand_expression( self, raw ):
+    raw = raw.strip()
+    expression = self.SPACE_TOKEN.split( raw, maxsplit = 2 )
+    name, operand, values = expression
+    return {
+        'operand' : operand,
+        'name' : name,
+        'values' : values
+      }
+
+  def new_and_expression( self, expressions ):
+    return {
+        'operand' : 'AND',
+        'parameters' : expressions
+      }
+
+  def new_or_expression( self, expressions ):
+    return {
+        'operand' : 'OR',
+        'parameters' : expressions
+      }
+
+  def feed( self, text ):
+    text = text.strip()
+    and_expressions = self.OR_TOKEN.split( text )
+    and_expressions = map( lambda and_expression : self.AND_TOKEN.split( and_expression ), and_expressions )
+    and_expressions = [ map( lambda exprs : self.new_operand_expression( exprs ), operand_expressions ) for operand_expressions in and_expressions ]
+    and_expressions = map( lambda exprs : self.new_and_expression( exprs ), and_expressions )
+    or_expression = self.new_or_expression( and_expressions )
+    self.root_OR_expression = or_expression
+
+  def reset( self ):
+    self.root_OR_expression = dict()
+
+class ElementMatchingRuleParser( RuleParser ):
+  pass
+
+class DataPrintingRuleParser( RuleParser ):
+  pass
 
 if __name__ == "__main__":
   x = RuleParser()
@@ -59,4 +74,13 @@ if __name__ == "__main__":
         href startswith https or
         src endswith .jpg
       """ 
+    )
+  print x.imprint(
+      """
+        porcupine on-attr live-source and
+        porcupine print-children all-descendents and
+        porcupine set-attr message "hello world" and
+        porcupine print-attr href and 
+        porcupine set-attr title porcupine
+      """
     )
