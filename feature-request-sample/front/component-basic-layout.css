@@ -9,7 +9,7 @@
   :root {
     font-size: 80%;
   }
-  input {
+  input, textarea {
     border: 1px solid gray;
   }
   input, textarea, select {
