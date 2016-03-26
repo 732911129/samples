@@ -1,5 +1,9 @@
 # Development Progress 
 
+## Some TODO
+
+- Component resize works to also be on : summary details opening by key. Textarea resize by touch-initiated drag. Pointer events ( when they exist ).
+ 
   This file tracks design, implementation, test and bugs discussion for feature-request-sample.
 
 ## Matching algorithm for rules ?
