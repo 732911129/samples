@@ -4,11 +4,12 @@ threadsafe: true
 
 handlers:
 
-- url: .*
-  script: back.api.app
-  secure: always
+  - url: .*
+    script: back.api.app
+    secure: always
 
 error_handlers:
+
   - file: error/ourErrorError.html
 
   - error_code: over_quota
@@ -19,5 +20,10 @@ error_handlers:
 
   - error_code: timeout
     file: error/viewTimeout.html
+
+builtins:
+
+  - appstats: on
+
 
 

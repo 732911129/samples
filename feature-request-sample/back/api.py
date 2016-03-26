@@ -84,7 +84,7 @@ app = server(
         catch_all
       ]
     , debug = True 
-  )
+  ) 
 
 if __name__ == "__main__":
   app.run()
