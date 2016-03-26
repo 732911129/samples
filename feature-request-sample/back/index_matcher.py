@@ -1,3 +1,5 @@
+import re
+
 LIST_SEPARATORS = re.compile( r'[\s,]+' )
 
 def map_by_name( tuples ):
@@ -7,8 +9,9 @@ def map_by_name( tuples ):
   return map
 
 def matches( expression, test_value = u'' ):
-  op, value = expression.get( 'operand' ).lower(), 
-              unicode( expression.get( 'value' ) )
+  op = expression.get( 'operand' ).lower()
+  value = unicode( expression.get( 'value' ) )
+
   if op == 'is':
     return value == test_value
   elif op == 'startswith':
