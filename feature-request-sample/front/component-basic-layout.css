@@ -9,6 +9,9 @@
   :root {
     font-size: 80%;
   }
+  input {
+    border: 1px solid gray;
+  }
   input, textarea, select {
     width:12em;
     box-sizing:border-box;
@@ -48,7 +51,6 @@
   }
   dd {
     padding: 0.25rem;
-    margin: 0;
     margin-left: 0.25rem;
     display: flex;
     flex-direction: row;
