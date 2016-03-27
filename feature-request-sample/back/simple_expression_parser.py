@@ -1,4 +1,5 @@
 import re
+from specialty_utils import superclass
 
 class RuleParser( object ):
   """
@@ -57,10 +58,24 @@ class RuleParser( object ):
     self.root_OR_expression = or_expression
 
   def reset( self ):
-    self.root_OR_expression = dict()
+     self.root_OR_expression = dict()
 
-class ElementMatchingRuleParser( RuleParser ):
-  pass
+class ElementMatchingIndexer( RuleParser ):
+  index = dict()
+
+  def build_index( self, tree ):
+    return tree
+
+  def imprint( self, text ):
+    tree = superclass( self ).imprint( self, text )
+    self.index = self.build_index( tree )
+    result = self.index
+    self.reset()
+    return result
+
+  def reset( self ):
+    superclass( self ).reset( self )
+    self.index = dict()
 
 class DataPrintingRuleParser( RuleParser ):
   pass

@@ -31,7 +31,7 @@ def matches( expression, test_value = u'' ):
   else:
     raise TypeError( 'Op %s is an unknown operand.' % ( op, ) )
 
-def match( name_values, index = dict() ):
+def match( name_value_pairs, index = dict() ):
   """
     The format of index is a map of names to expressions.
     And expression has a name ( the name it is indexed by )
@@ -50,7 +50,7 @@ def match( name_values, index = dict() ):
 
   frontier_queue.append( index )
 
-  names, map = map_by_name( name_values )
+  names, map = map_by_name( name_value_pairs )
 
   while len( frontier_queue ):
     frontier = frontier_queue.pop( 0 )
@@ -65,3 +65,22 @@ def match( name_values, index = dict() ):
         matching_results.append( expression.get( 'result' ) )
 
   return matching_results
+
+if __name__ == "__main__":
+  from simple_expression_parser import (
+      RuleParser,
+      ElementMatchingIndexer
+    )
+  import pprint
+  x = ElementMatchingIndexer()
+  y = x.imprint(
+      """
+        id is a and class includes b or
+        class includes c or
+        href startswith https or
+        src endswith .jpg
+      """ 
+    )
+  pp = pprint.PrettyPrinter( indent=2 )
+  pp.pprint( y )
+
