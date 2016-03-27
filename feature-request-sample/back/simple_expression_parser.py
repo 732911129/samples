@@ -64,7 +64,19 @@ class ElementMatchingIndexer( RuleParser ):
   index = dict()
 
   def build_index( self, tree ):
+    """ 
+      FIXME: Implement
+      Step through all AND_expressions and add each index each one.
+    """
     return tree
+
+  def index_AND_expression_result( self, existing_tree, AND_node, result ):
+    """
+      FIXME: Implement
+      Add one AND_node ( including all its descendent expressions ) to the 
+      index tree where it maps to result
+    """
+    return existing_tree
             
   def imprint( self, text ):
     tree = superclass( self ).imprint( self, text )
