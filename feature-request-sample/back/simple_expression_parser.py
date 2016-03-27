@@ -65,7 +65,7 @@ class ElementMatchingIndexer( RuleParser ):
 
   def build_index( self, tree ):
     return tree
-
+            
   def imprint( self, text ):
     tree = superclass( self ).imprint( self, text )
     self.index = self.build_index( tree )
