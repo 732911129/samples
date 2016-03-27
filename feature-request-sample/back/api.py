@@ -13,23 +13,26 @@ from endpoints import (
     catchall_endpoint as catchall
   )
 
+GET_ONLY = [ 'GET' ]
+POST_ONLY = [ 'POST' ]
+GET_POST = [ 'GET', 'POST' ]
 
 media_paths = prefix( '/api/media',
     [
         path( '/type/<media_type><:/?>', 
-            methods = [ 'GET' ],
+            methods = GET_ONLY,
             handler = collection
           ),
         path( '/type/<media_type>/cursor/<cursor><:/?>', 
-            methods = [ 'GET' ],
+            methods = GET_ONLY,
             handler = collection
           ),
         path( '/type/<media_type><:/?>',
-            methods = [ 'POST' ],
+            methods = POST_ONLY,
             handler = instance
           ),
         path( '/type/<media_type>/id/<id><:/?>', 
-            methods = [ 'GET','POST' ],
+            methods = GET_POST,
             handler = instance
           ),
       ]
@@ -37,7 +40,7 @@ media_paths = prefix( '/api/media',
 
 catch_all = path( 
     '/<path:.*>',
-    methods = [ 'GET','POST' ],
+    methods = GET_POST,
     handler = catchall
   )
 
