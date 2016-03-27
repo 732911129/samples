@@ -1,7 +1,7 @@
 import re
 from specialty_utils import superclass
 
-class RuleParser( object ):
+class ExpressionParser( object ):
   """
     Shares a parsing interface with HTMLParser
     Parses rules like:
@@ -60,54 +60,26 @@ class RuleParser( object ):
   def reset( self ):
      self.root_OR_expression = dict()
 
-class ElementMatchingIndexer( RuleParser ):
-  index = dict()
-
-  def build_index( self, tree ):
-    """ 
-      FIXME: Implement
-      Step through all AND_expressions and add each index each one.
-    """
-    return tree
-
-  def index_AND_expression_result( self, existing_tree, AND_node, result ):
-    """
-      FIXME: Implement
-      Add one AND_node ( including all its descendent expressions ) to the 
-      index tree where it maps to result
-    """
-    return existing_tree
-            
-  def imprint( self, text ):
-    tree = superclass( self ).imprint( self, text )
-    self.index = self.build_index( tree )
-    result = self.index
-    self.reset()
-    return result
-
-  def reset( self ):
-    superclass( self ).reset( self )
-    self.index = dict()
-
-class DataPrintingRuleParser( RuleParser ):
-  pass
-
 if __name__ == "__main__":
-  x = RuleParser()
-  print x.imprint( 
-      """
-        id is a and class includes b or
-        class includes c or
-        href startswith https or
-        src endswith .jpg
-      """ 
+  from pprint import PrettyPrinter as PP
+  pp = PP( indent = 2 )
+  x = ExpressionParser()
+  pp.pprint( x.imprint( 
+        """
+          id is a and class includes b or
+          class includes c or
+          href startswith https or
+          src endswith .jpg
+        """ 
+      ) 
     )
-  print x.imprint(
-      """
-        porcupine on-attr live-source and
-        porcupine print-children all-descendents and
-        porcupine set-attr message "hello world" and
-        porcupine print-attr href and 
-        porcupine set-attr title porcupine
-      """
+  pp.pprint( x.imprint(
+        """
+          porcupine on-attr live-source and
+          porcupine print-children all-descendents and
+          porcupine set-attr message "hello world" and
+          porcupine print-attr href and 
+          porcupine set-attr title porcupine
+        """
+      ) 
     )
