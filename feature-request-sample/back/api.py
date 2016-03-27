@@ -8,9 +8,9 @@ from webapp2_extras.routes import (
   )
 
 from endpoints import (
-    collection_endpoint,
-    instance_endpoint,
-    catchall_endpoint
+    collection_endpoint as collection,
+    instance_endpoint as instance,
+    catchall_endpoint as catchall
   )
 
 
@@ -18,19 +18,19 @@ media_paths = prefix( '/api/media',
     [
         path( '/type/<media_type><:/?>', 
             methods=['GET'],
-            handler=collection_endpoint
+            handler=collection
           ),
         path( '/type/<media_type>/cursor/<cursor><:/?>', 
             methods=['GET'],
-            handler=collection_endpoint
+            handler=collection
           ),
         path( '/type/<media_type><:/?>',
             methods=['POST'],
-            handler=instance_endpoint
+            handler=instance
           ),
         path( '/type/<media_type>/id/<id><:/?>', 
             methods=['GET','POST'],
-            handler=instance_endpoint
+            handler=instance
           ),
       ]
   )
@@ -38,7 +38,7 @@ media_paths = prefix( '/api/media',
 catch_all = path( 
     '/<path:.*>',
     methods=['GET','POST'],
-    handler=catchall_endpoint
+    handler=catchall
   )
 
 app = server( 
