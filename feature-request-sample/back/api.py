@@ -17,28 +17,28 @@ from endpoints import (
 media_paths = prefix( '/api/media',
     [
         path( '/type/<media_type><:/?>', 
-            methods=['GET'],
-            handler=collection
+            methods = [ 'GET' ],
+            handler = collection
           ),
         path( '/type/<media_type>/cursor/<cursor><:/?>', 
-            methods=['GET'],
-            handler=collection
+            methods = [ 'GET' ],
+            handler = collection
           ),
         path( '/type/<media_type><:/?>',
-            methods=['POST'],
-            handler=instance
+            methods = [ 'POST' ],
+            handler = instance
           ),
         path( '/type/<media_type>/id/<id><:/?>', 
-            methods=['GET','POST'],
-            handler=instance
+            methods = [ 'GET','POST' ],
+            handler = instance
           ),
       ]
   )
 
 catch_all = path( 
     '/<path:.*>',
-    methods=['GET','POST'],
-    handler=catchall
+    methods = [ 'GET','POST' ],
+    handler = catchall
   )
 
 app = server( 
