@@ -1,19 +1,33 @@
 <form id=component action=/api/media/type/feature title="Features Collection">
   <dl>
     <dt>
-      <input name=features no-bind class=type type=url value=https://dosaygo.com/type/Features>
+      <label for=features class=type>Features</label>
+      <input name=features id=features size=1 disabled hidden no-bind class=type type=url value=https://dosaygo.com/type/Features>
     </dt>
     <dd>
-      <label for=search>Search</label>
-      <input type=search no-bind name=search id=search>
-    </dd>
-    <dd>
-      <ul name=models>
-      </ul>
-    </dd>
-    <dd>
-      <button id=back>Back</button>
-      <button id=forward>Forward</button>
+      <dl>
+        <dt>
+          <label for=search>Search</label>
+        </dt>
+        <dd>
+          <input type=search no-bind name=search id=search>
+          <button>Search</button>
+        </dd>
+        <dt>
+          <label for=models>Models</label>
+        </dt>
+        <dd>
+          <ul name=models id=models>
+          </ul>
+        </dd>
+        <dt>
+          <label for=navigation>Navigation</label>
+        </dt>
+        <dd>
+          <button name=navigation value=back id=back>Back</button>
+          <button name=navigation value=forward id=forward>Forward</button>
+        </dd>
+      </dl>
     </dd>
   </dl>
 </form>

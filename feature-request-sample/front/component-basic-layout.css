@@ -9,13 +9,11 @@
   :root {
     font-size: 80%;
   }
-  input, textarea {
-    border: 1px solid gray;
-  }
   input, textarea, select {
+    border: 1px solid gray;
     width:12em;
     box-sizing:border-box;
-    padding: 0.25em;
+    padding: 0.2rem 0.5rem 0.3rem;
   }
   label {
     width: 12ch;
@@ -64,9 +62,6 @@
   }
   dd input {
     align-self: flex-start;
-  }
-  textarea, input {
-    padding: 0.2rem 0.5rem 0.3rem;
   }
   ul[name="models"] {
     -webkit-margin-before: 0;
