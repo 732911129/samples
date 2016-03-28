@@ -10,7 +10,6 @@
     font-size: 80%;
   }
   input, textarea, select {
-    border: 1px solid gray;
     width:12em;
     box-sizing:border-box;
     padding: 0.2rem 0.5rem 0.3rem;
