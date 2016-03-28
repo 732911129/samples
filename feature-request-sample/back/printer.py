@@ -6,9 +6,6 @@ from simple_expression_parser import (
 
 from boilerplate import boilerplate
 
-class PrintParser( ExpressionParser ):
-  pass
-
 class Printer( object ):
   SELF_CLOSING_TAGS = {
       'img' : True,

@@ -154,20 +154,14 @@ class ProjectionPointParser( ParserBase ):
   def get_output( self ):
     return self.printer.get_fragment()
 
-  def imprint( self, id, raw, all_projections ):
+  def imprint( self, raw, projections ):
     self.reset()
-    try:
-      self.projections = all_projections[ id ]
-    except keyerror as e:
-      logging.warning( 'requested projections for id %s but' % ( id, )  +
-                        'no such projectiosn registered' )
-      raise e
-    else:
-      self.feed( raw )
-      self.close()
-      result = self.printer.get_fragment()
-      self.reset()
-      return result
+    self.projections = projections
+    self.feed( raw )
+    self.close()
+    result = self.printer.get_fragment()
+    self.reset()
+    return result
 
 class ImprintingParser( ParserBase ):
   binder = Binder()
