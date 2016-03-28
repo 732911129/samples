@@ -14,12 +14,12 @@ class IndexMatcher( object ):
   def map_by_name( self, tuples ):
     map = dict()
     for tuple in tuples:
-      map[ tuple[ 0 ] ] = tuple
-    return map
+      map[ tuple[ 0 ] ] = tuple[ 1 ] 
+    return set( map.keys() ), map
 
   def matches( self, expression, test_value = u'' ):
     op = expression.get( 'operand' ).lower()
-    value = unicode( expression.get( 'value' ) )
+    value = unicode( expression.get( 'values' ) )
 
     if op == 'is':
       return value == test_value
@@ -59,62 +59,103 @@ class IndexMatcher( object ):
 
     frontier_queue.append( index )
 
-    names, map = map_by_name( name_value_pairs )
+    names, map = self.map_by_name( name_value_pairs )
 
     while len( frontier_queue ):
       frontier = frontier_queue.pop( 0 )
       overlap = names & set( frontier.keys() )
       for key in overlap:
-        expression, value = index[ key ], map[ key ]
-        if not matches( expression, value ):
-          continue
-        if expression.get( 'AND' ):
-          frontier_queue.append( expression.get( 'AND' ) )
-        if expression.get( 'result' ):
-          matching_results.append( expression.get( 'result' ) )
+        expressions, value = index[ key ], map[ key ]
+        for expression in expressions:
+          if not self.matches( expression, value ):
+            continue
+          if expression.get( 'AND' ):
+            frontier_queue.append( expression.get( 'AND' ) )
+          if expression.get( 'RESULT' ):
+            matching_results.append( expression.get( 'RESULT' ) )
 
     return matching_results
 
-class IndexBuilder( ExpressionParser ):
+class IndexBuilder( object ):
+  parser = ExpressionParser()
   index = dict()
 
-  def build_index( self, tree ):
+  def add_index( self, tree, result ):
     """ 
-      FIXME: Implement
+      TODO: test
       Step through all AND_expressions and add each index each one.
     """
-    return tree
+    OR_parameters = tree[ 'parameters' ]
+    for AND_node in OR_parameters:
+      self.index_AND_expression_result( self.index, AND_node, result )
+    return self.index
 
   def index_AND_expression_result( self, existing_tree, AND_node, result ):
     """
-      FIXME: Implement
+      TODO: make more efficient by combining the index list further
       Add one AND_node ( including all its descendent expressions ) to the 
       index tree where it maps to result
     """
-    return existing_tree
+    root_tree = existing_tree
+    expressions = AND_node[ 'parameters' ]
+    for expression in expressions:
+      name = expression[ 'name' ]
+      try:
+        index = existing_tree[ name ]
+      except KeyError:
+        index = existing_tree[ name ] = [ expression ]
+      else:
+        index.append( expression )
+      if expression is expressions[ -1 ]:
+        expression[ 'RESULT' ] = result
+      else:
+        expression[ 'AND' ] = existing_tree = {}
+    return root_tree
             
-  def imprint( self, text ):
-    tree = superclass( self ).imprint( self, text )
-    self.index = self.build_index( tree )
+  def feed_text_and_slot_name( self, text, slot_name ):
+    tree = parser.imprint( text )
+    self.index = self.add_index( tree, slot_name )
+    return self.index
+
+  def imprint( self, text_slot_name_pairs ):
+    for text, slot_name in text_slot_name_pairs:
+      tree = self.parser.imprint( text )
+      self.index = self.add_index( tree, slot_name )
     result = self.index
     self.reset()
     return result
 
   def reset( self ):
-    superclass( self ).reset( self )
     self.index = dict()
+    self.parser = ExpressionParser()
 
 if __name__ == "__main__":
   import pprint
   x = IndexBuilder()
-  y = x.imprint(
-      """
-        id is a and class includes b or
-        class includes c or
-        href startswith https or
-        src endswith .jpg
-      """ 
-    )
+  y = x.imprint( [
+      (
+        """
+          id is a and class includes b or
+          class includes c or
+          href startswith https or
+          src endswith .jpg
+        """ 
+      , "name1" ),
+      (
+        """
+          id is xy and class includes D or
+          href endswith jpeg 
+        """ 
+      , "name2" ) ] )
+  z = IndexMatcher()
+  attrs = [
+    ( 'id', 'a' ),
+    ( 'class', 'x y b z' ),
+    ( 'href', 'https://asdasdsa.jpeg' )
+  ]
+  r = z.match( attrs, y )
   pp = pprint.PrettyPrinter( indent=2 )
   pp.pprint( y )
+  pp.pprint( attrs )
+  pp.pprint( r )
 
