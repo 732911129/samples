@@ -117,10 +117,13 @@ class IndexBuilder( object ):
     self.index = self.add_index( tree, slot_name )
     return self.index
 
-  def imprint( self, text_slot_name_pairs ):
-    for text, slot_name in text_slot_name_pairs:
+  def imprint( self, slot_name_text_pairs, existing_index = None ):
+    self.reset()
+    if existing_index:
+      self.index = existing_index
+    for slot_name, text in slot_name_text_pairs:
       tree = self.parser.imprint( text )
-      self.index = self.add_index( tree, slot_name )
+      self.add_index( tree, slot_name )
     result = self.index
     self.reset()
     return result
@@ -132,21 +135,26 @@ class IndexBuilder( object ):
 if __name__ == "__main__":
   import pprint
   x = IndexBuilder()
-  y = x.imprint( [
-      (
-        """
-          id is a and class includes b or
-          class includes c or
-          href startswith https or
-          src endswith .jpg
-        """ 
-      , "name1" ),
-      (
-        """
-          id is xy and class includes D or
-          href endswith jpeg 
-        """ 
-      , "name2" ) ] )
+  y = x.imprint( 
+      [
+          (
+              "name1",
+              """
+                id is a and class includes b or
+                class includes c or
+                href startswith https or
+                src endswith .jpg
+              """ 
+            ),
+          (
+              "name2",
+              """
+                id is xy and class includes D or
+                href endswith jpeg 
+              """ 
+            ) 
+        ] 
+    )
   z = IndexMatcher()
   attrs = [
     ( 'id', 'a' ),

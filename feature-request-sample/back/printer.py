@@ -33,7 +33,7 @@ class Printer( object ):
 
   def start_new_document( self, title = 'Untitled', indenting_on = True ):
     self.doc = ""
-    self.detph = 0
+    self.depth = 0
     self.leaf = True
     self.indenting_on = indenting_on
     self.print_doctype()
@@ -155,6 +155,53 @@ class Printer( object ):
       self.print_new_indented_line()
     self.doc += '</' + tag + '>'
     self.leaf = False
+
+class FragmentPrinter( object ):
+  SELF_CLOSING_TAGS = {
+      'img' : True,
+      'link' : True,
+      'meta' : True,
+      'input' : True,
+      'area' : True,
+      'base' : True,
+      'br' : True,
+      'col' : True,
+      'hr' : True,
+      'keygen' : True,
+      'param' : True,
+      'source' : True,
+      'track' : True,
+      'wbr' : True,
+      'embed' : True
+    }
+  MAX_EXTRA_INDENT = 10
+  INDENT_SEQUENCE = "  "
+  indenting_on = True
+  doc = ""
+  depth = 0
+  leaf = True
+
+  def start_new_document( self, *args, **kwargs ):
+    raise TypeError( "Not implemented" )
+
+  def end_document( self ):
+    raise TypeError( "Not implemented" )
+
+  def get_document( self ):
+    raise TypeError( "Not implemented" )
+
+  def start_new_fragment( self, indenting_on = True ):
+    self.doc = ""
+    self.depth = 0
+    self.leaf = True
+    self.indenting_on = indenting_on
+
+  def end_fragment( self ):
+    pass
+
+  def get_fragment( self ):
+    return self.doc
+
 
 if __name__ == "__main__":
   p = Printer()
