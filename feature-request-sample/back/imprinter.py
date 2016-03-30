@@ -67,3 +67,11 @@ class IndexBuildingParser( ParserBase ):
     result = self.get_output() 
     self.reset()
     return result
+    
+class IndexMatchingParser( ParserBase ):
+  def handle_starttag( self, tag, attrs ):
+    projected = self.has_attribute( 'project-from', attrs )
+    if projected:
+      projections = self.get_attribute_value( 'project-from', attrs )
+      self.projector.imprint( projections, self, tag, attrs )
+
