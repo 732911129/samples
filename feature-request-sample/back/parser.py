@@ -1,7 +1,7 @@
 import logging
 from HTMLParser import HTMLParser as html
 from binder import Binder
-from printer import Printer
+from printer import FragmentPrinter
 from specialty_utils import superclass
 
 class ParserBase( html ):
@@ -34,7 +34,7 @@ class ParserBase( html ):
 
 class ImprintingParser( ParserBase ):
   binder = Binder()
-  printer = Printer()
+  printer = FragmentPrinter()
   model = None
   next_data = None
 
@@ -77,17 +77,17 @@ class ImprintingParser( ParserBase ):
   def reset( self ):
     superclass( self ).reset( self )
     self.binder = Binder()
-    self.printer = Printer()
+    self.printer = FragmentPrinter()
     self.next_data = None
     self.model = None
-    self.printer.start_new_document()
+    self.printer.start_new_fragment()
 
   def close( self ):
     superclass( self ).close( self ) 
-    self.printer.end_document()
+    self.printer.end_fragment()
 
   def get_output( self ):
-    return self.printer.get_document()
+    return self.printer.get_fragment()
 
   def imprint( self, model, view ):
     self.reset()

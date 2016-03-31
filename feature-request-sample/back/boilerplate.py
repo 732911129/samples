@@ -28,7 +28,7 @@ body_after_end_scripts_boilerplate = """
   <script src=/front/resize_embedder.js></script>
 """
 
-boilerplate = {
+Boilerplate = {
   'head' : {
     'after_begin' : [
       head_after_begin_meta_charset_boilerplate,

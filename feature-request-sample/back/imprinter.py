@@ -28,47 +28,13 @@ from index import (
     4. Return the imprinted document text.
 """
 
-class IndexBuildingParser( ParserBase ):
-  PROJECTING_CONTROLS = {
-    'input' : True,
-    'select' : True,
-    'textarea' : True
-  }
-  slot_name_projection_request_text_pairs = [] 
-  index_builder = IndexBuilder()
-  index = dict()
+class IndexMatchingParser( ParserBase ):
+  projector = ProjectionPointParser()
 
   def reset( self ):
     superclass( self ).reset( self )
-    self.slot_name_projection_request_text_pairs = [] 
-    self.index_builder = IndexBuilder()
-    self.index = dict()
+    self.projector = ProjectionPointParser()
 
-  def handle_starttag( self, tag, attrs ):
-    if tag in PROJECTING_CONTROLS:
-      slot_name = self.get_attribute_value( 'name', attrs )
-      projection_requests_text = self.get_attribute_value( 
-            'project-to', attrs )
-      self.slot_name_projection_request_text_pairs.append(
-            ( slot_name, projection_requests_text ) )
-
-  def get_output( self ):
-    return self.index
-
-  def feed( self, doc_text ):
-    superclass( self ).feed( self, doc_text )
-    self.index = self.index_builder.imprint( 
-          self.slot_name_projection_request_text_pairs,
-          self.index )
-
-  def imprint( self, doc_text, media ):
-    self.reset()
-    self.feed( doc_text )
-    result = self.get_output() 
-    self.reset()
-    return result
-    
-class IndexMatchingParser( ParserBase ):
   def handle_starttag( self, tag, attrs ):
     projected = self.has_attribute( 'project-from', attrs )
     if projected:

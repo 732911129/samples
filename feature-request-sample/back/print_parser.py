@@ -54,7 +54,7 @@ class ProjectionPointParser( ParserBase ):
   def get_output( self ):
     return self.printer.get_fragment()
 
-  def imprint( self, raw, projections ):
+  def imprint( self, projections, doc_printer, tag, attrs ):
     self.reset()
     self.projections = projections
     self.feed( raw )

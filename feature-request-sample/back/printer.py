@@ -4,9 +4,7 @@ from simple_expression_parser import (
     ExpressionParser 
   )
 
-from boilerplate import boilerplate
-
-class Printer( object ):
+class FragmentPrinter( object ):
   SELF_CLOSING_TAGS = {
       'img' : True,
       'link' : True,
@@ -31,44 +29,17 @@ class Printer( object ):
   depth = 0
   leaf = True
 
-  def start_new_document( self, title = 'Untitled', indenting_on = True ):
+  def start_new_fragment( self, indenting_on = True ):
     self.doc = ""
     self.depth = 0
     self.leaf = True
     self.indenting_on = indenting_on
-    self.print_doctype()
-    self.print_tag( 'html' )
-    self.print_tag( 'head' )
-    self.print_boilerplate( 'head/after_begin' )
-    self.print_tag( 'title' )
-    self.print_data( title )
-    self.print_end_tag( 'title' )
-    self.print_boilerplate( 'head/before_end' )
-    self.print_end_tag( 'head' ) 
-    self.print_tag( 'body' )
-    self.print_boilerplate( 'body/after_begin' )
 
-  def end_document( self ):
-    self.print_boilerplate( 'body/before_end' )
-    self.print_end_tag( 'body' )
-    self.print_boilerplate( 'body/after_end' )
-    self.print_end_tag( 'html' )
-   
-  def get_document( self ):
+  def end_fragment( self ):
+    pass
+
+  def get_fragment( self ):
     return self.doc
-
-  def print_boilerplate( self, path ):
-    parts = path.split( '/' )
-    safe_raws = []
-    resolved = boilerplate
-    try:
-      while len( parts ):
-        resolved = resolved[ parts.pop( 0 ) ]
-      safe_raws = resolved
-    except:
-      pass
-    for safe_raw in safe_raws:
-      self.print_safe_raw( safe_raw )
 
   def print_safe_raw( self, raw = '' ):
     if type( raw ) is str or type( raw ) is unicode:
@@ -156,58 +127,11 @@ class Printer( object ):
     self.doc += '</' + tag + '>'
     self.leaf = False
 
-class FragmentPrinter( object ):
-  SELF_CLOSING_TAGS = {
-      'img' : True,
-      'link' : True,
-      'meta' : True,
-      'input' : True,
-      'area' : True,
-      'base' : True,
-      'br' : True,
-      'col' : True,
-      'hr' : True,
-      'keygen' : True,
-      'param' : True,
-      'source' : True,
-      'track' : True,
-      'wbr' : True,
-      'embed' : True
-    }
-  MAX_EXTRA_INDENT = 10
-  INDENT_SEQUENCE = "  "
-  indenting_on = True
-  doc = ""
-  depth = 0
-  leaf = True
-
-  def start_new_document( self, *args, **kwargs ):
-    raise TypeError( "Not implemented" )
-
-  def end_document( self ):
-    raise TypeError( "Not implemented" )
-
-  def get_document( self ):
-    raise TypeError( "Not implemented" )
-
-  def start_new_fragment( self, indenting_on = True ):
-    self.doc = ""
-    self.depth = 0
-    self.leaf = True
-    self.indenting_on = indenting_on
-
-  def end_fragment( self ):
-    pass
-
-  def get_fragment( self ):
-    return self.doc
-
-
 if __name__ == "__main__":
-  p = Printer()
-  p.start_new_document( 'doc 1' )
+  p = FragmentPrinter()
+  p.start_new_fragment( 'doc 1' )
   p.print_tag( 'form', [ ( 'method', 'GET' ), ( 'action', '/' ) ] )
   p.print_tag( 'input', [ ( 'type', 'submit' ) ] )
   p.print_end_tag( 'form' )
-  p.end_document()
-  print p.get_document()
+  p.end_fragment()
+  print p.get_fragment()
