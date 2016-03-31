@@ -72,21 +72,52 @@ class IndexMatcher( object ):
     return matching_results
 
 class ProjectingParser( ImprintingParser ):
+  matcher = IndexMatcher() 
   media = dict()
   index = dict()
 
+  def get_projections( self, attrs ):
+    raw_projections = self.get_attribute_value( 'projects-from', attrs )
+    parsed_projections = self.expression_parser.imprint( raw_projections )
+    """
+      expression parser returns an OR node which has AND nodes as children
+      the format of the projects-from attribute is a single AND node
+      with the projections being its parameters
+      hence it is accessed via the key path:
+      parameters, 0, paramaters
+      as below
+    """
+    projections = parsed_projections[ 'parameters' ][ 0 ][ 'parameters' ]
+    return projections
+
   def handle_starttag( self, tag, attrs ):
-    raise TypeError( 'Not implemented' )
+    projected = self.has_attribute( 'projects-from', attrs )
+    matches = self.matcher.match( attrs, self.index )
+    if projected and matches:
+      projections = self.get_projections( attrs ) 
+      for projection in projections:
+        self.projector.project( projection, self, tag, attrs )
+    elif projected:
+      raise TypeError( "Projects-from and has no matching projects-to source" )
+    elif matches:
+      raise TypeError( "Projects-to and does not use the projections." )
+
+    superclass( self ).handle_starttag( self, tag, attrs )
 
   def imprint( self, doc, index, media ):
+    self.reset()
     self.index = index
     self.media = media
-    raise TypeError( 'Not implemented' )
+    self.feed( doc )
+    result = self.get_output()
+    self.reset()
+    return result
 
   def reset( self ):
     superclass( self ).reset( self )
     self.index = dict()
     self.media = dict()
+    self.matcher = IndexMatcher()
 
 class ProjectingTransformer( Transformer ):
   def transform( self, input ):
