@@ -86,7 +86,7 @@ class IndexBuildingParser( ParserBase ):
     if tag in self.PROJECTING_CONTROLS:
       slot_name = self.get_attribute_value( 'name', attrs )
       projection_requests_text = self.get_attribute_value( 
-            'project-to', attrs ) 
+            'projects-to', attrs ) 
       if projection_requests_text:
         self.slot_name_projection_request_text_pairs.append(
               ( slot_name, projection_requests_text ) )

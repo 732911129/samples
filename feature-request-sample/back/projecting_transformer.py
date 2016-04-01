@@ -173,11 +173,18 @@ class PrintParser( object ):
         attr[ 1 ] = self.projection_point.imprint( attr[ 1 ], value_map )
     return attrs
 
+  def project( self, projection, parser, tag, attrs ):
+    print projection, parser, tag, attrs
+    op = projection.get( 'operand' )
+    
+
   def reset( self ):
     self.projection_parser = ProjectionPointParser()
     self.expression_parser = ExpressionParser()
 
 class ProjectingParser( ImprintingParser ):
+  expression_parser = ExpressionParser()
+  projector = PrintParser()
   matcher = IndexMatcher() 
   media = dict()
   index = dict()
@@ -224,6 +231,8 @@ class ProjectingParser( ImprintingParser ):
     self.index = dict()
     self.media = dict()
     self.matcher = IndexMatcher()
+    self.expression_parser = ExpressionParser()
+    self.projector = PrintParser()
 
 class ProjectingTransformer( Transformer ):
   def transform( self, input ):
