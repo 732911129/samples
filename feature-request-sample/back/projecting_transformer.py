@@ -195,6 +195,7 @@ class PrintParser( object ):
     self.expression_parser = ExpressionParser()
 
 class ProjectingParser( ImprintingParser ):
+  REMOVE_SYMBOLS = True
   expression_parser = ExpressionParser()
   projector = PrintParser()
   matcher = IndexMatcher() 
@@ -217,8 +218,9 @@ class ProjectingParser( ImprintingParser ):
 
   def handle_starttag( self, tag, attrs ):
     media = self.media
+    projected = self.has_attribute( 'projects-from', attrs )
+    projector = self.has_attribute( 'projects-to', attrs )
     if media:
-      projected = self.has_attribute( 'projects-from', attrs )
       matches = self.matcher.match( attrs, self.index )
       if projected and matches and media:
         projections = self.get_projections( attrs ) 
@@ -228,6 +230,11 @@ class ProjectingParser( ImprintingParser ):
         raise TypeError( "Projects-from and has no matching projects-to source" )
       elif matches:
         raise TypeError( "Projects-to and does not use the projections." )
+    if self.REMOVE_SYMBOLS:
+      if projected:
+        self.projector.attr_off( 'projects-from', attrs )
+      if projector:
+        self.projector.attr_off( 'projects-to', attrs )
 
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 
