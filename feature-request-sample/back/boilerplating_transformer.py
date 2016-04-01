@@ -1,6 +1,8 @@
+from binder import Binder
 from parser import ImprintingParser
 from transformer import Transformer
 from boilerplate import Boilerplate
+from printer import FragmentPrinter
 
 class DocumentPrinter( FragmentPrinter ):
   def start_new_fragment( self, *args, **kwargs ):
@@ -41,7 +43,7 @@ class DocumentPrinter( FragmentPrinter ):
   def print_boilerplate( self, path ):
     parts = path.split( '/' )
     safe_raws = []
-    resolved = boilerplate
+    resolved = Boilerplate
     try:
       while len( parts ):
         resolved = resolved[ parts.pop( 0 ) ]
@@ -55,7 +57,7 @@ class BoilerplatingParser( ImprintingParser ):
   printer = DocumentPrinter()
 
   def reset( self ):
-    superclass( self ).reset( self )
+    super( BoilerplatingParser, self ).reset()
     self.binder = Binder()
     self.printer = DocumentPrinter()
     self.next_data = None
@@ -63,11 +65,18 @@ class BoilerplatingParser( ImprintingParser ):
     self.printer.start_new_document()
 
   def close( self ):
-    superclass( self ).close( self ) 
+    super( BoilerplatingParser, self ).close() 
     self.printer.end_document()
 
   def get_output( self ):
     return self.printer.get_document()
+
+  def imprint( self, doc ):
+    self.reset()
+    self.feed( doc )
+    result = self.get_output()
+    self.reset()
+    return result
 
 class BoilerplatingTransformer( Transformer ):
   def transform( self, input ):

@@ -1,5 +1,4 @@
 import re
-from specialty_utils import superclass
 
 class ExpressionParser( object ):
   """

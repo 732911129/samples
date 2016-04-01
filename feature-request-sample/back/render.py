@@ -4,11 +4,11 @@ from boilerplating_transformer import BoilerplatingTransformer
 from indexing_transformer import IndexingTransformer
 from projecting_transformer import ProjectingTransformer
 
-b = BoilerPlatingTransformer()
+b = BoilerplatingTransformer()
 i = IndexingTransformer()
 p = ProjectingTransformer()
 
-def imprint( media, control ):
+def imprint( media_instance, control ):
   input = {
       'doc' : control
     }
@@ -17,7 +17,7 @@ def imprint( media, control ):
   indexed_mediated = {
       'doc' : indexed[ 'doc' ],
       'index' : indexed[ 'index' ],
-      'media' : media
+      'media' : media_instance
     }
   projected = p.transform( indexed_mediated )
   return projected[ 'doc' ] 

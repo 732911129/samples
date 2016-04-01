@@ -1,7 +1,7 @@
-from parser import ImprintingParser
+import re
+from parser import ParserBase, ImprintingParser
 from printer import FragmentPrinter
 from simple_expression_parser import ExpressionParser
-from specialty_utils import superclass
 from transformer import Transformer
 
 class IndexMatcher( object ):
@@ -71,6 +71,57 @@ class IndexMatcher( object ):
             matching_results.append( expression.get( 'RESULT' ) )
 
     return matching_results
+
+class ProjectionPointParser( ParserBase ):
+  """
+    Attribute and data p-value parser.
+    Returns printed value of the attribute or data.
+    Parses attributes or HTML data that contains p-value tags, and replaces those tags with their values
+  """
+  VALUE_TAG = 'p-value'
+  NAME_ATTR = 'name'
+  printer = FragmentPrinter()
+  projections = dict()
+
+  def handle_starttag( self, tag, attrs ):
+    if tag != VALUE_TAG:
+      self.printer.print_tag( tag, attrs )
+    else:
+      name = self.get_attribute_value( 'name', attrs )
+      try:
+        projected_value = self.projections[ name ]
+      except KeyError:
+        logging.warning( '%s requests projection %s but no such entry in projects.' %
+                          ( self.VALUE_TAG, name ) )
+      else:
+        self.printer.print_data( projected_value )
+
+  def handle_startendtag( self, tag, attrs ):
+    self.handle_starttag( tag, attrs )
+
+  def handle_data( self, data ):
+    self.printer.print_data( data )
+
+  def handle_endtag( self, tag ):
+    self.printer.print_end_tag( tag )
+
+  def reset( self ):
+    super( ProjectionPointParser, self ).reset()
+    self.printer = FragmentPrinter()
+    self.requests = dict()
+    self.printer.start_new_fragment()
+
+  def get_output( self ):
+    return self.printer.get_fragment()
+
+  def imprint( self, projections, doc_printer, tag, attrs ):
+    self.reset()
+    self.projections = projections
+    self.feed( raw )
+    self.close()
+    result = self.printer.get_fragment()
+    self.reset()
+    return result
 
 class PrintParser( object ):
   """
@@ -157,7 +208,7 @@ class ProjectingParser( ImprintingParser ):
     elif matches:
       raise TypeError( "Projects-to and does not use the projections." )
 
-    superclass( self ).handle_starttag( self, tag, attrs )
+    super( ProjectingParser, self ).handle_starttag( tag, attrs )
 
   def imprint( self, doc, index, media ):
     self.reset()
@@ -169,61 +220,10 @@ class ProjectingParser( ImprintingParser ):
     return result
 
   def reset( self ):
-    superclass( self ).reset( self )
+    super( ProjectingParser, self ).reset()
     self.index = dict()
     self.media = dict()
     self.matcher = IndexMatcher()
-
-class ProjectionPointParser( ParserBase ):
-  """
-    Attribute and data p-value parser.
-    Returns printed value of the attribute or data.
-    Parses attributes or HTML data that contains p-value tags, and replaces those tags with their values
-  """
-  VALUE_TAG = 'p-value'
-  NAME_ATTR = 'name'
-  printer = FragmentPrinter()
-  projections = dict()
-
-  def handle_starttag( self, tag, attrs ):
-    if tag != VALUE_TAG:
-      self.printer.print_tag( tag, attrs )
-    else:
-      name = self.get_attribute_value( 'name', attrs )
-      try:
-        projected_value = self.projections[ name ]
-      except KeyError:
-        logging.warning( '%s requests projection %s but no such entry in projects.' %
-                          ( self.VALUE_TAG, name ) )
-      else:
-        self.printer.print_data( projected_value )
-
-  def handle_startendtag( self, tag, attrs ):
-    self.handle_starttag( tag, attrs )
-
-  def handle_data( self, data ):
-    self.printer.print_data( data )
-
-  def handle_endtag( self, tag ):
-    self.printer.print_end_tag( tag )
-
-  def reset( self ):
-    superclass( self ).reset( self )
-    self.printer = FragmentPrinter()
-    self.requests = dict()
-    self.printer.start_new_fragment()
-
-  def get_output( self ):
-    return self.printer.get_fragment()
-
-  def imprint( self, projections, doc_printer, tag, attrs ):
-    self.reset()
-    self.projections = projections
-    self.feed( raw )
-    self.close()
-    result = self.printer.get_fragment()
-    self.reset()
-    return result
 
 class ProjectingTransformer( Transformer ):
   def transform( self, input ):

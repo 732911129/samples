@@ -2,9 +2,11 @@ import logging
 from HTMLParser import HTMLParser as html
 from binder import Binder
 from printer import FragmentPrinter
-from specialty_utils import superclass
 
-class ParserBase( html ):
+class Parser( html, object ):
+  pass
+
+class ParserBase( Parser ):
   MULTIPLE_ATTRIBUTE_VALUE_SEPARATOR = " "
 
   def has_attribute( self, attr_name, attrs ):
@@ -75,7 +77,7 @@ class ImprintingParser( ParserBase ):
     self.printer.print_end_tag( tag )
 
   def reset( self ):
-    superclass( self ).reset( self )
+    super( ImprintingParser, self ).reset()
     self.binder = Binder()
     self.printer = FragmentPrinter()
     self.next_data = None
@@ -83,7 +85,7 @@ class ImprintingParser( ParserBase ):
     self.printer.start_new_fragment()
 
   def close( self ):
-    superclass( self ).close( self ) 
+    super( ImprintingParser, self ).close( self ) 
     self.printer.end_fragment()
 
   def get_output( self ):

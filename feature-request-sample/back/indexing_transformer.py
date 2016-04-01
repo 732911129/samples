@@ -2,10 +2,6 @@ import re
 
 from transformer import Transformer
 
-from specialty_utils import (
-    superclass
-  )
-
 from simple_expression_parser import (
     ExpressionParser
   )
@@ -81,29 +77,30 @@ class IndexBuildingParser( ParserBase ):
   index = dict()
 
   def reset( self ):
-    superclass( self ).reset( self )
+    super( IndexBuildingParser, self ).reset()
     self.slot_name_projection_request_text_pairs = [] 
     self.index_builder = IndexBuilder()
     self.index = dict()
 
   def handle_starttag( self, tag, attrs ):
-    if tag in PROJECTING_CONTROLS:
+    if tag in self.PROJECTING_CONTROLS:
       slot_name = self.get_attribute_value( 'name', attrs )
       projection_requests_text = self.get_attribute_value( 
-            'project-to', attrs )
-      self.slot_name_projection_request_text_pairs.append(
-            ( slot_name, projection_requests_text ) )
+            'project-to', attrs ) 
+      if projection_requests_text:
+        self.slot_name_projection_request_text_pairs.append(
+              ( slot_name, projection_requests_text ) )
 
   def get_output( self ):
     return self.index
 
   def feed( self, doc_text ):
-    superclass( self ).feed( self, doc_text )
+    super( IndexBuildingParser, self ).feed( doc_text )
     self.index = self.index_builder.imprint( 
           self.slot_name_projection_request_text_pairs,
           self.index )
 
-  def imprint( self, doc_text, media ):
+  def imprint( self, doc_text ):
     self.reset()
     self.feed( doc_text )
     result = self.get_output() 
@@ -113,7 +110,7 @@ class IndexBuildingParser( ParserBase ):
 class IndexingTransformer( Transformer ):
   def transform( self, input ):
     i = IndexBuildingParser()
-    doc = index[ 'doc' ]
+    doc = input[ 'doc' ]
     index = i.imprint( doc )
     output = {
         'doc' : doc,
