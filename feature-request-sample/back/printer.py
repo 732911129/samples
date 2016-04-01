@@ -29,16 +29,16 @@ class FragmentPrinter( object ):
   depth = 0
   leaf = True
 
-  def start_new_fragment( self, indenting_on = True ):
+  def start_new_output( self, indenting_on = True ):
     self.doc = ""
     self.depth = 0
     self.leaf = True
     self.indenting_on = indenting_on
 
-  def end_fragment( self ):
+  def end_output( self ):
     pass
 
-  def get_fragment( self ):
+  def get_output( self ):
     return self.doc
 
   def print_safe_raw( self, raw = '' ):
@@ -129,9 +129,9 @@ class FragmentPrinter( object ):
 
 if __name__ == "__main__":
   p = FragmentPrinter()
-  p.start_new_fragment( 'doc 1' )
+  p.start_new_output( 'doc 1' )
   p.print_tag( 'form', [ ( 'method', 'GET' ), ( 'action', '/' ) ] )
   p.print_tag( 'input', [ ( 'type', 'submit' ) ] )
   p.print_end_tag( 'form' )
-  p.end_fragment()
-  print p.get_fragment()
+  p.end_output()
+  print p.get_output()

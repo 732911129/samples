@@ -5,16 +5,7 @@ from boilerplate import Boilerplate
 from printer import FragmentPrinter
 
 class DocumentPrinter( FragmentPrinter ):
-  def start_new_fragment( self, *args, **kwargs ):
-    raise TypeError( "Not implemented" )
-
-  def end_fragment( self ):
-    raise TypeError( "Not implemented" )
-
-  def get_fragment( self ):
-    raise TypeError( "Not implemented" )
-
-  def start_new_document( self, title = 'Untitled', indenting_on = True ):
+  def start_new_output( self, title = 'Untitled', indenting_on = True ):
     self.doc = ""
     self.depth = 0
     self.leaf = True
@@ -31,13 +22,13 @@ class DocumentPrinter( FragmentPrinter ):
     self.print_tag( 'body' )
     self.print_boilerplate( 'body/after_begin' )
 
-  def end_document( self ):
+  def end_output( self ):
     self.print_boilerplate( 'body/before_end' )
     self.print_end_tag( 'body' )
     self.print_boilerplate( 'body/after_end' )
     self.print_end_tag( 'html' )
    
-  def get_document( self ):
+  def get_output( self ):
     return self.doc
 
   def print_boilerplate( self, path ):
@@ -58,31 +49,14 @@ class BoilerplatingParser( ImprintingParser ):
 
   def reset( self ):
     super( BoilerplatingParser, self ).reset()
-    self.binder = Binder()
     self.printer = DocumentPrinter()
-    self.next_data = None
-    self.model = None
-    self.printer.start_new_document()
-
-  def close( self ):
-    super( BoilerplatingParser, self ).close() 
-    self.printer.end_document()
-
-  def get_output( self ):
-    return self.printer.get_document()
-
-  def imprint( self, doc ):
-    self.reset()
-    self.feed( doc )
-    result = self.get_output()
-    self.reset()
-    return result
 
 class BoilerplatingTransformer( Transformer ):
   def transform( self, input ):
     p = BoilerplatingParser()
     doc = input[ 'doc' ]
-    boilerplated_doc = p.imprint( doc )
+    media = input[ 'media' ]
+    boilerplated_doc = p.imprint( doc, media )
     output = {
         'doc' : boilerplated_doc
       }

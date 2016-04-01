@@ -10,9 +10,11 @@ p = ProjectingTransformer()
 
 def imprint( media_instance, control ):
   input = {
-      'doc' : control
+      'doc' : control,
+      'media' : media_instance
     }
   boilerplated = b.transform( input )
+  print boilerplated
   indexed = i.transform( boilerplated )
   indexed_mediated = {
       'doc' : indexed[ 'doc' ],

@@ -109,17 +109,17 @@ class ProjectionPointParser( ParserBase ):
     super( ProjectionPointParser, self ).reset()
     self.printer = FragmentPrinter()
     self.requests = dict()
-    self.printer.start_new_fragment()
+    self.printer.start_new_output()
 
   def get_output( self ):
-    return self.printer.get_fragment()
+    return self.printer.get_output()
 
   def imprint( self, projections, doc_printer, tag, attrs ):
     self.reset()
     self.projections = projections
     self.feed( raw )
     self.close()
-    result = self.printer.get_fragment()
+    result = self.printer.get_output()
     self.reset()
     return result
 
