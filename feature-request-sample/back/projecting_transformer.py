@@ -132,6 +132,7 @@ class PrintParser( object ):
       porcupine print-attr href and 
       porcupine set-attr title porcupine
   """
+  EQUALS = re.compile( "\s*=\s*" )
   projection_parser = ProjectionPointParser()
   expression_parser = ExpressionParser()
 
@@ -179,7 +180,8 @@ class PrintParser( object ):
     name = projection.get( 'name' )
     if op == 'set-attr':
       if values.endswith( "'" ):
-        attr, value = values.split( "=" )
+        attr, value = self.EQUALS.split( values )
+        value = value[ 1 : -1 ]
       elif media.hasslot( name ):
         attr, value = values, media.getslot( name )
       else:
