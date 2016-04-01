@@ -14,7 +14,6 @@ def imprint( media_instance, control ):
       'media' : media_instance
     }
   boilerplated = b.transform( input )
-  print boilerplated
   indexed = i.transform( boilerplated )
   indexed_mediated = {
       'doc' : indexed[ 'doc' ],
