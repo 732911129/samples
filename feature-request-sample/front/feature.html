@@ -55,7 +55,10 @@
         <label class=explainer for=ticket_url>
           A field for storing any URL ( such as that of the ticket for this feature ).
         </label>
-        <input required type=url placeholder="https://" value="https://" id=ticket_url name=ticket_url>
+        <input required type=url placeholder="https://" value="https://" id=ticket_url name=ticket_url projects-to="id is ticket_url_link">
+      </dd>
+      <dd>
+        <a href="#" id=ticket_url_link projects-from="ticket_url set-attr target='_blank' and ticket_url set-attr href">Ticket URL</a>
       </dd>
       <dd>
         <label for=product_area>Product Area</label>

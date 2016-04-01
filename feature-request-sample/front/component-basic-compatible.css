@@ -69,6 +69,6 @@
   textarea, input, select, option, label, summary {
     font-family: inherit;
   }
-  label, summary {
+  label, summary, a {
     font-size: 0.8rem;
   }
