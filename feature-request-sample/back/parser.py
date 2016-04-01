@@ -65,7 +65,6 @@ class ImprintingParser( ParserBase ):
       elif bound_data is None:
         tags = [ ( tag, attrs, None, None ) ]
 
-      print tags
       self.perform_bind( tags )
 
   def handle_startendtag( self, tag, attrs ):
