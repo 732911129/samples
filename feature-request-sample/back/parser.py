@@ -82,7 +82,6 @@ class ImprintingParser( ParserBase ):
     self.printer = FragmentPrinter()
     self.next_data = None
     self.model = None
-    self.printer.start_new_output()
 
   def close( self ):
     super( ImprintingParser, self ).close()
@@ -93,6 +92,7 @@ class ImprintingParser( ParserBase ):
 
   def imprint( self, view, model ):
     self.reset()
+    self.printer.start_new_output()
     self.model = model
     self.feed( view )
     self.close()
