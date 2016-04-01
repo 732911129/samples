@@ -150,15 +150,15 @@ class PrintParser( object ):
         del attrs[ index - offset ]
     return attrs
 
-  def set_attr( self, attr, value, attrs ):
+  def set_attr( self, name, value, attrs ):
     """
       Since we can have multiple attributes with the same name, 
       and multiple values, and since set sets the value of an attribute,
       it works to remove any attributes of that name first
       and then set the attribute.
     """
-    attrs = self.attr_off( attr, attrs )
-    attrs.append( ( attr, value ) )
+    attrs = self.attr_off( name, attrs )
+    attrs.append( ( name, value ) )
     return attrs
 
   def print_attr( self, printed_attr, value_map, attrs ):
@@ -173,10 +173,20 @@ class PrintParser( object ):
         attr[ 1 ] = self.projection_point.imprint( attr[ 1 ], value_map )
     return attrs
 
-  def project( self, projection, parser, tag, attrs ):
-    print projection, parser, tag, attrs
+  def project( self, projection, parser, tag, attrs, media ):
     op = projection.get( 'operand' )
-    
+    values = projection.get( 'values' )
+    name = projection.get( 'name' )
+    if op == 'set-attr':
+      if values.endswith( "'" ):
+        attr, value = values.split( "=" )
+      elif media.hasslot( name ):
+        attr, value = values, media.getslot( name )
+      else:
+        raise TypeError( "No such set-attr implementation" )
+      self.set_attr( attr, value, attrs )
+    else:
+      raise TypeError( "Not implemented" )
 
   def reset( self ):
     self.projection_parser = ProjectionPointParser()
@@ -204,16 +214,18 @@ class ProjectingParser( ImprintingParser ):
     return projections
 
   def handle_starttag( self, tag, attrs ):
-    projected = self.has_attribute( 'projects-from', attrs )
-    matches = self.matcher.match( attrs, self.index )
-    if projected and matches:
-      projections = self.get_projections( attrs ) 
-      for projection in projections:
-        self.projector.project( projection, self, tag, attrs )
-    elif projected:
-      raise TypeError( "Projects-from and has no matching projects-to source" )
-    elif matches:
-      raise TypeError( "Projects-to and does not use the projections." )
+    media = self.media
+    if media:
+      projected = self.has_attribute( 'projects-from', attrs )
+      matches = self.matcher.match( attrs, self.index )
+      if projected and matches and media:
+        projections = self.get_projections( attrs ) 
+        for projection in projections:
+          self.projector.project( projection, self, tag, attrs, media )
+      elif projected:
+        raise TypeError( "Projects-from and has no matching projects-to source" )
+      elif matches:
+        raise TypeError( "Projects-to and does not use the projections." )
 
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 
