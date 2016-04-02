@@ -84,10 +84,10 @@ class ProjectionPointParser( ParserBase ):
   projections = dict()
 
   def handle_starttag( self, tag, attrs ):
-    if tag != VALUE_TAG:
+    if tag != self.VALUE_TAG:
       self.printer.print_tag( tag, attrs )
     else:
-      name = self.get_attribute_value( 'name', attrs )
+      name = self.get_attribute_value( self.NAME_ATTR, attrs )
       try:
         projected_value = self.projections[ name ]
       except KeyError:
@@ -114,7 +114,7 @@ class ProjectionPointParser( ParserBase ):
   def get_output( self ):
     return self.printer.get_output()
 
-  def imprint( self, projections, doc_printer, tag, attrs ):
+  def imprint( self, raw, projections, doc_printer, tag, attrs ):
     self.reset()
     self.projections = projections
     self.feed( raw )
@@ -135,6 +135,8 @@ class PrintParser( object ):
   EQUALS = re.compile( "\s*=\s*" )
   projection_parser = ProjectionPointParser()
   expression_parser = ExpressionParser()
+  scopes = dict()
+  print_attr_activated = False
 
   def attr_on( self, new_attr, attrs ):
     if not self.projection_parser.has_attribute( new_attr, attrs ) :
@@ -162,16 +164,20 @@ class PrintParser( object ):
     attrs.append( ( name, value ) )
     return attrs
 
-  def print_attr( self, printed_attr, value_map, attrs ):
+  def print_attr( self, printed_attr, value_map, doc_printer, tag, attrs ):
     """
       For this one, we step through each attribute
       and when the attribute's name matches attr
       we apply the attribute parser to that attribute's value 
       using the value_map
     """
+    new_attrs = []
     for attr in attrs:
       if attr[ 0 ] == printed_attr:
-        attr[ 1 ] = self.projection_point.imprint( attr[ 1 ], value_map )
+        new_attrs.append( ( attr[ 0 ], self.projection_parser.imprint( attr[ 1 ], value_map, doc_printer, tag, attrs ) ) )
+    for attr in new_attrs:
+      self.attr_off( attr[ 0 ], attrs )
+      attrs.append( attr )
     return attrs
 
   def project( self, projection, parser, tag, attrs, media ):
@@ -187,12 +193,27 @@ class PrintParser( object ):
       else:
         raise TypeError( "No such set-attr implementation" )
       self.set_attr( attr, value, attrs )
+    elif op == 'print-attr':
+      if not media.hasslot( name ):
+        raise TypeError( 'Print attr requests a slot that media does not have' )
+      try:
+        scope = self.scopes[ values ]
+      except KeyError:
+        scope = self.scopes[ values ] = dict()
+      finally:
+        scope[ name ] = media.getslot( name )
+        self.print_attr_activated = True
     else:
       raise TypeError( "Not implemented" )
 
   def reset( self ):
     self.projection_parser = ProjectionPointParser()
     self.expression_parser = ExpressionParser()
+    self.reset_print_attr_scopes()
+
+  def reset_print_attr_scopes( self ):
+    self.scopes = dict()
+    self.print_attr_activated = False
 
 class ProjectingParser( ImprintingParser ):
   REMOVE_SYMBOLS = True
@@ -235,6 +256,11 @@ class ProjectingParser( ImprintingParser ):
         self.projector.attr_off( 'projects-from', attrs )
       if projector:
         self.projector.attr_off( 'projects-to', attrs )
+
+    if self.projector.print_attr_activated:
+      for attr, scope in self.projector.scopes.iteritems():
+        self.projector.print_attr( attr, scope, self.printer, tag, attrs )
+      self.projector.reset_print_attr_scopes()
 
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 

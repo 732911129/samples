@@ -6,6 +6,7 @@ from simple_expression_parser import (
 
 class FragmentPrinter( object ):
   SELF_CLOSING_TAGS = {
+      'p-value' : True,
       'img' : True,
       'link' : True,
       'meta' : True,
