@@ -116,4 +116,6 @@ class Media( ndb.Expando ):
         except:
           return views.view404
       finally:
+        if not v:
+          v = views.view404
         return v
