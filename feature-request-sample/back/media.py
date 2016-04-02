@@ -90,10 +90,12 @@ class Media( ndb.Expando ):
   @classmethod
   def render( cls, media_type = None, id = None, params = None, cursor = None, path = None ):
     v = None
+
     if id == 'new' and not params:
       m = None
     else:
       m = cls._instance( media_type = media_type, id = id, params = params, cursor = cursor )
+
     if type( m ) is Collection:
       v = views[ media_type + 's' ] 
     elif media_type:
@@ -109,5 +111,9 @@ class Media( ndb.Expando ):
       try:
         v = files.read( path )
       except:
-        return views.view404
-      return v
+        try:
+          v = files.read( 'front/' + path )
+        except:
+          return views.view404
+      finally:
+        return v
