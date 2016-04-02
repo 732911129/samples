@@ -8,9 +8,11 @@ from media import Media
 
 EXTENSIONS = {
     '.css' : 'text/css',
+    '.js' : 'text/javascript',
     '.html' : 'text/html',
     '.txt' : 'text/plain',
     '.jpg' : 'image/jpg',
+    '.svg' : 'image/svg',
     '.png' : 'image/png',
     '.ico' : 'image/x-icon'
   }
