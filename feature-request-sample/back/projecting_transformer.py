@@ -1,5 +1,5 @@
 import re
-from parser import ParserBase, ImprintingParser
+from parser import ImprintingParser
 from printer import FragmentPrinter
 from simple_expression_parser import ExpressionParser
 from transformer import Transformer
@@ -72,7 +72,7 @@ class IndexMatcher( object ):
 
     return matching_results
 
-class ProjectionPointParser( ParserBase ):
+class ProjectionPointParser( ImprintingParser ):
   """
     Attribute and data p-value parser.
     Returns printed value of the attribute or data.
@@ -102,24 +102,12 @@ class ProjectionPointParser( ParserBase ):
         else:
           self.printer.print_data( projected_value )
 
-  def handle_startendtag( self, tag, attrs ):
-    self.handle_starttag( tag, attrs )
-
-  def handle_data( self, data ):
-    self.printer.print_data( data )
-
-  def handle_endtag( self, tag ):
-    self.printer.print_end_tag( tag )
-
   def reset( self ):
     super( ProjectionPointParser, self ).reset()
     self.printer = FragmentPrinter()
     self.requests = dict()
     self.print_defaults = False
     self.printer.start_new_output()
-
-  def get_output( self ):
-    return self.printer.get_output()
 
   def imprint( self, raw, projections, doc_printer, tag, attrs, print_defaults ):
     self.reset()
@@ -132,14 +120,6 @@ class ProjectionPointParser( ParserBase ):
     return result
 
 class PrintParser( object ):
-  """
-    Understands things like:
-      porcupine on-attr live-source and
-      porcupine print-children all-descendents and
-      porcupine set-attr message "hello world" and
-      porcupine print-attr href and 
-      porcupine set-attr title porcupine
-  """
   EQUALS = re.compile( "\s*=\s*" )
   projection_parser = ProjectionPointParser()
   expression_parser = ExpressionParser()
@@ -226,55 +206,47 @@ class ProjectingParser( ImprintingParser ):
   media = dict()
   index = dict()
 
+  def remove_symbols( self, projector, projected, tag, attrs ):
+    if projected:
+      self.projector.attr_off( 'projects-from', attrs )
+    if projector:
+      self.projector.attr_off( 'projects-to', attrs )
+    if projected and not self.media:
+      new_attrs = attrs[:]
+      for attr in new_attrs:
+        self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
+
   def get_projections( self, attrs ):
     raw_projections = self.get_attribute_value( 'projects-from', attrs )
     parsed_projections = self.expression_parser.imprint( raw_projections )
-    """
-      expression parser returns an OR node which has AND nodes as children
-      the format of the projects-from attribute is a single AND node
-      with the projections being its parameters
-      hence it is accessed via the key path:
-      parameters, 0, paramaters
-      as below
-    """
     projections = parsed_projections[ 'parameters' ][ 0 ][ 'parameters' ]
     return projections
 
+  def print_attrs( self, tag, attrs ):
+    for attr, scope in self.projector.scopes.iteritems():
+      self.projector.print_attr( attr, scope, self.printer, tag, attrs )
+    self.projector.reset_print_attr_scopes()
+
+  def project( self, projector, projected, tag, attrs ):
+    matches = self.matcher.match( attrs, self.index )
+    if projected and matches and self.media:
+      projections = self.get_projections( attrs ) 
+      for projection in projections:
+        self.projector.project( projection, self, tag, attrs, self.media )
+    elif projected:
+      raise TypeError( "Projects-from and has no matching projects-to source" )
+    elif matches:
+      raise TypeError( "Projects-to and does not use the projections." )
+
   def handle_starttag( self, tag, attrs ):
-    media = self.media
     projected = self.has_attribute( 'projects-from', attrs )
     projector = self.has_attribute( 'projects-to', attrs )
-
-    if media:
-      matches = self.matcher.match( attrs, self.index )
-      if projected and matches and media:
-        projections = self.get_projections( attrs ) 
-        for projection in projections:
-          self.projector.project( projection, self, tag, attrs, media )
-      elif projected:
-        raise TypeError( "Projects-from and has no matching projects-to source" )
-      elif matches:
-        raise TypeError( "Projects-to and does not use the projections." )
-
+    if self.media:
+      self.project( projector, projected, tag, attrs )
     if self.projector.print_attr_activated:
-      for attr, scope in self.projector.scopes.iteritems():
-        self.projector.print_attr( attr, scope, self.printer, tag, attrs )
-      self.projector.reset_print_attr_scopes()
-
+      self.print_attrs( tag, attrs )
     if self.REMOVE_SYMBOLS:
-      """ 
-        Strip all p-value tags by printing all non empty attrs with 
-        print_defaults True
-      """
-      if projected:
-        self.projector.attr_off( 'projects-from', attrs )
-      if projector:
-        self.projector.attr_off( 'projects-to', attrs )
-      if projected and not media:
-        new_attrs = attrs[:]
-        for attr in new_attrs:
-          self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
-
+      self.remove_symbols( projector, projected, tag, attrs )
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 
   def imprint( self, doc, index, media ):
