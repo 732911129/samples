@@ -80,21 +80,27 @@ class ProjectionPointParser( ParserBase ):
   """
   VALUE_TAG = 'p-value'
   NAME_ATTR = 'name'
+  DEFAULT_ATTR = 'default'
   printer = FragmentPrinter()
   projections = dict()
+  print_defaults = False
 
   def handle_starttag( self, tag, attrs ):
     if tag != self.VALUE_TAG:
       self.printer.print_tag( tag, attrs )
     else:
-      name = self.get_attribute_value( self.NAME_ATTR, attrs )
-      try:
-        projected_value = self.projections[ name ]
-      except KeyError:
-        logging.warning( '%s requests projection %s but no such entry in projects.' %
-                          ( self.VALUE_TAG, name ) )
-      else:
+      if self.print_defaults:
+        projected_value = self.get_attribute_value( self.DEFAULT_ATTR, attrs )
         self.printer.print_data( projected_value )
+      else:
+        name = self.get_attribute_value( self.NAME_ATTR, attrs )
+        try:
+          projected_value = self.projections[ name ]
+        except KeyError:
+          logging.warning( '%s requests projection %s but no such entry in projects.' %
+                            ( self.VALUE_TAG, name ) )
+        else:
+          self.printer.print_data( projected_value )
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )
@@ -109,14 +115,16 @@ class ProjectionPointParser( ParserBase ):
     super( ProjectionPointParser, self ).reset()
     self.printer = FragmentPrinter()
     self.requests = dict()
+    self.print_defaults = False
     self.printer.start_new_output()
 
   def get_output( self ):
     return self.printer.get_output()
 
-  def imprint( self, raw, projections, doc_printer, tag, attrs ):
+  def imprint( self, raw, projections, doc_printer, tag, attrs, print_defaults ):
     self.reset()
     self.projections = projections
+    self.print_defaults = print_defaults
     self.feed( raw )
     self.close()
     result = self.printer.get_output()
@@ -164,7 +172,7 @@ class PrintParser( object ):
     attrs.append( ( name, value ) )
     return attrs
 
-  def print_attr( self, printed_attr, value_map, doc_printer, tag, attrs ):
+  def print_attr( self, printed_attr, value_map, doc_printer, tag, attrs, print_defaults = False ):
     """
       For this one, we step through each attribute
       and when the attribute's name matches attr
@@ -174,7 +182,7 @@ class PrintParser( object ):
     new_attrs = []
     for attr in attrs:
       if attr[ 0 ] == printed_attr:
-        new_attrs.append( ( attr[ 0 ], self.projection_parser.imprint( attr[ 1 ], value_map, doc_printer, tag, attrs ) ) )
+        new_attrs.append( ( attr[ 0 ], self.projection_parser.imprint( attr[ 1 ], value_map, doc_printer, tag, attrs, print_defaults ) ) )
     for attr in new_attrs:
       self.attr_off( attr[ 0 ], attrs )
       attrs.append( attr )
@@ -252,6 +260,9 @@ class ProjectingParser( ImprintingParser ):
       elif matches:
         raise TypeError( "Projects-to and does not use the projections." )
     if self.REMOVE_SYMBOLS:
+      if not media:
+        for attr in attrs:
+          self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
       if projected:
         self.projector.attr_off( 'projects-from', attrs )
       if projector:
@@ -260,7 +271,7 @@ class ProjectingParser( ImprintingParser ):
     if self.projector.print_attr_activated:
       for attr, scope in self.projector.scopes.iteritems():
         self.projector.print_attr( attr, scope, self.printer, tag, attrs )
-      self.projector.reset_print_attr_scopes()
+      self.projector.reset_print_attr _scopes()
 
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 

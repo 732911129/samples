@@ -7,7 +7,7 @@
       </dt>
       <dd>
         <label for=key_id>Key ID</label>
-        <input name=key_id id=key_id readonly>
+        <input name=key_id id=key_id readonly projects-to="id is own_url">
       </dd>
       <dd>
         <label for=title>Title</label>
@@ -16,6 +16,9 @@
         </label>
         <input required type=text name=title id=title pattern=".{3,60}"
           title="Good titles are between 3 and 50 characters">
+      </dd>
+      <dd>
+        <a id=own_url target="_blank" projects-from="key_id print-attr href" href="/api/media/type/feature/id/<p-value name=key_id default=new>">Self</a>
       </dd>
       <dd>
         <label for=description>Description</label>
