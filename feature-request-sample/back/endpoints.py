@@ -4,7 +4,7 @@ from webapp2 import (
     RequestHandler as endpoint
   )
 
-from models import Media
+from media import Media
 
 EXTENSIONS = {
     '.css' : 'text/css',
