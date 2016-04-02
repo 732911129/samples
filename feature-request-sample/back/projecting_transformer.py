@@ -97,7 +97,7 @@ class ProjectionPointParser( ParserBase ):
         try:
           projected_value = self.projections[ name ]
         except KeyError:
-          logging.warning( '%s requests projection %s but no such entry in projects.' %
+          raise TypeError( '%s requests projection %s but no such entry in projects.' %
                             ( self.VALUE_TAG, name ) )
         else:
           self.printer.print_data( projected_value )
@@ -260,10 +260,15 @@ class ProjectingParser( ImprintingParser ):
       elif matches:
         raise TypeError( "Projects-to and does not use the projections." )
     if self.REMOVE_SYMBOLS:
-      if not media:
-        for attr in attrs:
-          self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
+      """ 
+        Strip all p-value tags by printing all non empty attrs with 
+        print_defaults True
+      """
       if projected:
+        if not media:
+          new_attrs = attrs[:]
+          for attr in new_attrs:
+            self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
         self.projector.attr_off( 'projects-from', attrs )
       if projector:
         self.projector.attr_off( 'projects-to', attrs )
@@ -271,7 +276,7 @@ class ProjectingParser( ImprintingParser ):
     if self.projector.print_attr_activated:
       for attr, scope in self.projector.scopes.iteritems():
         self.projector.print_attr( attr, scope, self.printer, tag, attrs )
-      self.projector.reset_print_attr _scopes()
+      self.projector.reset_print_attr_scopes()
 
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 
