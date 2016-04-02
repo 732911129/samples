@@ -146,11 +146,6 @@ class PrintParser( object ):
   scopes = dict()
   print_attr_activated = False
 
-  def attr_on( self, new_attr, attrs ):
-    if not self.projection_parser.has_attribute( new_attr, attrs ) :
-      attrs.append( ( new_attr, '' ) )
-    return attrs
-
   def attr_off( self, old_attr, attrs ):
     if self.projection_parser.has_attribute( old_attr, attrs ):
       remove = []
@@ -249,6 +244,7 @@ class ProjectingParser( ImprintingParser ):
     media = self.media
     projected = self.has_attribute( 'projects-from', attrs )
     projector = self.has_attribute( 'projects-to', attrs )
+
     if media:
       matches = self.matcher.match( attrs, self.index )
       if projected and matches and media:
@@ -259,24 +255,25 @@ class ProjectingParser( ImprintingParser ):
         raise TypeError( "Projects-from and has no matching projects-to source" )
       elif matches:
         raise TypeError( "Projects-to and does not use the projections." )
+
+    if self.projector.print_attr_activated:
+      for attr, scope in self.projector.scopes.iteritems():
+        self.projector.print_attr( attr, scope, self.printer, tag, attrs )
+      self.projector.reset_print_attr_scopes()
+
     if self.REMOVE_SYMBOLS:
       """ 
         Strip all p-value tags by printing all non empty attrs with 
         print_defaults True
       """
       if projected:
-        if not media:
-          new_attrs = attrs[:]
-          for attr in new_attrs:
-            self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
         self.projector.attr_off( 'projects-from', attrs )
       if projector:
         self.projector.attr_off( 'projects-to', attrs )
-
-    if self.projector.print_attr_activated:
-      for attr, scope in self.projector.scopes.iteritems():
-        self.projector.print_attr( attr, scope, self.printer, tag, attrs )
-      self.projector.reset_print_attr_scopes()
+      if projected and not media:
+        new_attrs = attrs[:]
+        for attr in new_attrs:
+          self.projector.print_attr( attr[ 0 ], None, self.printer, tag, attrs, print_defaults = True )
 
     super( ProjectingParser, self ).handle_starttag( tag, attrs )
 
