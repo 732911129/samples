@@ -64,13 +64,14 @@ class IndexMatcher( object ):
       overlap = names & set( frontier.keys() )
       for key in overlap:
         try:
-          expressions, value = index[ key ], map[ key ]
+          expressions = frontier[ key ]
         except KeyError as e:
-          # I think this means we got a partial match in an AND clause
-          # In other words, some of the expressions
-          # match, and others do not.
-          print index, map
-          raise e
+          """ We got a partial match only for this AND clause """
+          expressions = []
+        try:
+          value = map[ key ]
+        except KeyError as e:
+          raise TypeError( 'An attribute present in the tag was not present in the map and it was expected.' )
         for expression in expressions:
           if not self.matches( expression, value ):
             continue
@@ -208,10 +209,10 @@ class PrintParser( object ):
     elif op == 'append-data':
       if values.endswith( "'" ):
         value = values[ 1 : -1 ]
-        self.append_data( self.parser, value )
+        self.append_data( parser, value )
       elif media.hasslot( values ):
         value = media.getslot( values )
-        self.append_data( self.parser, value )
+        self.append_data( parser, value )
       else:
         raise TypeError( 'Append-data requests a non existing slot' )
     else:
@@ -255,20 +256,24 @@ class ProjectingParser( ImprintingParser ):
       self.projector.print_attr( attr, scope, self.printer, tag, attrs )
     self.projector.reset_print_attr_scopes()
 
+  def sort_attrs( self, attrs ):
+    return sorted( attrs, key = lambda a: a[ 0 ] )
+
   def project( self, projector, projected, tag, attrs ):
     description = attrs[ : ]
     description.append( ( '::tag', tag ) )
+    description = self.sort_attrs( description )
     matches = self.matcher.match( description, self.index )
-    print tag
-    if tag == 'title':
-      print self.index, description, projector, projected
-    if projected and matches and self.media:
+    match_found = len( matches )
+    if projected and match_found and self.media:
       projections = self.get_projections( attrs ) 
       for projection in projections:
         self.projector.project( projection, self, tag, attrs, self.media )
     elif projected:
+      print match_found, matches
       raise TypeError( "Projects-from and has no matching projects-to source" )
-    elif matches:
+    elif match_found:
+      print match_found, matches
       raise TypeError( "Projects-to and does not use the projections." )
 
   def handle_starttag( self, tag, attrs ):
