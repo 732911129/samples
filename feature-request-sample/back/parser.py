@@ -46,12 +46,12 @@ class ImprintingParser( ParserBase ):
       tag, attrs, data, close_tag = tag_bound_data
       if tag and not close_tag:
         self.printer.print_tag( tag, attrs )
-      if data:
-        self.printer.print_data( data )
+      if data or self.next_data:
+        self.handle_data( data or '' )
       if close_tag:
-        self.printer.print_end_tag( tag )
+        self.handle_endtag( tag )
 
-  def handle_starttag( self, tag, attrs ):
+  def prepare_bind( self, tag, attrs ):
     tags = []
     try:
       bound_data = self.binder.try_bind( self, tag, attrs, self.model )
@@ -65,12 +65,19 @@ class ImprintingParser( ParserBase ):
       elif bound_data is None:
         tags = [ ( tag, attrs, None, None ) ]
 
-      self.perform_bind( tags )
+    return tags
+
+  def handle_starttag( self, tag, attrs ):
+    tags = self.prepare_bind( tag, attrs )
+    self.perform_bind( tags )
 
   def handle_startendtag( self, tag, attrs ):
     self.handle_starttag( tag, attrs )
 
   def handle_data( self, data ):
+    if self.next_data:
+      self.printer.print_data( self.next_data )
+      self.next_data = None
     self.printer.print_data( data )
 
   def handle_endtag( self, tag ):

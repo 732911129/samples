@@ -277,6 +277,7 @@ class ProjectingParser( ImprintingParser ):
       raise TypeError( "Projects-to and does not use the projections." )
 
   def handle_starttag( self, tag, attrs ):
+    tags = self.prepare_bind( tag, attrs )
     projected = self.has_attribute( 'projects-from', attrs )
     projector = self.has_attribute( 'projects-to', attrs )
     if self.media:
@@ -285,7 +286,7 @@ class ProjectingParser( ImprintingParser ):
       self.print_attrs( tag, attrs )
     if self.REMOVE_SYMBOLS:
       self.remove_symbols( projector, projected, tag, attrs )
-    super( ProjectingParser, self ).handle_starttag( tag, attrs )
+    self.perform_bind( tags )
 
   def imprint( self, doc, index, media ):
     self.reset()
