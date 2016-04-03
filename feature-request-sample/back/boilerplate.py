@@ -5,7 +5,9 @@ head_after_begin_meta_charset_boilerplate = """
 head_after_begin_meta_viewport_boilerplate = """
     <meta name=viewport content="width=device-width, initial-scale=1" />
   """
-
+head_before_end_title_boilerplate = """
+    <title projects-from="title append-data title" role=title></title>
+  """
 head_before_end_styles_boilerplate = [
     """
       <style>
@@ -35,6 +37,7 @@ Boilerplate = {
       head_after_begin_meta_viewport_boilerplate,
     ],
     'before_end' : [
+      head_before_end_title_boilerplate,
       head_before_end_styles_boilerplate
     ]
   },

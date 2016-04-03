@@ -56,7 +56,7 @@ class ImprintingParser( ParserBase ):
     try:
       bound_data = self.binder.try_bind( self, tag, attrs, self.model )
     except BaseException as e:
-      logging.warning( e ) 
+      raise TypeError( e )
     else:
       if type( bound_data ) is tuple:
         tags = [ bound_data ]

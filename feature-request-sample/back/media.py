@@ -12,6 +12,9 @@ class Collection( object ):
     self.models = models
     self.cursor = cursor
     self.more = more
+    # COULDDO: Dynamic titles, trap getslot for title and replace
+    # With the types and ids of the first couple of models.
+    self.title = "Collection"
 
   def getslot( self, name ):
     if self.hasslot( name ):

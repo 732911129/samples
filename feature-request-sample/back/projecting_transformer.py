@@ -270,6 +270,7 @@ class ProjectingParser( ImprintingParser ):
       for projection in projections:
         self.projector.project( projection, self, tag, attrs, self.media )
     elif projected:
+      print self.index, description
       print match_found, matches
       raise TypeError( "Projects-from and has no matching projects-to source" )
     elif match_found:

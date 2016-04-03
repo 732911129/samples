@@ -5,7 +5,7 @@ from boilerplate import Boilerplate
 from printer import FragmentPrinter
 
 class DocumentPrinter( FragmentPrinter ):
-  def start_new_output( self, title = 'Untitled', indenting_on = True ):
+  def start_new_output( self, title = None, indenting_on = True ):
     self.doc = ""
     self.depth = 0
     self.leaf = True
@@ -14,9 +14,10 @@ class DocumentPrinter( FragmentPrinter ):
     self.print_tag( 'html' )
     self.print_tag( 'head' )
     self.print_boilerplate( 'head/after_begin' )
-    self.print_tag( 'title' )
-    self.print_data( title )
-    self.print_end_tag( 'title' )
+    if title:
+      self.print_tag( 'title' )
+      self.print_data( title )
+      self.print_end_tag( 'title' )
     self.print_boilerplate( 'head/before_end' )
     self.print_end_tag( 'head' ) 
     self.print_tag( 'body' )
