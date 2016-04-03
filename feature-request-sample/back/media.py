@@ -6,6 +6,18 @@ import views
 import files
 import logging
 
+class App( object ):
+  def __init__( self ):
+    self.title = "App"
+
+  def getslot( self, name ):
+    if self.hasslot( name ):
+      return self.__getattribute__( name )
+    return None
+
+  def hasslot( self, name ):
+    return hasattr( self, name )
+
 class Collection( object ):
   def __init__( self, media_type, models, cursor, more ):
     self.media_type = media_type
@@ -105,6 +117,7 @@ class Media( ndb.Expando ):
       v = views[ media_type ]
 
     if not v and path == '':
+      m = App()
       v = views[ 'app' ]
 
     if v:
