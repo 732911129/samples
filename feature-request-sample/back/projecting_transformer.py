@@ -14,6 +14,8 @@ class IndexMatcher( object ):
     return set( map.keys() ), map
 
   def matches( self, expression, test_value = u'' ):
+    # TODO: exists does not exist operands
+    # Maybe ::present, ::absent pseudo
     op = expression.get( 'operand' ).lower()
     value = unicode( expression.get( 'values' ) )
 
@@ -61,7 +63,14 @@ class IndexMatcher( object ):
       frontier = frontier_queue.pop( 0 )
       overlap = names & set( frontier.keys() )
       for key in overlap:
-        expressions, value = index[ key ], map[ key ]
+        try:
+          expressions, value = index[ key ], map[ key ]
+        except KeyError as e:
+          # I think this means we got a partial match in an AND clause
+          # In other words, some of the expressions
+          # match, and others do not.
+          print index, map
+          raise e
         for expression in expressions:
           if not self.matches( expression, value ):
             continue
@@ -163,6 +172,16 @@ class PrintParser( object ):
       attrs.append( attr )
     return attrs
 
+  def append_data( self, parser, data ):
+    next_data = parser.next_data or ''
+    next_data += data
+    parser.next_data = next_data
+
+  def prepend_data( self, parser, data ):
+    next_data = parser.next_data or ''
+    next_data = data + next_data
+    parser.next_data = next_data
+    
   def project( self, projection, parser, tag, attrs, media ):
     op = projection.get( 'operand' )
     values = projection.get( 'values' )
@@ -186,6 +205,15 @@ class PrintParser( object ):
       finally:
         scope[ name ] = media.getslot( name )
         self.print_attr_activated = True
+    elif op == 'append-data':
+      if values.endswith( "'" ):
+        value = values[ 1 : -1 ]
+        self.append_data( self.parser, value )
+      elif media.hasslot( values ):
+        value = media.getslot( values )
+        self.append_data( self.parser, value )
+      else:
+        raise TypeError( 'Append-data requests a non existing slot' )
     else:
       raise TypeError( "Not implemented" )
 
@@ -228,7 +256,12 @@ class ProjectingParser( ImprintingParser ):
     self.projector.reset_print_attr_scopes()
 
   def project( self, projector, projected, tag, attrs ):
-    matches = self.matcher.match( attrs, self.index )
+    description = attrs[ : ]
+    description.append( ( '::tag', tag ) )
+    matches = self.matcher.match( description, self.index )
+    print tag
+    if tag == 'title':
+      print self.index, description, projector, projected
     if projected and matches and self.media:
       projections = self.get_projections( attrs ) 
       for projection in projections:
