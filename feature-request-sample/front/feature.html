@@ -15,7 +15,8 @@
           A short, descriptive name of the feature request. 
         </label>
         <input required type=text name=title id=title pattern=".{3,60}"
-          title="Good titles are between 3 and 50 characters">
+          title="Good titles are between 3 and 50 characters"
+          projects-to="::tag is title and role is title">
       </dd>
       <dd>
         <a id=own_url target="_blank" projects-from="key_id print-attr href" href="/api/media/type/feature/id/<p-value name=key_id default=new>">Self</a>
