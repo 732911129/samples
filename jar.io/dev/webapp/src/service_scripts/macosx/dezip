@@ -1,0 +1,37 @@
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+  echo "Usage: $0 [ zipfile ] [ -q ]"
+  echo "-q suppresses all prompts and assumes yes answer."
+  exit 1
+fi
+
+zip=$1
+shift
+args="$@"
+staging=~/jar.io/tmp/build_staging
+
+if [[ ! -e $staging ]]; then
+  echo "Making $staging directory..."
+  mkdir -p $staging
+elif [[ ! -d $staging ]]; then
+  echo "$staging exists but is not a directory" 1>&2
+  exit 1
+else
+  echo "Clearing $staging directory..."
+  rm -rf $staging/*
+fi
+
+# check if the quiet option is set
+if [[ ! $@ == *-q* ]]; then
+  while true; do
+    read -p "Unzip $zip.zip into $staging? ( y/n ) " yn
+    case $yn in
+      [Yy]* ) unzip $zip.zip -d $staging; break;;
+      [Nn]* ) exit;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+else
+  echo "Unzipping $zip into $staging..."
+  unzip $zip.zip -d $staging
+fi
+
