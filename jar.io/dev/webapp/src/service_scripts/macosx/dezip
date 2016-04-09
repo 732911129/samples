@@ -23,15 +23,15 @@ fi
 # check if the quiet option is set
 if [[ ! $@ == *-q* ]]; then
   while true; do
-    read -p "Unzip $zip.zip into $staging? ( y/n ) " yn
+    read -p "Unzip $zip into $staging? ( y/n ) " yn
     case $yn in
-      [Yy]* ) unzip $zip.zip -d $staging; break;;
+      [Yy]* ) unzip $zip -d $staging; break;;
       [Nn]* ) exit;;
       * ) echo "Please answer yes or no.";;
     esac
   done
 else
   echo "Unzipping $zip into $staging..."
-  unzip $zip.zip -d $staging
+  unzip $zip -d $staging
 fi
 
