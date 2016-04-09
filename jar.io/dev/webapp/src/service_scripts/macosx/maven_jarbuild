@@ -1,0 +1,31 @@
+jarname=$1
+project=$2
+entrypoint=$3
+staging=~/jar.io/tmp/build_staging/$project
+build=$staging/target
+
+# clean
+
+echo "Cleaning build directory..."
+rm -rf $build
+
+# building with maven
+
+echo "Building with maven..."
+cd $staging
+mvn compile
+
+# make jar build directory
+
+echo "Making jar build directories..."
+mkdir -p $build/jar
+
+# making jar
+
+echo "Making jar..."
+
+cd $build
+jar -cvfe ./jar/$jarname.jar $entrypoint -C ./classes . 
+
+echo "Done."
+
