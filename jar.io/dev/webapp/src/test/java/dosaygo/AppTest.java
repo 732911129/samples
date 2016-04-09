@@ -1,4 +1,4 @@
-package com.example;
+package dosaygo;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
