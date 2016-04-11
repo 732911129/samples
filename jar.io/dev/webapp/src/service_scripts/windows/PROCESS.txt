@@ -1,0 +1,11 @@
+1. First name the upload file GUID.zip
+2. Unzip G.zip into staging/G/
+3. Check if it is maven ( pom.xml exists ).
+4. If it is maven run maven_build.
+5. Check if jar is requested. If jar requested run maven_jarbuild.
+6. If it is not maven run build.
+7. Zip the target directory as G-build.zip.
+8. Make a link for the target available for download. 
+9. Add G to the coomplete list, with its time.
+10. Every hour check complete list and remove any G directories created more than 1 hour before.
+
