@@ -1,0 +1,32 @@
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+  echo "Usage: $0 [ task-guid ] [ project-dir ] [ -q ]"
+  echo "-q suppresses all prompts and assumes yes answer."
+  exit 1
+fi
+
+guid=$1
+project=$2
+shift
+args="$@"
+build=~/.jar.io/tmp/build_staging/$guid/$project/target
+
+if [[ ! -e $build ]]; then
+  echo "Build directory $build does not exist!"
+  exit 1
+fi
+
+# check if the quiet option is set
+if [[ ! $@ == *-q* ]]; then
+  while true; do
+    read -p "zip $build into $guid? ( y/n ) " yn
+    case $yn in
+      [Yy]* ) zip -r $guid.zip $build/*; break;;
+      [Nn]* ) exit;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+else
+  echo "zipping $build into $guid..."
+  zip -r $guid.zip $build/*;
+fi
+

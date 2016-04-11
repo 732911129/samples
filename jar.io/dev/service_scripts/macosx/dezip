@@ -1,13 +1,14 @@
-if [[ $# -lt 1 || $# -gt 2 ]]; then
-  echo "Usage: $0 [ zipfile ] [ -q ]"
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+  echo "Usage: $0 [ zipfile ] [ task-guid ] [ -q ]"
   echo "-q suppresses all prompts and assumes yes answer."
   exit 1
 fi
 
 zip=$1
+guid=$2
 shift
 args="$@"
-staging=~/jar.io/tmp/build_staging
+staging=~/.jar.io/tmp/build_staging/$guid
 
 if [[ ! -e $staging ]]; then
   echo "Making $staging directory..."
