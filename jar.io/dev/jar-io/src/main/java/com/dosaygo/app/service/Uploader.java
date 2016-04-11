@@ -4,7 +4,11 @@ import java.util.List;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
 
 import java.nio.charset.StandardCharsets;
 
@@ -37,17 +41,43 @@ public class Uploader implements HttpHandler {
     return boundary_slot[ 1 ];
   }
 
+  public String detailException ( Exception e ) {
+    StringWriter sw = new StringWriter();
+    e.printStackTrace( new PrintWriter( sw ) );
+    return sw.toString();
+  }
+
   public void handlePost( HttpExchange e ) throws IOException {
     InputStream is = e.getRequestBody();
+    ByteArrayOutputStream outs = new ByteArrayOutputStream();
+    OutputStream buf = e.getResponseBody();
+    Headers oh = e.getResponseHeaders();
+    oh.set( "Content-Type", "application/octet-stream" );
+    e.sendResponseHeaders( 200, 0 );
     Headers h = e.getRequestHeaders();
     List<String> type_header = h.get( "Content-Type" );
     System.out.println( type_header.size() );
     String boundary = this.getBoundary( type_header.get( 0 ) );
     System.out.println( boundary );
-    byte[] boundary_bytes = boundary.getBytes( StandardCharsets.UTF_8 );
+    byte[] boundary_bytes = boundary.getBytes();
     int buf_size = boundary_bytes.length * 1024 * 1024;
-    MultipartStream upload_stream = new MultipartStream( is, boundary_bytes, buf_size, null );
-    this.handleGet( e );
+    try {
+      MultipartStream upload_stream = new MultipartStream( is, boundary_bytes, buf_size, null );
+      boolean nextPart = upload_stream.skipPreamble();
+      while( nextPart ) {
+        String header = upload_stream.readHeaders();
+        System.out.println( header );
+        upload_stream.readBodyData( outs );
+        nextPart = upload_stream.readBoundary();
+      }
+    } catch ( MultipartStream.MalformedStreamException ex ) {
+      System.out.println( this.detailException( ex ) );
+    } catch ( IOException ex ) {
+      System.out.println( this.detailException( ex ) );
+    } finally {
+      outs.writeTo( buf );
+      buf.close();
+    }
   }
 
   @Override
