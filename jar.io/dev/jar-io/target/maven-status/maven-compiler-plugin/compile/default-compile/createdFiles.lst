@@ -1,3 +1,4 @@
 com/dosaygo/app/Server$Dispatcher.class
-com/dosaygo/app/service/Uploader.class
+com/dosaygo/app/service/Service.class
 com/dosaygo/app/Server.class
+com/dosaygo/app/service/Uploader.class

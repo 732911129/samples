@@ -1,14 +1,13 @@
 package com.dosaygo.app.service;
 
+import com.dosaygo.app.service.Service;
+
 import java.util.List;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-
 
 import java.nio.charset.StandardCharsets;
 
@@ -23,7 +22,7 @@ import org.apache.commons.fileupload.MultipartStream;
  *
  */
 
-public class Uploader implements HttpHandler {
+public class Uploader extends Service {
 
   public void handleGet( HttpExchange e ) throws IOException {
     String response = "<form enctype=multipart/form-data method=POST action=/upload><input name=file type=file><button>Up</button></form>";
@@ -33,18 +32,6 @@ public class Uploader implements HttpHandler {
     OutputStream os = e.getResponseBody();
     os.write( response.getBytes() );
     os.close();
-  }
-
-  public String getBoundary( String header_value ) {
-    String[] parts = header_value.split( ";", 2 );
-    String[] boundary_slot = parts[ 1 ].split( "=", 2 );
-    return boundary_slot[ 1 ];
-  }
-
-  public String detailException ( Exception e ) {
-    StringWriter sw = new StringWriter();
-    e.printStackTrace( new PrintWriter( sw ) );
-    return sw.toString();
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
@@ -80,21 +67,10 @@ public class Uploader implements HttpHandler {
     }
   }
 
-  @Override
-  public void handle( HttpExchange e ) throws IOException {
-    String method = e.getRequestMethod();
-    System.out.println( method );
-    switch( method ) {
-      case "GET":
-          this.handleGet( e );
-          break;
-      case "POST":
-          this.handlePost( e );
-          break;
-      default:
-          this.handleGet( e );
-          break;
-    }
+  public String getBoundary( String header_value ) {
+    String[] parts = header_value.split( ";", 2 );
+    String[] boundary_slot = parts[ 1 ].split( "=", 2 );
+    return boundary_slot[ 1 ];
   }
 
 }
