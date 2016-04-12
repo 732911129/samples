@@ -31,9 +31,15 @@ abstract public class Service implements HttpHandler {
     }
   }
 
+  abstract public String name();
+
   abstract public void handleGet( HttpExchange e ) throws IOException;
 
   abstract public void handlePost( HttpExchange e ) throws IOException;
+
+  protected String storageRoot() {
+    return this.name() + "-scratchdisk";
+  }
 
   public String detailException ( Exception e ) {
     StringWriter sw = new StringWriter();

@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 
 import com.sun.net.httpserver.Headers;
@@ -23,6 +25,11 @@ import org.apache.commons.fileupload.MultipartStream;
  */
 
 public class Uploader extends Service {
+
+  @Override;
+  protected String name() {
+    return "Uploader";
+  }
 
   public void handleGet( HttpExchange e ) throws IOException {
     String response = "<form enctype=multipart/form-data method=POST action=/upload><input name=file type=file><button>Up</button></form>";
@@ -63,6 +70,7 @@ public class Uploader extends Service {
       System.out.println( this.detailException( ex ) );
     } finally {
       outs.writeTo( buf );
+      Files.write( Paths.get( this.storageRoot(), this.guid() ), outs );
       buf.close();
     }
   }
