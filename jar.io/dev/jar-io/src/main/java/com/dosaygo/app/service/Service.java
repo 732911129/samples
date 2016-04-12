@@ -13,6 +13,11 @@ import com.sun.net.httpserver.HttpHandler;
  */
 
 abstract public class Service implements HttpHandler {
+  protected String storageBase;
+
+  public Service( String storageBase ) {
+    this.storageBase = storageBase;
+  }
 
   @Override
   public void handle( HttpExchange e ) throws IOException {

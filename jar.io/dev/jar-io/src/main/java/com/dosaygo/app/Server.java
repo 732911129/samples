@@ -1,6 +1,3 @@
-package com.dosaygo.app;
-
-import com.dosaygo.app.service.Uploader;
 import com.dosaygo.app.service.CopyService;
 import com.dosaygo.app.service.DezipService;
 import com.dosaygo.app.service.BuildService;
@@ -23,15 +20,16 @@ import com.sun.net.httpserver.HttpServer;
 public class Server {
   public static void main( String[] args ) throws Exception {
     System.out.println( "Starting server..." );
+    String folder = args[ 1 ];
     HttpServer server = HttpServer.create( new InetSocketAddress( 8080 ), 0 );
-    server.createContext( "/", new Dispatcher() );
-    server.createcontext( "/upload", new Uploader() );
-    server.createcontext( "/dezip", new DezipService() );
-    server.createcontext( "/copy", new CopyService() );
-    server.createcontext( "/build", new BuildService() );
-    server.createcontext( "/maven_build", new MavenBuildService() );
-    server.createcontext( "/rezip", new RezipService() );
-    server.createcontext( "/download", new Downloader() );
+    server.createContext( "/", new Dispatcher( folder ) );
+    server.createcontext( "/upload", new Uploader( folder ) );
+    server.createcontext( "/dezip", new DezipService( folder ) );
+    server.createcontext( "/copy", new CopyService( folder ) );
+    server.createcontext( "/build", new BuildService( folder ) );
+    server.createcontext( "/maven_build", new MavenBuildService( folder ) );
+    server.createcontext( "/rezip", new RezipService( folder ) );
+    server.createcontext( "/download", new Downloader( folder ) );
     server.setExecutor( null );
     server.start();
   }
