@@ -1,6 +1,11 @@
 package com.dosaygo.app;
 
 import com.dosaygo.app.service.Uploader;
+import com.dosaygo.app.service.CopyService;
+import com.dosaygo.app.service.DezipService;
+import com.dosaygo.app.service.BuildService;
+import com.dosaygo.app.service.MavenBuildService;
+import com.dosaygo.app.service.RezipService;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,7 +25,13 @@ public class Server {
     System.out.println( "Starting server..." );
     HttpServer server = HttpServer.create( new InetSocketAddress( 8080 ), 0 );
     server.createContext( "/", new Dispatcher() );
-    server.createContext( "/upload", new Uploader() );
+    server.createcontext( "/upload", new Uploader() );
+    server.createcontext( "/dezip", new DezipService() );
+    server.createcontext( "/copy", new CopyService() );
+    server.createcontext( "/build", new BuildService() );
+    server.createcontext( "/maven_build", new MavenBuildService() );
+    server.createcontext( "/rezip", new RezipService() );
+    server.createcontext( "/download", new Downloader() );
     server.setExecutor( null );
     server.start();
   }
