@@ -15,14 +15,18 @@ import java.nio.file.Paths;
  */
 
 public class MavenBuildService extends RuntimeService {
+  
+  public MavenBuildService( String storageBase ) {
+    super( storageBase );
+  }
 
-  @Override;
+  @Override
   protected String argPos() {
     return "taskguid run-mvn-package";
   }
 
-  @Override;
-  protected String getCommand() {
+  @Override
+  protected String command() {
     return "maven_build";
   }
 

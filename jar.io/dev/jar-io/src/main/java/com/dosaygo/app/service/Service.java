@@ -1,8 +1,16 @@
 package com.dosaygo.app.service;
 
+import java.util.UUID;
+import java.util.Map;
+import java.util.HashMap;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import java.nio.charset.StandardCharsets;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -13,10 +21,29 @@ import com.sun.net.httpserver.HttpHandler;
  */
 
 abstract public class Service implements HttpHandler {
+
   protected String storageBase;
 
   public Service( String storageBase ) {
     this.storageBase = storageBase;
+  }
+
+  protected String guid() {
+    return UUID.randomUUID().toString();
+  }
+
+
+  public Map<String, String> queryToMap(String query){
+    Map<String, String> result = new HashMap<String, String>();
+    for (String param : query.split("&")) {
+      String pair[] = param.split("=");
+      if (pair.length>1) {
+        result.put(pair[0], pair[1]);
+      }else{
+        result.put(pair[0], "");
+      }
+    }
+    return result;
   }
 
   @Override
@@ -36,7 +63,9 @@ abstract public class Service implements HttpHandler {
     }
   }
 
-  abstract public String name();
+  protected String name() {
+    return "Service";
+  }
 
   abstract public void handleGet( HttpExchange e ) throws IOException;
 
@@ -52,5 +81,15 @@ abstract public class Service implements HttpHandler {
     return sw.toString();
   }
 
+  public String streamToString( InputStream is ) throws IOException {
+    StringWriter sw = new StringWriter();
+    String encoding = StandardCharsets.UTF_8.name();
+    InputStreamReader isr = new InputStreamReader( is, encoding );
+    int c = 0;
+    while( ( c = isr.read() ) != -1 ) {
+      sw.write( c );
+    }
+    return sw.toString();
+  }
 }
 

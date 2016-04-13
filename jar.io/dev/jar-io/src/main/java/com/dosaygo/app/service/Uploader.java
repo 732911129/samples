@@ -26,7 +26,11 @@ import org.apache.commons.fileupload.MultipartStream;
 
 public class Uploader extends Service {
 
-  @Override;
+  public Uploader( String storageBase ) {
+    super( storageBase );
+  }
+
+  @Override
   protected String name() {
     return "Uploader";
   }
@@ -69,8 +73,9 @@ public class Uploader extends Service {
     } catch ( IOException ex ) {
       System.out.println( this.detailException( ex ) );
     } finally {
-      outs.writeTo( buf );
-      Files.write( Paths.get( this.storageRoot(), this.guid() ), outs );
+      String guid = this.guid();
+      Files.write( Paths.get( this.storageRoot(), guid, guid + ".zip" ), outs.toByteArray() );
+      buf.write( guid.getBytes() );
       buf.close();
     }
   }

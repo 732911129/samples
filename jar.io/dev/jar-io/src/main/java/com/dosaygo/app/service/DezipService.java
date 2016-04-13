@@ -16,13 +16,17 @@ import java.nio.file.Paths;
 
 public class DezipService extends RuntimeService {
 
-  @Override;
+  public DezipService( String storageBase ) {
+    super( storageBase );
+  }
+
+  @Override
   protected String argPos() {
     return "zipfile taskguid";
   }
 
-  @Override;
-  protected String getCommand() {
+  @Override
+  protected String command() {
     return "dezip";
   }
 

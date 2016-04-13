@@ -1,3 +1,6 @@
+import com.dosaygo.app.service.Service;
+import com.dosaygo.app.service.Uploader;
+import com.dosaygo.app.service.Downloader;
 import com.dosaygo.app.service.CopyService;
 import com.dosaygo.app.service.DezipService;
 import com.dosaygo.app.service.BuildService;
@@ -23,26 +26,35 @@ public class Server {
     String folder = args[ 1 ];
     HttpServer server = HttpServer.create( new InetSocketAddress( 8080 ), 0 );
     server.createContext( "/", new Dispatcher( folder ) );
-    server.createcontext( "/upload", new Uploader( folder ) );
-    server.createcontext( "/dezip", new DezipService( folder ) );
-    server.createcontext( "/copy", new CopyService( folder ) );
-    server.createcontext( "/build", new BuildService( folder ) );
-    server.createcontext( "/maven_build", new MavenBuildService( folder ) );
-    server.createcontext( "/rezip", new RezipService( folder ) );
-    server.createcontext( "/download", new Downloader( folder ) );
+    server.createContext( "/upload", new Uploader( folder ) );
+    server.createContext( "/dezip", new DezipService( folder ) );
+    server.createContext( "/copy", new CopyService( folder ) );
+    server.createContext( "/build", new BuildService( folder ) );
+    server.createContext( "/maven_build", new MavenBuildService( folder ) );
+    server.createContext( "/rezip", new RezipService( folder ) );
+    server.createContext( "/download", new Downloader( folder ) );
     server.setExecutor( null );
     server.start();
   }
 
-  static class Dispatcher implements HttpHandler {
-    @Override
-    public void handle( HttpExchange e ) throws IOException {
+  static class Dispatcher extends Service {
+
+    public Dispatcher( String storageBase ) {
+      super( storageBase ); 
+    }
+
+    public void handleGet( HttpExchange e ) throws IOException {
       String response = "<a href=/upload>Go to upload</a>";
       e.sendResponseHeaders( 200, response.length() );
       OutputStream os = e.getResponseBody();
       os.write( response.getBytes() );
       os.close();
     }
+
+    public void handlePost( HttpExchange e ) throws IOException {
+      this.handleGet( e );
+    }
+
   }
 }
 

@@ -17,7 +17,21 @@ import java.nio.file.Paths;
 
 public class CopyService extends RuntimeService {
 
-  public void copy( node, service1, service2 ) {
+  public CopyService( String storageBase ) {
+    super( storageBase );
+  }
+
+  @Override
+  protected String argPos() {
+    return "node service1name service2name";
+  }
+
+  @Override
+  protected String command() {
+    return "copynode";
+  }
+
+  public void copy( String node, String service1, String service2 ) {
     // simply executes a cp -r {service1 root}/node {service2 root}/node
     //
   }

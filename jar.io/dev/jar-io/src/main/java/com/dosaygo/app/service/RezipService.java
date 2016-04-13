@@ -16,16 +16,19 @@ import java.nio.file.Paths;
 
 public class RezipService extends RuntimeService {
 
-  @Override;
+  public RezipService( String storageBase ) {
+    super( storageBase );
+  }
+
+  @Override
   protected String argPos() {
     return "taskguid";
   }
 
-  @Override;
-  protected String getCommand() {
+  @Override
+  protected String command() {
     return "rezip";
   }
-
 
 }
 

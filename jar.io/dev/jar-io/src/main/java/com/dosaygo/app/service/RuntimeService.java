@@ -1,13 +1,18 @@
 package com.dosaygo.app.service;
 
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+
 import java.util.List;
 import java.util.Map;
 
 import java.lang.ProcessBuilder;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * Web Server request dispatcher
@@ -16,15 +21,16 @@ import java.nio.file.Paths;
 
 abstract public class RuntimeService extends Service {
 
-  private Map<String,Int> arg_order;
+  private Map<String,Integer> arg_order;
 
   abstract protected String command();
   abstract protected String argPos();
 
-  public RuntimeService( ) {
-    String[] pos = this.argPos().split( ' ' );
+  public RuntimeService( String storageBase ) {
+    super( storageBase );
+    String[] pos = this.argPos().split( " " );
     for( int i = 0; i < pos.length; i++ ) {
-      arg_order.set( pos[ i ], i + 1 );
+      arg_order.put( pos[ i ], i + 1 );
     }
   }
 
@@ -38,19 +44,38 @@ abstract public class RuntimeService extends Service {
     return this.name() + "-" + this.command() + "-scratchdisk";
   }
 
+  public void handleGet( HttpExchange e ) throws IOException {
+    String response = "<form method=POST action=/" + this.command() + "><input name=guid><button>" + this.command() + "</button></form>";
+    Headers h = e.getResponseHeaders(); 
+    h.set( "Content-Type", "text/html; charset=utf-8" );
+    e.sendResponseHeaders( 200, response.length() );
+    OutputStream os = e.getResponseBody();
+    os.write( response.getBytes() );
+    os.close();
+  }
+
+  public void handlePost( HttpExchange e ) throws IOException {
+    String body = this.streamToString( e.getRequestBody() );
+    Map<String, String> params = this.queryToMap( body );
+    this.execute( params );
+  }
+
   private void positionArguments( Map<String,String> arg_map, List<String> args ) {
     arg_map.entrySet().forEach( arg -> { 
-      if( arg_order.has( arg.getKey() ) ) {
-        args[ this.arg_order[ arg.getKey() ] ] = arg.getValue();
+      if( arg_order.containsKey( arg.getKey() ) ) {
+        args.set( this.arg_order.get( arg.getKey() ), arg.getValue() );
       }
     } );
   }
 
-  public void execute( Map<String,String> parameters ) {
-    String nodeName = parameters.get( 'nodeName' );
-    Path dir = Paths.get( this.storageRoot(), nodeName );
-    Process cmd = new ProcessBuilder( this.command() );
-    cmd.directory( dir );
+  public void execute( Map<String,String> parameters ) throws IOException {
+    String nodeName = parameters.get( "nodeName" );
+    String platform = "macosx";
+    String platform_extension = "";
+    Path target_dir = Paths.get( this.storageRoot(), nodeName );
+    Path command_dir = Paths.get( this.storageBase, "service_scripts", platform, this.command(), platform_extension );
+    ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
+    cmd.directory( target_dir.toFile() );
     List<String> command_args = cmd.command();
     this.positionArguments( parameters, command_args );
     cmd.start();

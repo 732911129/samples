@@ -16,13 +16,17 @@ import java.nio.file.Paths;
 
 public class BuildService extends RuntimeService {
 
-  @Override;
+  public BuildService( String storageBase ) {
+    super( storageBase );
+  }
+
+  @Override
   protected String argPos() {
     return "taskguid";
   }
 
-  @Override;
-  protected String getCommand() {
+  @Override
+  protected String command() {
     return "build";
   }
 
