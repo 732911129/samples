@@ -1,11 +1,11 @@
 com/dosaygo/app/service/RezipService.class
 com/dosaygo/app/service/Service.class
+com/dosaygo/app/Server.class
 com/dosaygo/app/service/BuildService.class
 com/dosaygo/app/service/RuntimeService.class
 com/dosaygo/app/service/Uploader.class
+com/dosaygo/app/Server$Dispatcher.class
 com/dosaygo/app/service/DezipService.class
-Server.class
-Server$Dispatcher.class
 com/dosaygo/app/service/CopyService.class
 com/dosaygo/app/service/MavenBuildService.class
 com/dosaygo/app/service/Downloader.class

@@ -1,3 +1,10 @@
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/Server.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/MavenBuildService.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/DezipService.java
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/Uploader.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/BuildService.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/CopyService.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/Downloader.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/RuntimeService.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/RezipService.java
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/Service.java

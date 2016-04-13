@@ -1,3 +1,5 @@
+package com.dosaygo.app;
+
 import com.dosaygo.app.service.Service;
 import com.dosaygo.app.service.Uploader;
 import com.dosaygo.app.service.Downloader;
@@ -21,9 +23,14 @@ import com.sun.net.httpserver.HttpServer;
  */
 
 public class Server {
+
   public static void main( String[] args ) throws Exception {
     System.out.println( "Starting server..." );
-    String folder = args[ 1 ];
+    if( args.length < 1 ) {
+      System.out.println( "Specify a folder" );
+      System.exit( 1 );
+    }
+    String folder = args[ 0 ];
     HttpServer server = HttpServer.create( new InetSocketAddress( 8080 ), 0 );
     server.createContext( "/", new Dispatcher( folder ) );
     server.createContext( "/upload", new Uploader( folder ) );

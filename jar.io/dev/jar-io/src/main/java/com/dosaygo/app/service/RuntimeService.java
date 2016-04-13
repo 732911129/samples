@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import java.lang.ProcessBuilder;
 
@@ -21,16 +22,17 @@ import java.nio.file.Path;
 
 abstract public class RuntimeService extends Service {
 
-  private Map<String,Integer> arg_order;
+  protected Map<String,Integer> arg_order;
 
   abstract protected String command();
   abstract protected String argPos();
 
   public RuntimeService( String storageBase ) {
     super( storageBase );
+    this.arg_order = new HashMap<String,Integer>();
     String[] pos = this.argPos().split( " " );
     for( int i = 0; i < pos.length; i++ ) {
-      arg_order.put( pos[ i ], i + 1 );
+      this.arg_order.put( pos[ i ], i + 1 );
     }
   }
 
@@ -62,7 +64,7 @@ abstract public class RuntimeService extends Service {
 
   private void positionArguments( Map<String,String> arg_map, List<String> args ) {
     arg_map.entrySet().forEach( arg -> { 
-      if( arg_order.containsKey( arg.getKey() ) ) {
+      if( this.arg_order.containsKey( arg.getKey() ) ) {
         args.set( this.arg_order.get( arg.getKey() ), arg.getValue() );
       }
     } );
