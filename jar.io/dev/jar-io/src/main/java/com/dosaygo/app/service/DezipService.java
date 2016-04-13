@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 public class DezipService extends RuntimeService {
 
-  public DezipService( String storageBase ) {
+  public DezipService( String storageBase ) throws IOException {
     super( storageBase );
   }
 

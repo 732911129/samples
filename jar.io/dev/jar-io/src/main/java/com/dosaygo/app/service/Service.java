@@ -4,12 +4,14 @@ import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -22,9 +24,12 @@ import com.sun.net.httpserver.HttpHandler;
 
 abstract public class Service implements HttpHandler {
 
+  protected String serviceBase;
   protected String storageBase;
 
-  public Service( String storageBase ) {
+  public Service( String storageBase ) throws IOException {
+    this.serviceBase = new File( "." ).getCanonicalPath();
+    System.out.println( this.serviceBase );
     this.storageBase = storageBase;
   }
 
@@ -72,7 +77,7 @@ abstract public class Service implements HttpHandler {
   abstract public void handlePost( HttpExchange e ) throws IOException;
 
   protected String storageRoot() {
-    return this.name() + "-scratchdisk";
+    return Paths.get( this.storageBase, "jar-io", "tmp", this.name() + "-scratchdisk" ).toAbsolutePath().toString();
   }
 
   public String detailException ( Exception e ) {

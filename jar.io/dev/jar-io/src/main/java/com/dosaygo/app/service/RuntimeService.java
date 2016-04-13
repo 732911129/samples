@@ -27,7 +27,7 @@ abstract public class RuntimeService extends Service {
   abstract protected String command();
   abstract protected String argPos();
 
-  public RuntimeService( String storageBase ) {
+  public RuntimeService( String storageBase ) throws IOException {
     super( storageBase );
     this.arg_order = new HashMap<String,Integer>();
     String[] pos = this.argPos().split( " " );
@@ -43,7 +43,7 @@ abstract public class RuntimeService extends Service {
 
   @Override
   protected String storageRoot() {
-    return this.name() + "-" + this.command() + "-scratchdisk";
+    return Paths.get( this.storageBase, "jar-io", "tmp", this.name() + "-" + this.command() + "-scratchdisk" ).toAbsolutePath().toString();
   }
 
   public void handleGet( HttpExchange e ) throws IOException {
@@ -75,7 +75,7 @@ abstract public class RuntimeService extends Service {
     String platform = "macosx";
     String platform_extension = "";
     Path target_dir = Paths.get( this.storageRoot(), nodeName );
-    Path command_dir = Paths.get( this.storageBase, "service_scripts", platform, this.command(), platform_extension );
+    Path command_dir = Paths.get( this.serviceBase, "service_scripts", platform, this.command() + platform_extension );
     ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
     cmd.directory( target_dir.toFile() );
     List<String> command_args = cmd.command();

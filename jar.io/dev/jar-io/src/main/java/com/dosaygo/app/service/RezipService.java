@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 public class RezipService extends RuntimeService {
 
-  public RezipService( String storageBase ) {
+  public RezipService( String storageBase ) throws IOException {
     super( storageBase );
   }
 

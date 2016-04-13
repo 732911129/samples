@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 
@@ -26,7 +27,7 @@ import org.apache.commons.fileupload.MultipartStream;
 
 public class Uploader extends Service {
 
-  public Uploader( String storageBase ) {
+  public Uploader( String storageBase ) throws IOException {
     super( storageBase );
   }
 
@@ -50,7 +51,7 @@ public class Uploader extends Service {
     ByteArrayOutputStream outs = new ByteArrayOutputStream();
     OutputStream buf = e.getResponseBody();
     Headers oh = e.getResponseHeaders();
-    oh.set( "Content-Type", "application/octet-stream" );
+    oh.set( "Content-Type", "text/html" );
     e.sendResponseHeaders( 200, 0 );
     Headers h = e.getRequestHeaders();
     List<String> type_header = h.get( "Content-Type" );
@@ -74,9 +75,15 @@ public class Uploader extends Service {
       System.out.println( this.detailException( ex ) );
     } finally {
       String guid = this.guid();
-      Files.write( Paths.get( this.storageRoot(), guid, guid + ".zip" ), outs.toByteArray() );
-      buf.write( guid.getBytes() );
-      buf.close();
+      try { 
+        Path guidRoot = Paths.get( this.storageRoot(), guid );
+        Files.createDirectories( guidRoot );
+        Files.write( Paths.get( guidRoot.toString(), guid + ".zip" ), outs.toByteArray() );
+        buf.write( guid.getBytes() );
+        buf.close();
+      } catch ( IOException ex ) {
+        System.out.println( this.detailException( ex ) );
+      }
     }
   }
 

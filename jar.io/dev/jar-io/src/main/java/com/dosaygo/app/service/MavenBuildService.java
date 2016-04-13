@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 public class MavenBuildService extends RuntimeService {
   
-  public MavenBuildService( String storageBase ) {
+  public MavenBuildService( String storageBase ) throws IOException {
     super( storageBase );
   }
 

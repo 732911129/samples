@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 public class BuildService extends RuntimeService {
 
-  public BuildService( String storageBase ) {
+  public BuildService( String storageBase ) throws IOException {
     super( storageBase );
   }
 

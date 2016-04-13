@@ -31,6 +31,7 @@ public class Server {
       System.exit( 1 );
     }
     String folder = args[ 0 ];
+    folder = folder.replaceFirst( "^~", System.getProperty( "user.home" ) );
     HttpServer server = HttpServer.create( new InetSocketAddress( 8080 ), 0 );
     server.createContext( "/", new Dispatcher( folder ) );
     server.createContext( "/upload", new Uploader( folder ) );
@@ -46,7 +47,7 @@ public class Server {
 
   static class Dispatcher extends Service {
 
-    public Dispatcher( String storageBase ) {
+    public Dispatcher( String storageBase ) throws IOException {
       super( storageBase ); 
     }
 

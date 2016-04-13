@@ -31,7 +31,7 @@ public class Downloader extends Service {
     return "Downloader";
   }
 
-  public Downloader( String storageBase ) {
+  public Downloader( String storageBase ) throws IOException {
     super( storageBase );
   }
 

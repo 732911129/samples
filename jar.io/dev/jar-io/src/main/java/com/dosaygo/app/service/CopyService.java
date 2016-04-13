@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 
 public class CopyService extends RuntimeService {
 
-  public CopyService( String storageBase ) {
+  public CopyService( String storageBase ) throws IOException {
     super( storageBase );
   }
 
