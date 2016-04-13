@@ -1,6 +1,9 @@
 package com.dosaygo.app.service;
 
+import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import java.lang.ProcessBuilder;
 
@@ -31,9 +34,11 @@ public class CopyService extends RuntimeService {
     return "copynode";
   }
 
-  public void copy( String node, String service1, String service2 ) {
-    // simply executes a cp -r {service1 root}/node {service2 root}/node
-    //
+  @Override
+  public void transformParameters( Map<String,String> params ) {
+    List<String> l = new ArrayList<String>( Arrays.asList( "service1name", "service2name" ) );
+    l.forEach( key -> params.put( key, this.getStoragePath( params.get( key ) ) ) );
   }
+
 }
 

@@ -31,21 +31,6 @@ public class Uploader extends Service {
     super( storageBase );
   }
 
-  @Override
-  protected String name() {
-    return "Uploader";
-  }
-
-  public void handleGet( HttpExchange e ) throws IOException {
-    String response = "<form enctype=multipart/form-data method=POST action=/upload><input name=file type=file><button>Up</button></form>";
-    Headers h = e.getResponseHeaders(); 
-    h.set( "Content-Type", "text/html; charset=utf-8" );
-    e.sendResponseHeaders( 200, response.length() );
-    OutputStream os = e.getResponseBody();
-    os.write( response.getBytes() );
-    os.close();
-  }
-
   public void handlePost( HttpExchange e ) throws IOException {
     InputStream is = e.getRequestBody();
     ByteArrayOutputStream outs = new ByteArrayOutputStream();

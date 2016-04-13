@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -37,23 +38,8 @@ abstract public class RuntimeService extends Service {
   }
 
   @Override
-  protected String name() {
-    return "RuntimeService";
-  }
-
-  @Override
   protected String storageRoot() {
     return Paths.get( this.storageBase, "jar-io", "tmp", this.name() + "-" + this.command() + "-scratchdisk" ).toAbsolutePath().toString();
-  }
-
-  public void handleGet( HttpExchange e ) throws IOException {
-    String response = "<form method=POST action=/" + this.command() + "><input name=guid><button>" + this.command() + "</button></form>";
-    Headers h = e.getResponseHeaders(); 
-    h.set( "Content-Type", "text/html; charset=utf-8" );
-    e.sendResponseHeaders( 200, response.length() );
-    OutputStream os = e.getResponseBody();
-    os.write( response.getBytes() );
-    os.close();
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
@@ -65,22 +51,36 @@ abstract public class RuntimeService extends Service {
   private void positionArguments( Map<String,String> arg_map, List<String> args ) {
     arg_map.entrySet().forEach( arg -> { 
       if( this.arg_order.containsKey( arg.getKey() ) ) {
-        args.set( this.arg_order.get( arg.getKey() ), arg.getValue() );
+        int index = this.arg_order.get( arg.getKey() );
+        while( index > args.size() ) {
+          args.add( " " );
+        }
+        if( index == args.size() ) {
+          args.add( arg.getValue() );
+        } else { 
+          args.set( index, arg.getValue() );
+        }
       }
     } );
   }
 
   public void execute( Map<String,String> parameters ) throws IOException {
-    String nodeName = parameters.get( "nodeName" );
+    System.out.println( parameters.toString() );
+    this.transformParameters( parameters );
     String platform = "macosx";
     String platform_extension = "";
-    Path target_dir = Paths.get( this.storageRoot(), nodeName );
+    Path target_dir = Paths.get( this.storageRoot() );
     Path command_dir = Paths.get( this.serviceBase, "service_scripts", platform, this.command() + platform_extension );
-    ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
-    cmd.directory( target_dir.toFile() );
-    List<String> command_args = cmd.command();
-    this.positionArguments( parameters, command_args );
-    cmd.start();
+    try { 
+      ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
+      Files.createDirectories( target_dir );
+      cmd.directory( target_dir.toFile() );
+      List<String> command_args = cmd.command();
+      this.positionArguments( parameters, command_args );
+      cmd.start();
+    } catch ( Exception e ) {
+      System.out.println( e.toString() );
+    }
   }
 
 }

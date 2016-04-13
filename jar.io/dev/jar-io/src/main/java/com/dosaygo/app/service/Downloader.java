@@ -26,11 +26,6 @@ import org.apache.commons.fileupload.MultipartStream;
 
 public class Downloader extends Service {
 
-  @Override
-  protected String name() {
-    return "Downloader";
-  }
-
   public Downloader( String storageBase ) throws IOException {
     super( storageBase );
   }

@@ -9,6 +9,9 @@ import com.dosaygo.app.service.BuildService;
 import com.dosaygo.app.service.MavenBuildService;
 import com.dosaygo.app.service.RezipService;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.Executor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -25,6 +28,7 @@ import com.sun.net.httpserver.HttpServer;
 public class Server {
 
   public static void main( String[] args ) throws Exception {
+
     System.out.println( "Starting server..." );
     if( args.length < 1 ) {
       System.out.println( "Specify a folder" );
@@ -32,17 +36,38 @@ public class Server {
     }
     String folder = args[ 0 ];
     folder = folder.replaceFirst( "^~", System.getProperty( "user.home" ) );
-    HttpServer server = HttpServer.create( new InetSocketAddress( 8080 ), 0 );
-    server.createContext( "/", new Dispatcher( folder ) );
-    server.createContext( "/upload", new Uploader( folder ) );
-    server.createContext( "/dezip", new DezipService( folder ) );
-    server.createContext( "/copy", new CopyService( folder ) );
-    server.createContext( "/build", new BuildService( folder ) );
-    server.createContext( "/maven_build", new MavenBuildService( folder ) );
-    server.createContext( "/rezip", new RezipService( folder ) );
-    server.createContext( "/download", new Downloader( folder ) );
-    server.setExecutor( null );
-    server.start();
+    API api = new API();
+    api.registerService( "/", new Dispatcher( folder ) );
+    api.registerService( "/upload", new Uploader( folder ) );
+    api.registerService( "/dezip", new DezipService( folder ) );
+    api.registerService( "/copy", new CopyService( folder ) );
+    api.registerService( "/build", new BuildService( folder ) );
+    api.registerService( "/maven_build", new MavenBuildService( folder ) );
+    api.registerService( "/rezip", new RezipService( folder ) );
+    api.registerService( "/download", new Downloader( folder ) );
+    api.publish();
+
+  }
+
+  static class API {
+
+    protected Map<String,Service> services;
+    protected HttpServer server;
+
+    public API() throws IOException {
+      this.server = HttpServer.create( new InetSocketAddress( 8080 ), 10 );
+      this.services = new HashMap<String,Service> ();
+    }
+
+    public void registerService( String route, Service service ) {
+      this.server.createContext( route, service ); 
+      this.services.put( service.name(), service );
+    }
+
+    public void publish() {
+      this.server.start();
+    }
+
   }
 
   static class Dispatcher extends Service {

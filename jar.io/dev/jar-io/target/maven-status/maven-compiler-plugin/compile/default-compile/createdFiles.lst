@@ -1,5 +1,6 @@
 com/dosaygo/app/service/RezipService.class
 com/dosaygo/app/service/Service.class
+com/dosaygo/app/Server$API.class
 com/dosaygo/app/Server.class
 com/dosaygo/app/service/BuildService.class
 com/dosaygo/app/service/RuntimeService.class
