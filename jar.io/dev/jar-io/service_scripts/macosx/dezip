@@ -8,31 +8,20 @@ zip=$1
 guid=$2
 shift
 args="$@"
-staging=~/.jar.io/tmp/build_staging/$guid
-
-if [[ ! -e $staging ]]; then
-  echo "Making $staging directory..."
-  mkdir -p $staging
-elif [[ ! -d $staging ]]; then
-  echo "$staging exists but is not a directory" 1>&2
-  exit 1
-else
-  echo "Clearing $staging directory..."
-  rm -rf $staging/*
-fi
+staging=$guid
 
 # check if the quiet option is set
 if [[ ! $@ == *-q* ]]; then
   while true; do
     read -p "Unzip $zip into $staging? ( y/n ) " yn
     case $yn in
-      [Yy]* ) unzip $zip -d $staging; break;;
+      [Yy]* ) unzip $staging/$zip -d $staging; break;;
       [Nn]* ) exit;;
       * ) echo "Please answer yes or no.";;
     esac
   done
 else
   echo "Unzipping $zip into $staging..."
-  unzip $zip -d $staging
+  unzip $staging/$zip -d $staging
 fi
 

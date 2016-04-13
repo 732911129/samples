@@ -3,6 +3,7 @@ package com.dosaygo.app.service;
 import com.dosaygo.app.service.Service;
 
 import java.util.List;
+import java.util.EnumSet;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,6 +12,9 @@ import java.io.InputStream;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 
@@ -59,14 +63,19 @@ public class Uploader extends Service {
     } catch ( IOException ex ) {
       System.out.println( this.detailException( ex ) );
     } finally {
+      outs.flush();
       String guid = this.guid();
       try { 
         Path guidRoot = Paths.get( this.storageRoot(), guid );
         Files.createDirectories( guidRoot );
-        Files.write( Paths.get( guidRoot.toString(), guid + ".zip" ), outs.toByteArray() );
+        SeekableByteChannel fouts = Files.newByteChannel( Paths.get( guidRoot.toString(), guid + ".zip" ), EnumSet.of( StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE ) );
+        byte[] outsba = outs.toByteArray();
+        ByteBuffer b = ByteBuffer.wrap( outsba );
+        fouts.write( b );
+        fouts.close();
         buf.write( guid.getBytes() );
         buf.close();
-      } catch ( IOException ex ) {
+      } catch ( Exception ex ) {
         System.out.println( this.detailException( ex ) );
       }
     }

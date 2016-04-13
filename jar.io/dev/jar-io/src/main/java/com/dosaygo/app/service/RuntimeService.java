@@ -37,15 +37,11 @@ abstract public class RuntimeService extends Service {
     }
   }
 
-  @Override
-  protected String storageRoot() {
-    return Paths.get( this.storageBase, "jar-io", "tmp", this.name() + "-" + this.command() + "-scratchdisk" ).toAbsolutePath().toString();
-  }
-
   public void handlePost( HttpExchange e ) throws IOException {
     String body = this.streamToString( e.getRequestBody() );
     Map<String, String> params = this.queryToMap( body );
     this.execute( params );
+    this.handleGet( e );
   }
 
   private void positionArguments( Map<String,String> arg_map, List<String> args ) {
