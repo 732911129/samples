@@ -42,7 +42,7 @@ public class Server {
     api.registerService( "/dezip", new DezipService( folder ) );
     api.registerService( "/copy", new CopyService( folder ) );
     api.registerService( "/build", new BuildService( folder ) );
-    api.registerService( "/maven_build", new MavenBuildService( folder ) );
+    api.registerService( "/mavenbuild", new MavenBuildService( folder ) );
     api.registerService( "/rezip", new RezipService( folder ) );
     api.registerService( "/download", new Downloader( folder ) );
     api.publish();

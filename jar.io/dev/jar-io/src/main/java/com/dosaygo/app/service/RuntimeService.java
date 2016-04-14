@@ -61,8 +61,8 @@ abstract public class RuntimeService extends Service {
   }
 
   public void execute( Map<String,String> parameters ) throws IOException {
-    System.out.println( parameters.toString() );
     this.transformParameters( parameters );
+    System.out.println( parameters.toString() );
     String platform = "macosx";
     String platform_extension = "";
     Path target_dir = Paths.get( this.storageRoot() );

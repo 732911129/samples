@@ -31,7 +31,6 @@ public class DezipService extends RuntimeService {
     Path unzipPath = Paths.get( this.storageRoot(), params.get( "taskguid" ) );
     params.put( "taskguid", unzipPath.toString() );
     params.put( "options", "-q" );
-    System.out.println( params );
   }
 
   @Override
