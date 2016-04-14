@@ -8,5 +8,6 @@ zipbase=$2
 zip=compiled.$zipbase.zip
 
 echo "zipping $guid into $guid/$zip..."
-zip -r $guid/$zip $guid/*;
+cd $guid
+zip -r $zip *;
 
