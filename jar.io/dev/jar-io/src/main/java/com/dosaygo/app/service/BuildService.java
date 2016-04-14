@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 
 import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * Web Server request dispatcher
@@ -22,7 +23,7 @@ public class BuildService extends RuntimeService {
 
   @Override
   protected String argPos() {
-    return "taskguid";
+    return "taskguid make_jar entrypoint";
   }
 
   @Override
@@ -30,6 +31,11 @@ public class BuildService extends RuntimeService {
     return "build";
   }
 
+  @Override
+  public void transformParameters( Map<String,String> params ) {
+    Path buildPath = Paths.get( this.storageRoot(), params.get( "taskguid" ) );
+    params.put( "taskguid", buildPath.toString() );
+  }
 
 }
 

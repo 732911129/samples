@@ -1,0 +1,9 @@
+<form method=POST>
+  <input required name=taskguid value=guid>
+  <select required name=make_jar>
+    <option selected value=no_jar>Don't make jar ( compile classes only )</option>
+    <option value=make_jar>Make jar</option>
+  </select>
+  <input name=entrypoint>
+  <button>Build with Maven</button>
+</form>
