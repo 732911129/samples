@@ -22,7 +22,7 @@ public class RezipService extends RuntimeService {
 
   @Override
   protected String argPos() {
-    return "taskguid";
+    return "taskguid zipbase";
   }
 
   @Override
@@ -30,5 +30,12 @@ public class RezipService extends RuntimeService {
     return "rezip";
   }
 
+  @Override
+  public void transformParameters( Map<String,String> params ) {
+    String taskguid = params.get( "taskguid" );
+    Path buildPath = Paths.get( this.storageRoot(), params.get( "taskguid" ) );
+    params.put( "taskguid", buildPath.toString() );
+    params.put( "zipbase", taskguid );
+  }
 }
 
