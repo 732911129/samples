@@ -35,6 +35,7 @@ public class Server {
       System.exit( 1 );
     }
     String folder = args[ 0 ];
+    System.out.println( folder );
     folder = folder.replaceFirst( "^~", System.getProperty( "user.home" ) );
     API api = new API();
     api.registerService( "/", new Dispatcher( folder ) );
