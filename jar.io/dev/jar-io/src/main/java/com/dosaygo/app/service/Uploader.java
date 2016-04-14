@@ -68,7 +68,7 @@ public class Uploader extends Service {
       try { 
         Path guidRoot = Paths.get( this.storageRoot(), guid );
         Files.createDirectories( guidRoot );
-        SeekableByteChannel fouts = Files.newByteChannel( Paths.get( guidRoot.toString(), guid + ".zip" ), EnumSet.of( StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE ) );
+        SeekableByteChannel fouts = Files.newByteChannel( Paths.get( guidRoot.toString(), "uploaded." + guid + ".zip" ), EnumSet.of( StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE ) );
         byte[] outsba = outs.toByteArray();
         ByteBuffer b = ByteBuffer.wrap( outsba );
         fouts.write( b );

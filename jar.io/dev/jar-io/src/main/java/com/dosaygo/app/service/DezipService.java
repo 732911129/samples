@@ -28,7 +28,9 @@ public class DezipService extends RuntimeService {
 
   @Override
   public void transformParameters( Map<String,String> params ) {
+    String guid = params.get( "taskguid" );
     Path unzipPath = Paths.get( this.storageRoot(), params.get( "taskguid" ) );
+    params.put( "zipfile", "uploaded." + guid + ".zip" ); 
     params.put( "taskguid", unzipPath.toString() );
     params.put( "options", "-q" );
   }

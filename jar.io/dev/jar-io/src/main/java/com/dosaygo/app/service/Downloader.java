@@ -41,11 +41,13 @@ public class Downloader extends Service {
   public void handlePost( HttpExchange e ) throws IOException {
     String body = this.streamToString( e.getRequestBody() );
     Map<String, String> params = this.queryToMap( body );
+    String guid = params.get( "taskguid" );
     this.transformParameters( params );
     try {
       Path zipPath = Paths.get( params.get( "taskguid" ) );
       Headers h = e.getResponseHeaders(); 
       h.set( "Content-Type", "application/zip, application/octet-stream" );
+      h.set( "Content-Disposition", "attachment; filename=compiled." + guid + ".zip" );
       e.sendResponseHeaders( 200, 0 );
       OutputStream os = e.getResponseBody();
       os.write( Files.readAllBytes( zipPath ) );
