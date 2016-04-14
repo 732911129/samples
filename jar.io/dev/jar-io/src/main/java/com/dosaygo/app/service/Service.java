@@ -5,6 +5,7 @@ import java.lang.Class;
 import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,13 +87,34 @@ abstract public class Service implements HttpHandler {
     return kind.getSimpleName().toLowerCase();
   }
 
+  public String template( String page, Map<String, String> params ) {
+    LinkedList<String> iterations = new LinkedList<String>();
+    iterations.add( page );
+    params.forEach( ( key, value ) -> iterations.add( iterations.getLast().replace( "::" + key, value ) ) );
+    return iterations.getLast();
+  }
+
   public void handleGet( HttpExchange e ) throws IOException {
+    this.handleGet( e, null );
+  }
+
+  public void handleGet( HttpExchange e, Map<String, String> params ) throws IOException {
+    if( params == null ) {
+      String query = e.getRequestURI().getQuery();
+      if( query != null ) {
+        params = this.queryToMap( query );
+      }
+    }
     String response = this.getHTMLControl();
     Headers h = e.getResponseHeaders(); 
     h.set( "Content-Type", "text/html; charset=utf-8" );
-    e.sendResponseHeaders( 200, response.length() );
+    e.sendResponseHeaders( 200, 0 );
     OutputStream os = e.getResponseBody();
-    os.write( response.getBytes() );
+    String page = response + this.getHTMLNavigation();
+    if( params != null ) {
+      page = this.template( page, params );
+    }
+    os.write( page.getBytes() );
     os.close();
   }
 
@@ -125,15 +147,29 @@ abstract public class Service implements HttpHandler {
 
   protected String getHTMLControl() {
     try { 
-      Path htmlPath = Paths.get( this.serviceBase, "pages", this.name() + ".html" );
       if ( this.pageCache == "" ) {
-        String page = new String( Files.readAllBytes( htmlPath ) );
-        this.pageCache = page;
+        this.pageCache = this.getHTML( this.name() + ".html" );
       }
     } catch ( IOException e ) {
       System.out.println( e );
     } finally { 
       return this.pageCache;
+    }
+  }
+
+  protected String getHTML( String ... path ) throws IOException {
+    Path htmlPath = Paths.get( this.serviceBase, Paths.get( "pages", path ).toString() );
+    return new String( Files.readAllBytes( htmlPath ) );
+  }
+
+  protected String getHTMLNavigation() {
+    String nav = "";
+    try { 
+      nav = this.getHTML( "shared", "navigation.html" );
+    } catch ( IOException e ) {
+      System.out.println( e );
+    } finally { 
+      return nav;
     }
   }
 

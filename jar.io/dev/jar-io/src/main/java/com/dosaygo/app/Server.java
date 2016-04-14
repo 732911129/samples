@@ -77,6 +77,7 @@ public class Server {
       super( storageBase ); 
     }
 
+    @Override
     public void handleGet( HttpExchange e ) throws IOException {
       String response = "<a href=/upload>Go to upload</a>";
       e.sendResponseHeaders( 200, response.length() );
@@ -90,6 +91,7 @@ public class Server {
     }
 
   }
+
 }
 
 

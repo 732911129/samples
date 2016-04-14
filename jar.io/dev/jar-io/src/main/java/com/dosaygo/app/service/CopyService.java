@@ -26,7 +26,7 @@ public class CopyService extends RuntimeService {
 
   @Override
   protected String argPos() {
-    return "node service1name service2name";
+    return "taskguid service1name service2name";
   }
 
   @Override

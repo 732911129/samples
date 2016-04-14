@@ -3,6 +3,8 @@ package com.dosaygo.app.service;
 import com.dosaygo.app.service.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.EnumSet;
 
 import java.io.IOException;
@@ -38,15 +40,9 @@ public class Uploader extends Service {
   public void handlePost( HttpExchange e ) throws IOException {
     InputStream is = e.getRequestBody();
     ByteArrayOutputStream outs = new ByteArrayOutputStream();
-    OutputStream buf = e.getResponseBody();
-    Headers oh = e.getResponseHeaders();
-    oh.set( "Content-Type", "text/html" );
-    e.sendResponseHeaders( 200, 0 );
     Headers h = e.getRequestHeaders();
     List<String> type_header = h.get( "Content-Type" );
-    System.out.println( type_header.size() );
     String boundary = this.getBoundary( type_header.get( 0 ) );
-    System.out.println( boundary );
     byte[] boundary_bytes = boundary.getBytes();
     int buf_size = boundary_bytes.length * 1024 * 1024;
     try {
@@ -65,6 +61,8 @@ public class Uploader extends Service {
     } finally {
       outs.flush();
       String guid = this.guid();
+      Map<String, String> params = new HashMap<String, String>();
+      params.put( "taskguid", guid );
       try { 
         Path guidRoot = Paths.get( this.storageRoot(), guid );
         Files.createDirectories( guidRoot );
@@ -73,8 +71,7 @@ public class Uploader extends Service {
         ByteBuffer b = ByteBuffer.wrap( outsba );
         fouts.write( b );
         fouts.close();
-        buf.write( guid.getBytes() );
-        buf.close();
+        this.handleGet( e, params );
       } catch ( Exception ex ) {
         System.out.println( this.detailException( ex ) );
       }

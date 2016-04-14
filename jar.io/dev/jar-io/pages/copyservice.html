@@ -1,6 +1,20 @@
 <form method=POST>
-  <input required name=node value="node">
-  <input required name=service1name value="service1">
-  <input required name=service2name value="service2">
+  <input required name=taskguid value=::taskguid>
+  <select required name=service1name>
+    <option value=uploader>Upload</option>
+    <option value=dezipservice>Unzip</option>
+    <option value=mavenbuildservice>Maven Build</option>
+    <option value=buildservice>Java Build</option>
+    <option value=rezipservice>Zip</option>
+    <option value=downloader>Download</option>
+  </select>
+  <select required name=service2name>
+    <option value=uploader>Upload</option>
+    <option value=dezipservice>Unzip</option>
+    <option value=mavenbuildservice>Maven Build</option>
+    <option value=buildservice>Java Build</option>
+    <option value=rezipservice>Zip</option>
+    <option value=downloader>Download</option>
+  </select>
   <button>Copy</button>
 </form>
