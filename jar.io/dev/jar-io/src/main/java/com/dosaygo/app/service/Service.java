@@ -2,6 +2,7 @@ package com.dosaygo.app.service;
 
 import java.lang.Class;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ abstract public class Service implements HttpHandler {
 
   protected Map<String, String> queryToMap(String query){
     Map<String, String> result = new HashMap<String, String> ();
-    query.split( "&" )
+    Arrays.asList( query.split( "&" ) )
       .map( param -> param.split( "=" ) )
       .forEach( pair -> result.put( pair[ 0 ], pair.length > 1 ? pair[ 1 ] : "" ) );
     return result;
@@ -62,7 +63,7 @@ abstract public class Service implements HttpHandler {
   @Override
   public void handle( HttpExchange e ) throws IOException {
     String method = e.getRequestMethod();
-    String uri = e.getRequestURI();
+    String uri = e.getRequestURI().toString();
     System.out.println( method + " " + uri );
     switch( method ) {
       case "GET":   this.handleGet( e ); break;
