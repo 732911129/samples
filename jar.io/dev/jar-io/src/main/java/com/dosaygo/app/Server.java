@@ -77,15 +77,6 @@ public class Server {
       super( storageBase ); 
     }
 
-    @Override
-    public void handleGet( HttpExchange e ) throws IOException {
-      String response = "<a href=/upload>Go to upload</a>";
-      e.sendResponseHeaders( 200, response.length() );
-      OutputStream os = e.getResponseBody();
-      os.write( response.getBytes() );
-      os.close();
-    }
-
     public void handlePost( HttpExchange e ) throws IOException {
       this.handleGet( e );
     }
