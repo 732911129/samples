@@ -38,7 +38,6 @@ abstract public class Service implements HttpHandler {
 
   public Service( String storageBase ) throws IOException {
     this.serviceBase = new File( "." ).getCanonicalPath();
-    System.out.println( this.serviceBase );
     this.storageBase = storageBase;
     this.pageCache = "";
   }
@@ -49,36 +48,26 @@ abstract public class Service implements HttpHandler {
 
 
   protected Map<String, String> queryToMap(String query){
-    Map<String, String> result = new HashMap<String, String>();
-    for (String param : query.split("&")) {
-      String pair[] = param.split("=");
-      if (pair.length>1) {
-        result.put(pair[0], pair[1]);
-      }else{
-        result.put(pair[0], "");
-      }
-    }
+    Map<String, String> result = new HashMap<String, String> ();
+    query.split( "&" )
+      .map( param -> param.split( "=" ) )
+      .forEach( pair -> result.put( pair[ 0 ], pair.length > 1 ? pair[ 1 ] : "" ) );
     return result;
   }
 
   protected void transformParameters( Map<String,String> params ) {
-    // default is not parameter transformation
+    // default is no parameter transformation
   }
 
   @Override
   public void handle( HttpExchange e ) throws IOException {
     String method = e.getRequestMethod();
-    System.out.println( method );
+    String uri = e.getRequestURI();
+    System.out.println( method + " " + uri );
     switch( method ) {
-      case "GET":
-        this.handleGet( e );
-        break;
-      case "POST":
-        this.handlePost( e );
-        break;
-      default:
-          this.handleGet( e );
-          break;
+      case "GET":   this.handleGet( e ); break;
+      case "POST":  this.handlePost( e ); break;
+      default:      this.handleGet( e ); break;
     }
   }
 
@@ -100,23 +89,27 @@ abstract public class Service implements HttpHandler {
   }
 
   public void handleGet( HttpExchange e, Map<String, String> params ) throws IOException {
+    
     if( params == null ) {
       String query = e.getRequestURI().getQuery();
       if( query != null ) {
         params = this.queryToMap( query );
       }
     }
-    String response = this.getHTMLControl();
+    
     Headers h = e.getResponseHeaders(); 
     h.set( "Content-Type", "text/html; charset=utf-8" );
     e.sendResponseHeaders( 200, 0 );
-    OutputStream os = e.getResponseBody();
-    String page = response + this.getHTMLNavigation();
+    
+    String page = this.getHTMLControl() + this.getHTMLNavigation();
     if( params != null ) {
       page = this.template( page, params );
     }
+    
+    OutputStream os = e.getResponseBody();
     os.write( page.getBytes() );
     os.close();
+  
   }
 
   abstract public void handlePost( HttpExchange e ) throws IOException;
@@ -147,16 +140,15 @@ abstract public class Service implements HttpHandler {
   }
 
   protected String getHTMLControl() {
-    try { 
-      if ( this.pageCache == "" ) {
+    if ( this.pageCache == "" ) {
+      try { 
         this.pageCache = this.getHTML( this.name() + ".html" );
+      } catch ( IOException e ) {
+        System.out.println( e );
       }
-    } catch ( IOException e ) {
-      System.out.println( e );
-    } finally { 
-      return this.pageCache;
     }
-  }
+    return this.pageCache;
+}
 
   protected String getHTML( String ... path ) throws IOException {
     Path htmlPath = Paths.get( this.serviceBase, Paths.get( "pages", path ).toString() );
