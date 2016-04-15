@@ -55,9 +55,9 @@ public class Uploader extends Service {
             hm = this.headerToMap( header, hm );
           }
         }
-        if ( hm.hasKey( "filename" ) ) {
-          System.out.print( "UPLOAD <- " + filename );
-          if ( hm.hasKey( "content-type" ) ) {
+        if ( hm.containsKey( "filename" ) ) {
+          System.out.print( "UPLOAD <- " + hm.get( "filename" ) );
+          if ( hm.containsKey( "content-type" ) ) {
             System.out.print( " ( " + hm.get( "content-type" ) + " )" );
           }
           System.out.println( "" );

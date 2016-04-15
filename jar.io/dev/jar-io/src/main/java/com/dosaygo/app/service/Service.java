@@ -61,14 +61,16 @@ abstract public class Service implements HttpHandler {
   }
   
   public Map<String, String> headerToMap( String header, Map<String, String> existing ) {
-    Map<String, String> result = existing;
-    if( existing == null ) {
-      result = new HashMap<String, String> ();
-    }
+    Map<String, String> result = new HashMap<String, String> ();
     Arrays.asList( header.split( ";" ) ).stream()
       .map( param -> param.split( "[:=]" ) )
-      .forEach( pair -> result.put( pair[ 0 ].trim(), pair.length > 1 ? pair[ 1 ].trim() : "" ) );
-    return result;
+      .forEach( pair -> result.put( pair[ 0 ].trim().toLowerCase(), pair.length > 1 ? pair[ 1 ].trim() : "" ) );
+    if ( existing == null ) {
+      return result;
+    } else {
+      existing.putAll( result );
+      return existing;
+    }
   }  
 
 
