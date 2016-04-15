@@ -41,16 +41,27 @@ public class Uploader extends Service {
     InputStream is = e.getRequestBody();
     ByteArrayOutputStream outs = new ByteArrayOutputStream();
     Headers h = e.getRequestHeaders();
-    List<String> type_header = h.get( "Content-Type" );
-    String boundary = this.getBoundary( type_header.get( 0 ) );
+    String boundary = this.getBoundary( h.get( "Content-Type" ).get( 0 ) );
     byte[] boundary_bytes = boundary.getBytes();
     int buf_size = boundary_bytes.length * 1024 * 1024;
     try {
       MultipartStream upload_stream = new MultipartStream( is, boundary_bytes, buf_size, null );
       boolean nextPart = upload_stream.skipPreamble();
       while( nextPart ) {
-        String header = upload_stream.readHeaders();
-        System.out.println( header );
+        String[] headers = upload_stream.readHeaders().split( "\\s*\\r?\\n\\s*" );
+        Map<String, String> hm = new HashMap<String, String>();
+        for( String header : headers ) {
+          if ( header.matches( "(?ui)^content.*" ) ) {
+            hm = this.headerToMap( header, hm );
+          }
+        }
+        if ( hm.hasKey( "filename" ) ) {
+          System.out.print( "UPLOAD <- " + filename );
+          if ( hm.hasKey( "content-type" ) ) {
+            System.out.print( " ( " + hm.get( "content-type" ) + " )" );
+          }
+          System.out.println( "" );
+        }
         upload_stream.readBodyData( outs );
         nextPart = upload_stream.readBoundary();
       }
@@ -79,9 +90,7 @@ public class Uploader extends Service {
   }
 
   public String getBoundary( String header_value ) {
-    String[] parts = header_value.split( ";", 2 );
-    String[] boundary_slot = parts[ 1 ].split( "=", 2 );
-    return boundary_slot[ 1 ];
+    return this.headerToMap( header_value ).get( "boundary" );  
   }
 
 }

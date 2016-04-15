@@ -55,6 +55,22 @@ abstract public class Service implements HttpHandler {
       .forEach( pair -> result.put( pair[ 0 ], pair.length > 1 ? pair[ 1 ] : "" ) );
     return result;
   }
+  
+  public Map<String, String> headerToMap( String header ) {
+    return this.headerToMap( header, null );
+  }
+  
+  public Map<String, String> headerToMap( String header, Map<String, String> existing ) {
+    Map<String, String> result = existing;
+    if( existing == null ) {
+      result = new HashMap<String, String> ();
+    }
+    Arrays.asList( header.split( ";" ) ).stream()
+      .map( param -> param.split( "[:=]" ) )
+      .forEach( pair -> result.put( pair[ 0 ].trim(), pair.length > 1 ? pair[ 1 ].trim() : "" ) );
+    return result;
+  }  
+
 
   protected void transformParameters( Map<String,String> params ) {
     // default is no parameter transformation

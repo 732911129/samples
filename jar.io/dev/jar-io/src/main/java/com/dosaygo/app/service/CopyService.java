@@ -52,7 +52,7 @@ public class CopyService extends RuntimeService {
       this.execute( execute_params );
       Headers h = e.getResponseHeaders(); 
       String redirectTo = "/" + params.get( "next_service" ) + "?taskguid=" + params.get( "taskguid" );
-      System.out.println( "redirect: " + redirectTo );
+      System.out.println( "REDIRECT -> " + redirectTo );
       h.set( "Location", redirectTo );
       e.sendResponseHeaders( 302, -1 );
     } else {
