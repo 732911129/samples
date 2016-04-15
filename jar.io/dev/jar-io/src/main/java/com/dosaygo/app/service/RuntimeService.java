@@ -69,6 +69,7 @@ abstract public class RuntimeService extends Service {
     Path command_dir = Paths.get( this.serviceBase, "service_scripts", platform, this.command() + platform_extension );
     try { 
       ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
+      cmd.inheritIO();
       Files.createDirectories( target_dir );
       cmd.directory( target_dir.toFile() );
       List<String> command_args = cmd.command();
