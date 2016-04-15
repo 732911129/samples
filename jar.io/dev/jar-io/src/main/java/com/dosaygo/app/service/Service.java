@@ -50,7 +50,7 @@ abstract public class Service implements HttpHandler {
 
   protected Map<String, String> queryToMap(String query){
     Map<String, String> result = new HashMap<String, String> ();
-    Arrays.asList( query.split( "&" ) )
+    Arrays.asList( query.split( "&" ) ).stream()
       .map( param -> param.split( "=" ) )
       .forEach( pair -> result.put( pair[ 0 ], pair.length > 1 ? pair[ 1 ] : "" ) );
     return result;
