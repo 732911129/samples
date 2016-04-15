@@ -46,9 +46,12 @@ public class Downloader extends Service {
     try {
       Path zipPath = Paths.get( params.get( "taskguid" ) );
       Headers h = e.getResponseHeaders(); 
-      h.set( "Content-Type", "application/zip, application/octet-stream" );
-      h.set( "Content-Disposition", "attachment; filename=compiled." + guid + ".zip" );
+      String mime = "application/zip, application/octet-stream";
+      h.set( "Content-Type", mime );
+      String filename = "compiled." + guid + ".zip";
+      h.set( "Content-Disposition", "attachment; filename=" + filename );
       e.sendResponseHeaders( 200, 0 );
+      System.out.println( "DOWNLOAD -> " + filename + " ( " + mime + " ) " );
       OutputStream os = e.getResponseBody();
       os.write( Files.readAllBytes( zipPath ) );
       os.flush();
