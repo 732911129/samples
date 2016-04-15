@@ -39,13 +39,13 @@ public class Server {
     folder = folder.replaceFirst( "^~", System.getProperty( "user.home" ) );
     API api = new API();
     api.registerService( "/", new Dispatcher( folder ) );
-    api.registerService( "/upload", new Uploader( folder ) );
-    api.registerService( "/dezip", new DezipService( folder ) );
-    api.registerService( "/copy", new CopyService( folder ) );
-    api.registerService( "/build", new BuildService( folder ) );
-    api.registerService( "/mavenbuild", new MavenBuildService( folder ) );
-    api.registerService( "/rezip", new RezipService( folder ) );
-    api.registerService( "/download", new Downloader( folder ) );
+    api.registerService( "/uploader", new Uploader( folder ) );
+    api.registerService( "/dezipservice", new DezipService( folder ) );
+    api.registerService( "/copyservice", new CopyService( folder ) );
+    api.registerService( "/buildservice", new BuildService( folder ) );
+    api.registerService( "/mavenbuildservice", new MavenBuildService( folder ) );
+    api.registerService( "/rezipservice", new RezipService( folder ) );
+    api.registerService( "/downloader", new Downloader( folder ) );
     api.publish();
 
   }

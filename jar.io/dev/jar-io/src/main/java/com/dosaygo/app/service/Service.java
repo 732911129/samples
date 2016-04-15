@@ -89,6 +89,7 @@ abstract public class Service implements HttpHandler {
 
   public String template( String page, Map<String, String> params ) {
     LinkedList<String> iterations = new LinkedList<String>();
+    params.put( "service_name", this.name() );
     iterations.add( page );
     params.forEach( ( key, value ) -> iterations.add( iterations.getLast().replace( "::" + key, value ) ) );
     return iterations.getLast();

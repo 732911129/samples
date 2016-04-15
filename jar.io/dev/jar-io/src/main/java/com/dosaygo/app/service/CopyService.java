@@ -36,7 +36,7 @@ public class CopyService extends RuntimeService {
 
   @Override
   public void transformParameters( Map<String,String> params ) {
-    List<String> l = new ArrayList<String>( Arrays.asList( "service1name", "service2name" ) );
+    List<String> l = new ArrayList<String>( Arrays.asList( "current_service", "next_service" ) );
     l.forEach( key -> params.put( key, this.getStoragePath( params.get( key ) ) ) );
   }
 
