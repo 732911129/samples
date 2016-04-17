@@ -1,13 +1,15 @@
 package com.dosaygo.app;
 
 import com.dosaygo.app.service.Service;
+import com.dosaygo.app.service.LoginService;
 import com.dosaygo.app.service.Uploader;
-import com.dosaygo.app.service.Downloader;
 import com.dosaygo.app.service.CopyService;
 import com.dosaygo.app.service.DezipService;
 import com.dosaygo.app.service.BuildService;
 import com.dosaygo.app.service.MavenBuildService;
 import com.dosaygo.app.service.RezipService;
+import com.dosaygo.app.service.Downloader;
+import com.dosaygo.app.service.LogoutService;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ public class Server {
     System.out.println( "Working directory: " + folder );
     API api = new API();
     api.registerService( "/", new Dispatcher( folder ) );
+    api.registerService( "/loginservice", new LoginService( folder ) );
     api.registerService( "/uploader", new Uploader( folder ) );
     api.registerService( "/dezipservice", new DezipService( folder ) );
     api.registerService( "/copyservice", new CopyService( folder ) );
@@ -44,6 +47,7 @@ public class Server {
     api.registerService( "/mavenbuildservice", new MavenBuildService( folder ) );
     api.registerService( "/rezipservice", new RezipService( folder ) );
     api.registerService( "/downloader", new Downloader( folder ) );
+    api.registerService( "/logoutservice", new LogoutService( folder ) );
     api.publish();
 
   }

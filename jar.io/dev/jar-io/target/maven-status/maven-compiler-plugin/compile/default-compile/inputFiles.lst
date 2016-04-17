@@ -6,5 +6,7 @@
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/CopyService.java
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/Downloader.java
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/RuntimeService.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/LoginService.java
+/Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/LogoutService.java
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/RezipService.java
 /Users/dosaygo/git/privates/samples/jar.io/dev/jar-io/src/main/java/com/dosaygo/app/service/Service.java
