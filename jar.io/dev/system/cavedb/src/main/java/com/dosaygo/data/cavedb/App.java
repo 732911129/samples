@@ -21,8 +21,8 @@ public class App
 
     public static void main( String[] args ) throws IOException {
         System.out.println( "Starting cave..." );
-        System.out.println( "ARG 0: " + args[ 0 ] );
-        System.out.println( Util.fileToString( args[ 0 ] ) );
+        Util.stringToFile( args[ 0 ], args[ 1 ] );
+        System.out.println( Util.fileToString( args[ 1 ] ) );
     }
 
     public static class Util
@@ -36,6 +36,11 @@ public class App
         return Files
           .lines( Paths.get( "", path ) )
           .collect( Collectors.joining( "\n" ) );
+      }
+
+
+      public static void stringToFile( String data, String... path ) throws IOException {
+        Files.write( Paths.get( "", path ), data.getBytes() );
       }
 
     }
