@@ -1,0 +1,4 @@
+#!/bin/sh
+java -jar cavedb/target/cavedb-1.0-alpha-jar-with-dependencies.jar "$@"
+
+
