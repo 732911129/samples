@@ -1,4 +1,4 @@
-package com.dosaygo.app.jar-io;
+package com.dosaygo.app.jar_io;
 
 import com.dosaygo.data.cavedb.App;
 
