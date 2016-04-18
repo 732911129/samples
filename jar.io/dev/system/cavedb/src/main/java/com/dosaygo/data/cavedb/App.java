@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import static com.dosaygo.data.cavedb.App.CaveObject.*;
+
 
 /**
  * CaveDb
@@ -32,6 +34,19 @@ public class App
       System.out.println( Util.fileToString( "db", dir.toString(), "RAW" ) );
     }
 
+    public static enum CaveObject {
+      DATA, RAW, MEDIA
+    }
+
+    public static interface Encaveable {
+
+      public String toString();
+      public byte[] getBytes();
+      public void fromString( String source );
+      public void fromBytes( byte[] source );
+       
+    }
+
     public static class Util
     {
 
@@ -49,9 +64,7 @@ public class App
 
 
       public static void stringToFile( String data, String... path ) throws IOException {
-        Path filePath = Paths.get( "", path );
-        Files.createDirectories( filePath.getParent() );
-        Files.write( filePath, data.getBytes() );
+        Util.bytesToFile( data.getBytes(), path );
       }
 
       public static String[] divideString( String whole, int[] part_origins ) {
@@ -72,8 +85,21 @@ public class App
         return Util.divideString( guid, Util.GUID_DIVISIONS );
       }
       
-      public static void save( ) {
+      public static void bytesToFile( byte[] data, String... path ) throws IOException {
+        Path filePath = Paths.get( "", path );
+        Files.createDirectories( filePath.getParent() );
+        Files.write( filePath, data );
+      }
 
+      public static void saveObject( CaveObject kind, Object data ) {
+        switch( kind ) {
+          case DATA:
+            break;
+          case MEDIA:
+            break;
+          case RAW:
+            break;
+        }
       }
 
     }
