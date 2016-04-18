@@ -1,0 +1,7 @@
+#!/bin/sh
+#mvn exec:java -Dexec.mainClass=com.dosaygo.app.jar_io.Server -Dexec.args="~/"
+java -jar jar.io/target/jar.io-1.0-alpha-jar-with-dependencies.jar ~/
+
+
+
+

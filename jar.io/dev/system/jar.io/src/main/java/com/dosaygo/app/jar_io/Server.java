@@ -2,16 +2,16 @@ package com.dosaygo.app.jar_io;
 
 import com.dosaygo.data.cavedb.App;
 
-import com.dosaygo.app.service.Service;
-import com.dosaygo.app.service.LoginService;
-import com.dosaygo.app.service.Uploader;
-import com.dosaygo.app.service.CopyService;
-import com.dosaygo.app.service.DezipService;
-import com.dosaygo.app.service.BuildService;
-import com.dosaygo.app.service.MavenBuildService;
-import com.dosaygo.app.service.RezipService;
-import com.dosaygo.app.service.Downloader;
-import com.dosaygo.app.service.LogoutService;
+import com.dosaygo.app.jar_io.service.Service;
+import com.dosaygo.app.jar_io.service.LoginService;
+import com.dosaygo.app.jar_io.service.Uploader;
+import com.dosaygo.app.jar_io.service.CopyService;
+import com.dosaygo.app.jar_io.service.DezipService;
+import com.dosaygo.app.jar_io.service.BuildService;
+import com.dosaygo.app.jar_io.service.MavenBuildService;
+import com.dosaygo.app.jar_io.service.RezipService;
+import com.dosaygo.app.jar_io.service.Downloader;
+import com.dosaygo.app.jar_io.service.LogoutService;
 
 import java.util.Map;
 import java.util.HashMap;

@@ -28,7 +28,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.dosaygo.app.jar-io.Server</mainClass>
+              <mainClass>com.dosaygo.app.jar_io.Server</mainClass>
             </manifest>
           </archive>
         </configuration>

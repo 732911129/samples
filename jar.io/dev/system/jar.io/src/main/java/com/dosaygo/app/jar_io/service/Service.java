@@ -38,7 +38,7 @@ abstract public class Service implements HttpHandler {
   private String pageCache;
 
   public Service( String storageBase ) throws IOException {
-    this.serviceBase = new File( "." ).getCanonicalPath();
+    this.serviceBase = Paths.get( ".", "jar.io" ).toAbsolutePath().toString();
     this.storageBase = storageBase;
     this.pageCache = "";
   }
