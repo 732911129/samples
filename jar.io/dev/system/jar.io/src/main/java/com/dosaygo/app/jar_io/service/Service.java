@@ -1,4 +1,4 @@
-package com.dosaygo.app.jar-io.service;
+package com.dosaygo.app.jar_io.service;
 
 import java.lang.Class;
 

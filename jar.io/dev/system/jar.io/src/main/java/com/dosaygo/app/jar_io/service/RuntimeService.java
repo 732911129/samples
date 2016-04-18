@@ -1,4 +1,4 @@
-package com.dosaygo.app.jar-io.service;
+package com.dosaygo.app.jar_io.service;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
