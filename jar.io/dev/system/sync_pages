@@ -1,0 +1,10 @@
+#!/bin/sh
+files=`find jar.io/pages -type f -name "*.html"`
+for file in $files; do
+  echo Syncing $file to database...
+  filename=$(basename "$file")
+  extension="${filename##*.}"
+  filename="${filename%.*}"
+  ./docave $filename $file
+done
+
