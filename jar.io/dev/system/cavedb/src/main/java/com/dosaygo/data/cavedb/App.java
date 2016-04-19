@@ -23,18 +23,21 @@ public class App
 {
 
     public static void main( String[] args ) throws IOException {
+
       System.out.println( "Starting cave..." );
-      String guid = Util.guid();
-      System.out.println( "GUID: " + guid );
-      String[] path = Util.divideGUID( guid );
-      Path dir = Paths.get( "", path );
-      System.out.println( dir );
-      Util.stringToFile( args[ 0 ], "db", dir.toString(), "RAW" );
-      System.out.println( Util.fileToString( "db", dir.toString(), "RAW" ) );
+      CaveObject obj = new CaveObject( null, DATA, data );
+      Cave c = new Cave( "." );
+      String guid = c.saveObject( obj );
+      System.out.println( obj );
+      System.out.println( guid );
+      System.out.println( c.getObject( guid, DATA ) );
+
     }
 
     public static enum CaveObjectType {
-      DATA, RAW, MEDIA
+
+      DATA, RAW, MEDIA, TYPE
+
     }
 
     public static interface Encaveable {
@@ -134,42 +137,62 @@ public class App
     public static class Media 
     {
 
-      public String[] lines;
+      public final String[] lines;
 
       public Media( String[] lines ) {
         this.lines = lines;
       }
 
+      public Media( List<String> lines ) {
+        this.lines = lines.toArray( new String[ lines.size() ] );
+      }
+
     }
 
-    public static class CaveObject {
+    public static class CaveObject 
+    {
+
+      public final String guid;
       public final CaveObjectType kind;
+      public String type;
       public List<String> data;
       public byte[] raw;
       public Media media;
 
-      private CaveObject( CaveObjectType kind ) {
+      private CaveObject( String guid, CaveObjectType kind ) {
+        if( guid == null ) {
+          guid = Cave.NEW_GUID;
+        }
+        this.guid = guid;
         this.kind = kind;
       }
 
-      public CaveObject( CaveObjectType kind, List<String> data ) {
-        this( kind );
+      public CaveObject( String guid, CaveObjectType kind, String type ) {
+        this( guid, kind );
+        this.type = type;
+      }
+
+      public CaveObject( String guid, CaveObjectType kind, List<String> data ) {
+        this( guid, kind );
         this.data = data;
       }
 
-      public CaveObject( CaveObjectType kind, byte[] raw ) {
-        this( kind );
+      public CaveObject( String guid, CaveObjectType kind, byte[] raw ) {
+        this( guid, kind );
         this.raw = raw;
       }
 
-      public CaveObject( CaveObjectType kind, Media media ) {
-        this( kind );
+      public CaveObject( String guid, CaveObjectType kind, Media media ) {
+        this( guid, kind );
         this.media = media;
       }
+
     }
+
     public static class Cave
     {
 
+      public static final String NEW_GUID = "NEW";
       protected Path pathToCave;
 
       public Cave( String pathToCave ) {
@@ -185,37 +208,59 @@ public class App
         return objectPath;
       }
 
-      public Media getMedia( String guid ) throws IOException {
-        Path path = this.getObjectPath( guid, MEDIA );
-        List<String> lines = Util.fileToLines( path );
-        return new Media( lines.toArray( new String[ lines.size() ] ) );
+      public CaveObject getObject( String guid, CaveObjectType kind ) throws IOException {
+        Path path = this.getObjectPath( guid, kind );
+        List<String> lines;
+        String type;
+        byte[] raw;
+        Media media;
+        CaveObject obj;
+        switch( kind ) {
+          case MEDIA:
+            lines = Util.fileToLines( path );
+            obj = new CaveObject( guid, kind, new Media( lines ) );
+            break;
+          case RAW:
+            raw = Util.fileToBytes( path );
+            obj = new CaveObject( guid, kind, raw );
+            break;
+          case DATA:
+            lines = Util.fileToLines( path );
+            obj = new CaveObject( guid, kind, lines );
+            break;
+          case TYPE:
+            type = Util.fileToString( path );
+            obj = new CaveObject( guid, kind, type );
+            break;
+        }
+        return obj;
       }
 
-      public String getData( String guid ) throws IOException {
-        Path path = this.getObjectPath( guid, DATA );
-        String data = Util.fileToString( path );
-        return data;
-      }
-
-      public byte[] getRaw( String guid ) throws IOException {
-        Path path = this.getObjectPath( guid, RAW );
-        byte[] bytes = Util.fileToBytes( path );
-        return bytes;
-      }
-
-      public void saveMedia( String guid, Media media ) throws IOException {
-        Util.linesToFile( 
-            Arrays.asList( media.lines ), 
-            this.getObjectPath( guid, MEDIA ) 
-          ); 
-      }
-
-      public void saveData( String guid, String data ) throws IOException {
-        Util.stringToFile( data, this.getObjectPath( guid, DATA ) );
-      }
-
-      public void saveRaw( String guid, byte[] raw ) throws IOException {
-        Util.bytesToFile( raw, this.getObjectPath( guid, RAW ) );
+      public String saveObject( CaveObject obj ) throws IOException {
+        String guid = obj.guid;
+        if ( guid == Cave.NEW_GUID ) {
+          guid = Util.guid();
+        }
+        CaveObjectType kind = obj.kind;
+        Path path = this.getObjectPath( guid, kind );
+        switch( kind ) {
+          case MEDIA:
+            Util.linesToFile( 
+                Arrays.asList( obj.media.lines ), 
+                path
+              ); 
+            break;
+          case RAW:
+            Util.bytesToFile( obj.raw, path );
+            break;
+          case DATA:
+            Util.linesToFile( obj.data, path );
+            break;
+          case TYPE:
+            Util.stringToFile( obj.type, path );
+            break;
+        }
+        return guid;
       }
 
     }
