@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.dosaygo.data.cavedb.App.CaveObject.*;
+import static com.dosaygo.data.cavedb.App.CaveObjectType.*;
 
 
 /**
@@ -33,7 +33,7 @@ public class App
       System.out.println( Util.fileToString( "db", dir.toString(), "RAW" ) );
     }
 
-    public static enum CaveObject {
+    public static enum CaveObjectType {
       DATA, RAW, MEDIA
     }
 
@@ -142,6 +142,31 @@ public class App
 
     }
 
+    public static class CaveObject {
+      public final CaveObjectType kind;
+      public List<String> data;
+      public byte[] raw;
+      public Media media;
+
+      private CaveObject( CaveObjectType kind ) {
+        this.kind = kind;
+      }
+
+      public CaveObject( CaveObjectType kind, List<String> data ) {
+        this( kind );
+        this.data = data;
+      }
+
+      public CaveObject( CaveObjectType kind, byte[] raw ) {
+        this( kind );
+        this.raw = raw;
+      }
+
+      public CaveObject( CaveObjectType kind, Media media ) {
+        this( kind );
+        this.media = media;
+      }
+    }
     public static class Cave
     {
 
@@ -151,7 +176,7 @@ public class App
         this.pathToCave = Paths.get( pathToCave ).toAbsolutePath();
       }
 
-      public Path getObjectPath( String guid, CaveObject kind ) {
+      public Path getObjectPath( String guid, CaveObjectType kind ) {
         Path basePath = Paths.get( 
             this.pathToCave.toString(), 
             Util.divideGUID( guid ) 
@@ -194,4 +219,5 @@ public class App
       }
 
     }
+
 }
