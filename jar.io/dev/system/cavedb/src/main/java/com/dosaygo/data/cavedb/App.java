@@ -22,16 +22,18 @@ import static com.dosaygo.data.cavedb.App.CaveObjectType.*;
 public class App 
 {
 
-    public static void main( String[] args ) throws IOException {
+    public static void main( String[] args ) throws IOException, IllegalArgumentException {
 
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
       CaveObject obj = new CaveObject( null, DATA, data );
       Cave c = new Cave( "." );
       String guid = c.saveObject( obj );
+      CaveObject o2 = new CaveObject( guid, RAW, "NEW DATA".getBytes() );
       System.out.println( obj );
       System.out.println( guid );
       System.out.println( c.getObject( guid, DATA ) );
+      c.saveObject( o2 );
 
     }
 
@@ -246,12 +248,25 @@ public class App
         return obj;
       }
 
-      public String saveObject( CaveObject obj ) throws IOException {
+      private void saveType( String guid, CaveObjectType kind ) throws IOException {
+        Path type_path = this.getObjectPath( guid, TYPE );
+        Util.stringToFile( kind.name(), type_path );
+      }
+
+      public String saveObject( CaveObject obj ) throws IOException, IllegalArgumentException {
         String guid = obj.guid;
-        if ( guid == Cave.NEW_GUID ) {
-          guid = Util.guid();
-        }
         CaveObjectType kind = obj.kind;
+        if ( guid == Cave.NEW_GUID ) {
+          // TODO: code to check if GUID exists ? 
+          guid = Util.guid();
+        } else {
+          Path type_path = this.getObjectPath( guid, TYPE );
+          String type = Util.fileToString( type_path );
+          if ( ! type.equals( kind.name() ) ) {
+            throw new IllegalArgumentException( "The object's existing type of " + type + " cannot be changed to a different type " + kind.name() );
+          }
+        }
+        this.saveType( guid, kind );
         Path path = this.getObjectPath( guid, kind );
         switch( kind ) {
           case MEDIA:
