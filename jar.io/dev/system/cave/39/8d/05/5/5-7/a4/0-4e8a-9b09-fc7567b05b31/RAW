@@ -1,0 +1,6 @@
+<form method=POST>
+  Name: <input required name=human>
+  Secret: <input required type=password name=secret>
+  Create? <input type=checkbox name=create>
+  <button>Login</button>
+</form>

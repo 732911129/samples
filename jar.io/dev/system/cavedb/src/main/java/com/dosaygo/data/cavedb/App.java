@@ -55,7 +55,8 @@ public class App
     public static class Util
     {
 
-      static final int[] GUID_DIVISIONS = { 0, 2, 15, 17, 30, 32, 34 };
+      static final int[] GUID_DIVISIONS_V1 = { 0, 2, 15, 17, 30, 32, 34 };
+      static final int[] GUID_DIVISIONS = { 0, 2, 4, 6, 7, 10, 12 };
 
       // guid utils 
         public static String[] divideGUID( String guid ) {
@@ -355,4 +356,5 @@ public class App
       }
 
     }
+
 }

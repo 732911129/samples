@@ -1,0 +1,20 @@
+<form method=POST>
+  <input required name=taskguid value=::taskguid>
+  <select required name=current_service>
+    <option value=uploader>Upload</option>
+    <option value=dezipservice>Unzip</option>
+    <option value=mavenbuildservice>Maven Build</option>
+    <option value=buildservice>Java Build</option>
+    <option value=rezipservice>Zip</option>
+    <option value=downloader>Download</option>
+  </select>
+  <select required name=next_service>
+    <option value=uploader>Upload</option>
+    <option value=dezipservice>Unzip</option>
+    <option value=mavenbuildservice>Maven Build</option>
+    <option value=buildservice>Java Build</option>
+    <option value=rezipservice>Zip</option>
+    <option value=downloader>Download</option>
+  </select>
+  <button>Copy</button>
+</form>
