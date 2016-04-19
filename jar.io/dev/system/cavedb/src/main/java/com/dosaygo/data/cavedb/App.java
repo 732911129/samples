@@ -25,6 +25,7 @@ public class App
     public static void main( String[] args ) throws IOException {
 
       System.out.println( "Starting cave..." );
+      List<String> data = Arrays.asList( args );
       CaveObject obj = new CaveObject( null, DATA, data );
       Cave c = new Cave( "." );
       String guid = c.saveObject( obj );
@@ -193,10 +194,13 @@ public class App
     {
 
       public static final String NEW_GUID = "NEW";
+      public static final String ROOT = "cave";
       protected Path pathToCave;
 
       public Cave( String pathToCave ) {
-        this.pathToCave = Paths.get( pathToCave ).toAbsolutePath();
+        this.pathToCave = Paths
+          .get( pathToCave, Cave.ROOT )
+          .toAbsolutePath();
       }
 
       public Path getObjectPath( String guid, CaveObjectType kind ) {
@@ -210,28 +214,34 @@ public class App
 
       public CaveObject getObject( String guid, CaveObjectType kind ) throws IOException {
         Path path = this.getObjectPath( guid, kind );
-        List<String> lines;
+        List<String> data;
         String type;
         byte[] raw;
         Media media;
         CaveObject obj;
         switch( kind ) {
           case MEDIA:
-            lines = Util.fileToLines( path );
-            obj = new CaveObject( guid, kind, new Media( lines ) );
+            media = new Media( Util.fileToLines( path ) );
+            obj = new CaveObject( guid, kind, media );
             break;
           case RAW:
             raw = Util.fileToBytes( path );
             obj = new CaveObject( guid, kind, raw );
             break;
           case DATA:
-            lines = Util.fileToLines( path );
-            obj = new CaveObject( guid, kind, lines );
+            data = Util.fileToLines( path );
+            obj = new CaveObject( guid, kind, data );
             break;
           case TYPE:
             type = Util.fileToString( path );
             obj = new CaveObject( guid, kind, type );
             break;
+          default:
+            if ( kind == null ) {
+              throw new NullPointerException( "CaveObjectType kind cannot be null." ); 
+            } else {
+              throw new UnsupportedOperationException( "CaveObjectType " + kind.name() + " is not an implemented CaveObject type." );
+            }
         }
         return obj;
       }
