@@ -1,8 +1,12 @@
 package com.dosaygo.data;
 
+import java.io.IOException;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import com.dosaygo.data.cavedb.App;
 
 /**
  * Unit test for simple App.
@@ -31,8 +35,13 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testApp()
+    public void testApp() throws IOException
     {
         assertTrue( true );
+        try { 
+          App.main( "X", "Y" );
+        } catch ( IllegalArgumentException ex ) {
+          System.out.println( "All is well : " + ex );
+        }
     }
 }

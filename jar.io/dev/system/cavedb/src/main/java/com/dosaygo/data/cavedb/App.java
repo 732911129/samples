@@ -22,7 +22,7 @@ import static com.dosaygo.data.cavedb.App.CaveObjectType.*;
 public class App 
 {
 
-    public static void main( String[] args ) throws IOException, IllegalArgumentException {
+    public static void main( String... args ) throws IOException, IllegalArgumentException {
 
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
@@ -137,7 +137,7 @@ public class App
 
     }
 
-    public static class Media 
+    public static final class Media 
     {
 
       public final String[] lines;
@@ -152,7 +152,7 @@ public class App
 
     }
 
-    public static class CaveObject 
+    public static final class CaveObject 
     {
 
       public final String guid;
@@ -192,7 +192,7 @@ public class App
 
     }
 
-    public static class Cave
+    public static final class Cave
     {
 
       public static final String NEW_GUID = "NEW";
