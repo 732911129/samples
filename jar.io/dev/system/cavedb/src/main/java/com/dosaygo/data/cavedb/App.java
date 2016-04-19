@@ -24,16 +24,16 @@ public class App
 
     public static void main( String... args ) throws IOException, IllegalArgumentException {
 
+      System.out.println( "Current working directory: " );
+      System.out.println( Paths.get( "." ).toAbsolutePath().toString() );
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
-      CaveObject obj = new CaveObject( null, DATA, data );
-      Cave c = new Cave( "." );
-      String guid = c.saveObject( obj );
-      CaveObject o2 = new CaveObject( guid, RAW, "NEW DATA".getBytes() );
-      System.out.println( obj );
-      System.out.println( guid );
-      System.out.println( c.getObject( guid, DATA ) );
-      c.saveObject( o2 );
+      CaveAPI api = new CaveAPI( "." );
+      if ( args.length > 1 ) {
+        api.storeFile( args[ 0 ], args[ 1 ] ); 
+      }
+      String file = api.getFileAsString( args[ 0 ] );
+      System.out.println( file );
 
     }
 
@@ -157,6 +157,7 @@ public class App
 
       public final String guid;
       public final CaveObjectType kind;
+      public String name;
       public String type;
       public List<String> data;
       public byte[] raw;
@@ -197,12 +198,20 @@ public class App
 
       public static final String NEW_GUID = "NEW";
       public static final String ROOT = "cave";
+      public static final String NAME_ROOT = "name";
       protected Path pathToCave;
 
       public Cave( String pathToCave ) {
         this.pathToCave = Paths
           .get( pathToCave, Cave.ROOT )
           .toAbsolutePath();
+      }
+
+      private CaveObjectType getKind( String guid ) throws IOException {
+        Path type_path = this.getObjectPath( guid, TYPE );
+        String type = Util.fileToString( type_path );
+        CaveObjectType kind = CaveObjectType.valueOf( type );
+        return kind;
       }
 
       public Path getObjectPath( String guid, CaveObjectType kind ) {
@@ -214,7 +223,8 @@ public class App
         return objectPath;
       }
 
-      public CaveObject getObject( String guid, CaveObjectType kind ) throws IOException {
+      public CaveObject getObject( String guid ) throws IOException {
+        CaveObjectType kind = this.getKind( guid );
         Path path = this.getObjectPath( guid, kind );
         List<String> data;
         String type;
@@ -248,6 +258,22 @@ public class App
         return obj;
       }
 
+      public String guidFromName( String name ) throws IOException {
+        Path namePath = Paths.get( Cave.ROOT, Cave.NAME_ROOT, name );
+        String guid = Util.fileToString( namePath );
+        return guid;
+      }
+
+      public CaveObject objectFromName( String name ) throws IOException {
+        String guid = this.guidFromName( name );
+        return this.getObject( guid );
+      }
+
+      private void saveName( String name, String guid ) throws IOException {
+        Path namePath = Paths.get( Cave.ROOT, Cave.NAME_ROOT, name );
+        Util.stringToFile( guid, namePath );
+      }
+
       private void saveType( String guid, CaveObjectType kind ) throws IOException {
         Path type_path = this.getObjectPath( guid, TYPE );
         Util.stringToFile( kind.name(), type_path );
@@ -267,6 +293,9 @@ public class App
           }
         }
         this.saveType( guid, kind );
+        if ( obj.name != null ) {
+          this.saveName( obj.name, guid );
+        }
         Path path = this.getObjectPath( guid, kind );
         switch( kind ) {
           case MEDIA:
@@ -286,8 +315,44 @@ public class App
             break;
         }
         return guid;
+      } 
+
+    }
+  
+    public static class CaveAPI 
+    {
+      
+      public final Cave db;
+
+      public CaveAPI( String pathToCave ) {
+        this.db = new Cave( pathToCave );
+      }
+
+      public void storeFile( String name, String... path ) throws IOException, IllegalArgumentException {
+        byte[] fileBytes = Util.fileToBytes( path );
+        CaveObject fileObject = new CaveObject( null, RAW, fileBytes );
+        if ( name == null ) {
+          name = Paths.get( "", path ).toString();
+        }
+        fileObject.name = name;
+        this.db.saveObject( fileObject );
+      }
+
+      public byte[] getFileAsBytes( String name, String... path ) throws IOException, IllegalArgumentException {
+        if ( path.length > 0 ) {
+          name = Paths.get( "", path ).toString();
+        }
+        if ( name == null ) {
+          throw new IllegalArgumentException( "getFile must receive a name or path." );
+        }
+        CaveObject fileObject = this.db.objectFromName( name );
+        return fileObject.raw;
+      }
+
+      public String getFileAsString( String name, String... path ) throws IOException, IllegalArgumentException {
+        byte[] fileBytes = this.getFileAsBytes( name, path );
+        return new String( fileBytes );
       }
 
     }
-
 }

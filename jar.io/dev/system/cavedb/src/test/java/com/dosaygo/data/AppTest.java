@@ -37,11 +37,11 @@ public class AppTest
      */
     public void testApp() throws IOException
     {
-        assertTrue( true );
-        try { 
-          App.main( "X", "Y" );
-        } catch ( IllegalArgumentException ex ) {
-          System.out.println( "All is well : " + ex );
-        }
+      assertTrue( true );
+      try { 
+        App.main( "cavedb.pom", "pom.xml" );
+      } catch ( IllegalArgumentException ex ) {
+        System.out.println( "All is well : " + ex );
+      }
     }
 }
