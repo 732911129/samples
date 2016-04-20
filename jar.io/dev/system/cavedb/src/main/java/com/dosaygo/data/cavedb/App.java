@@ -59,6 +59,7 @@ public class App
 
       static final int[] GUID_DIVISIONS_V1 = { 0, 2, 15, 17, 30, 32, 34 };
       static final int[] GUID_DIVISIONS = { 0, 2, 4, 6, 7, 10, 12 };
+      static final Base64.Decoder b64decoder = Base64.getDecoder();
 
       // double utils
         public static byte[] doubleToBytes( double source ) {
@@ -77,7 +78,7 @@ public class App
         }
         
         public static byte[] b64ToBytes( String encoded ) {
-          return Base64.Decoder.decode( encoded );
+          return Util.b64decoder.decode( encoded );
         }
 
       // guid utils 
@@ -177,16 +178,15 @@ public class App
       }
 
       public Slot( String... triple ) throws IllegalArgumentException {
-        if ( triple.length != 3 ) {
-          throw new IllegalArgumentException( "A Slot has 3 parts, and this was given " + triple.length );
-        }
         this( triple[ 0 ], triple[ 1 ], triple[ 2 ] );
       }
 
       public Slot( String base64EncodedSlotLine ) throws IllegalArgumentException {
-        String line = Util.b64ToString( base64EncodedSlotLine );
-        String[] triple = line.split( "\\s+" );
-        this( triple );
+        this( 
+            Util
+              .b64ToString( base64EncodedSlotLine )
+              .split( "\\s+", 3 )
+          );
       }
 
       public Media media() {
@@ -201,7 +201,7 @@ public class App
         return Util.b64ToString( this.value );
       }
 
-      public double double() {
+      public double number() {
         return Util.bytesToDouble( this.bytes() );
       }
 
@@ -215,6 +215,10 @@ public class App
     {
 
       public final String[] lines;
+
+      public Media( String source ) {
+        this.lines = source.split( "\\r?\\n" );
+      }
 
       public Media( String[] lines ) {
         this.lines = lines;
