@@ -34,18 +34,19 @@ public class App
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
       CaveAPI api = new CaveAPI( "." );
-      if ( args[ 0 ] == "raw" ) { 
+      if ( "raw".equals( args[ 0 ] ) ) { 
         if ( args.length > 2 ) {
           api.storeFile( args[ 1 ], args[ 2 ] ); 
         }
         String file = api.getFileAsString( args[ 1 ] );
         System.out.println( file );
-      } else if ( args[ 0 ] == "media" ) {
+      } else if ( "media".equals( args[ 0 ] ) ) {
         if ( args.length > 2 ) {
           api.storeMedia( args[ 1 ], args[ 2 ] ); 
         }
         Media media = api.getMedia( args[ 1 ] );
         System.out.println( media );
+        System.out.println( media.getSlot( "age" ) );
       }
 
     }
@@ -230,6 +231,7 @@ public class App
       
       private void makeSlot( String line ) throws IllegalArgumentException {
         if ( line.trim().length() > 0 ) {
+          System.out.println( line );
           Slot s = new Slot( line );
           this.slotsByName.put( s.slotName, s );
           this.slots.add( s );
@@ -246,6 +248,8 @@ public class App
         this.slotsByName = new HashMap<String,Slot>();
         this.typeName = this.lines[ 0 ];
         Arrays.asList( this.lines )
+          .stream()
+          .skip( 1 )
           .forEach( line -> this.makeSlot( line ) ); 
       }
 
@@ -441,7 +445,8 @@ public class App
 
       public void storeMedia( String name, String... path ) throws IOException, IllegalArgumentException {
         List<String> lines = Util.fileToLines( path );
-        CaveObject mediaObject = new CaveObject( null, MEDIA, lines );
+        Media media = new Media( lines );
+        CaveObject mediaObject = new CaveObject( null, MEDIA, media );
         if ( name == null ) {
           name = Paths.get( "", path ).toString();
         }
@@ -449,10 +454,9 @@ public class App
         this.db.saveObject( mediaObject );
       }
 
-      public Media getMedia( String name, String... path ) throws IOException, IllegalArgumentException {
-        String file = this.getFileAsString( name, path );
-        Media m = new Media( file );
-        return m;
+      public Media getMedia( String name ) throws IOException, IllegalArgumentException {
+        CaveObject obj = this.db.objectFromName( name );
+        return obj.media;
       }
 
       public void storeFile( String name, String... path ) throws IOException, IllegalArgumentException {
@@ -477,6 +481,10 @@ public class App
       }
 
       public String getFileAsString( String name, String... path ) throws IOException, IllegalArgumentException {
+        System.out.println( name );
+        for( String p : path ) {
+          System.out.println( p );
+        }
         byte[] fileBytes = this.getFileAsBytes( name, path );
         return new String( fileBytes );
       }
