@@ -45,19 +45,9 @@ public class App
 
     }
 
-    public static interface Encaveable {
-
-      public String toString();
-      public byte[] getBytes();
-      public void fromString( String source );
-      public void fromBytes( byte[] source );
-       
-    }
-
     public static class Util
     {
 
-      static final int[] GUID_DIVISIONS_V1 = { 0, 2, 15, 17, 30, 32, 34 };
       static final int[] GUID_DIVISIONS = { 0, 2, 4, 6, 7, 10, 12 };
       static final Base64.Decoder b64decoder = Base64.getDecoder();
 
