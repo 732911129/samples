@@ -177,7 +177,7 @@ public class App
         this.value = value;
       }
 
-      public Slot( String... triple ) throws IllegalArgumentException {
+      public Slot( String[] triple ) throws IllegalArgumentException {
         this( triple[ 0 ], triple[ 1 ], triple[ 2 ] );
       }
 
