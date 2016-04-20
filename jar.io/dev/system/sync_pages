@@ -5,6 +5,6 @@ for file in $files; do
   filename=$(basename "$file")
   extension="${filename##*.}"
   filename="${filename%.*}"
-  ./docave $filename $file
+  ./docave raw $filename $file
 done
 

@@ -9,6 +9,9 @@ import java.io.IOException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Base64;
@@ -31,11 +34,19 @@ public class App
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
       CaveAPI api = new CaveAPI( "." );
-      if ( args.length > 1 ) {
-        api.storeFile( args[ 0 ], args[ 1 ] ); 
+      if ( args[ 0 ] == "raw" ) { 
+        if ( args.length > 2 ) {
+          api.storeFile( args[ 1 ], args[ 2 ] ); 
+        }
+        String file = api.getFileAsString( args[ 1 ] );
+        System.out.println( file );
+      } else if ( args[ 0 ] == "media" ) {
+        if ( args.length > 2 ) {
+          api.storeMedia( args[ 1 ], args[ 2 ] ); 
+        }
+        Media media = api.getMedia( args[ 1 ] );
+        System.out.println( media );
       }
-      String file = api.getFileAsString( args[ 0 ] );
-      System.out.println( file );
 
     }
 
@@ -171,12 +182,12 @@ public class App
         this( triple[ 0 ], triple[ 1 ], triple[ 2 ] );
       }
 
-      public Slot( String base64EncodedSlotLine ) throws IllegalArgumentException {
-        this( 
-            Util
-              .b64ToString( base64EncodedSlotLine )
-              .split( "\\s+", 3 )
-          );
+      public Slot( String normalLine ) throws IllegalArgumentException {
+        this( normalLine.split( "\\s+", 3 ) );
+      }
+
+      public static Slot b64ToSlot( String base64EncodedSlotLine ) throws IllegalArgumentException {
+        return new Slot( Util.b64ToString( base64EncodedSlotLine ) );
       }
 
       public Media media() {
@@ -198,24 +209,56 @@ public class App
       public byte[] bytes() {
         return Util.b64ToBytes( this.value ); 
       }
+      
+      public String toString() {
+        return this.slotName + " " + this.typeName + " " + this.value;
+      }
 
     }
 
     public static final class Media 
     {
 
+      public final String typeName;
       public final String[] lines;
+      public final List<Slot> slots;
+      public final Map<String,Slot> slotsByName;
 
-      public Media( String source ) {
-        this.lines = source.split( "\\r?\\n" );
+      public Media( String source ) throws IllegalArgumentException {
+        this( source.split( "\\r?\\n" ) );
+      }
+      
+      private void makeSlot( String line ) throws IllegalArgumentException {
+        if ( line.trim().length() > 0 ) {
+          Slot s = new Slot( line );
+          this.slotsByName.put( s.slotName, s );
+          this.slots.add( s );
+        }
       }
 
-      public Media( String[] lines ) {
+      public Slot getSlot( String name ) {
+        return this.slotsByName.get( name );
+      }
+
+      public Media( String[] lines ) throws IllegalArgumentException {
         this.lines = lines;
+        this.slots = new ArrayList<Slot>();
+        this.slotsByName = new HashMap<String,Slot>();
+        this.typeName = this.lines[ 0 ];
+        Arrays.asList( this.lines )
+          .forEach( line -> this.makeSlot( line ) ); 
       }
 
       public Media( List<String> lines ) {
-        this.lines = lines.toArray( new String[ lines.size() ] );
+        this( lines.toArray( new String[ lines.size() ] ) );
+      }
+      
+      public String toString() {
+        return this.typeName + "\n" + 
+          this.slots
+            .stream()
+            .map( slot -> slot.toString() )
+            .collect( Collectors.joining( "\n" ) );
       }
 
     }
@@ -394,6 +437,22 @@ public class App
 
       public CaveAPI( String pathToCave ) {
         this.db = new Cave( pathToCave );
+      }
+
+      public void storeMedia( String name, String... path ) throws IOException, IllegalArgumentException {
+        List<String> lines = Util.fileToLines( path );
+        CaveObject mediaObject = new CaveObject( null, MEDIA, lines );
+        if ( name == null ) {
+          name = Paths.get( "", path ).toString();
+        }
+        mediaObject.name = name;
+        this.db.saveObject( mediaObject );
+      }
+
+      public Media getMedia( String name, String... path ) throws IOException, IllegalArgumentException {
+        String file = this.getFileAsString( name, path );
+        Media m = new Media( file );
+        return m;
       }
 
       public void storeFile( String name, String... path ) throws IOException, IllegalArgumentException {
