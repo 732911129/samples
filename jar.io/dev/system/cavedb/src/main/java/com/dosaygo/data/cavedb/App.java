@@ -1,5 +1,6 @@
 package com.dosaygo.data.cavedb;
 
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Base64;
 
 import static com.dosaygo.data.cavedb.App.CaveObjectType.*;
 
@@ -57,6 +59,26 @@ public class App
 
       static final int[] GUID_DIVISIONS_V1 = { 0, 2, 15, 17, 30, 32, 34 };
       static final int[] GUID_DIVISIONS = { 0, 2, 4, 6, 7, 10, 12 };
+
+      // double utils
+        public static byte[] doubleToBytes( double source ) {
+          byte[] bytes = new byte[ 8 ];
+          ByteBuffer.wrap( bytes ).putDouble( source );
+          return bytes;
+        }
+
+        public static double bytesToDouble( byte[] source ) {
+          return ByteBuffer.wrap( source ).getDouble();
+        }
+
+      // base64 utils
+        public static String b64ToString( String encoded ) {
+          return new String( Util.b64ToBytes( encoded ) );
+        }
+        
+        public static byte[] b64ToBytes( String encoded ) {
+          return Base64.Decoder.decode( encoded );
+        }
 
       // guid utils 
         public static String[] divideGUID( String guid ) {
@@ -135,6 +157,57 @@ public class App
         public static void linesToFile( List<String> lines, String...path ) throws IOException {
           Util.linesToFile( lines, Paths.get( "", path ) );
         }
+
+    }
+
+    public static final class Slot 
+    {
+
+      public final String typeName;
+      public final String slotName;
+      public final String value;
+
+      public Slot( String slotName, String typeName, String value ) throws IllegalArgumentException {
+        if( slotName == null || typeName == null || value == null ) {
+          throw new IllegalArgumentException( "A Slot has all String parts, and the parts here were : " + slotName + ", " + typeName + ", " + value );
+        }
+        this.slotName = slotName;
+        this.typeName = typeName;
+        this.value = value;
+      }
+
+      public Slot( String... triple ) throws IllegalArgumentException {
+        if ( triple.length != 3 ) {
+          throw new IllegalArgumentException( "A Slot has 3 parts, and this was given " + triple.length );
+        }
+        this( triple[ 0 ], triple[ 1 ], triple[ 2 ] );
+      }
+
+      public Slot( String base64EncodedSlotLine ) throws IllegalArgumentException {
+        String line = Util.b64ToString( base64EncodedSlotLine );
+        String[] triple = line.split( "\\s+" );
+        this( triple );
+      }
+
+      public Media media() {
+        return new Media( this.multilineString() );
+      }
+
+      public String string() {
+        return this.value;
+      }
+
+      public String multilineString() {
+        return Util.b64ToString( this.value );
+      }
+
+      public double double() {
+        return Util.bytesToDouble( this.bytes() );
+      }
+
+      public byte[] bytes() {
+        return Util.b64ToBytes( this.value ); 
+      }
 
     }
 
