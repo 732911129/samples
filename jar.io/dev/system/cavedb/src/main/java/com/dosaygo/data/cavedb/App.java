@@ -33,18 +33,19 @@ public class App
       System.out.println( Paths.get( "." ).toAbsolutePath().toString() );
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
-      CaveAPI api = new CaveAPI( "." );
+      CaveFileAPI api = new CaveFileAPI( "." );
       if ( "raw".equals( args[ 0 ] ) ) { 
         if ( args.length > 2 ) {
-          api.storeFile( args[ 1 ], args[ 2 ] ); 
+          api.storeRawFile( args[ 1 ], args[ 2 ] ); 
         }
         String file = api.getFileAsString( args[ 1 ] );
         System.out.println( file );
       } else if ( "media".equals( args[ 0 ] ) ) {
         if ( args.length > 2 ) {
-          api.storeMedia( args[ 1 ], args[ 2 ] ); 
+          api.storeMediaFile( args[ 1 ], args[ 2 ] ); 
         }
-        Media media = api.getMedia( args[ 1 ] );
+        CaveObjectAPI objApi = new CaveObjectAPI( "." );
+        Media media = objApi.getMedia( args[ 1 ] );
         System.out.println( media );
         System.out.println( media.getSlot( "age" ) );
       }
@@ -434,59 +435,86 @@ public class App
 
     }
   
-    public static class CaveAPI 
+    public static class CaveObjectAPI 
     {
       
       public final Cave db;
 
-      public CaveAPI( String pathToCave ) {
+      public CaveObjectAPI( String pathToCave ) {
         this.db = new Cave( pathToCave );
       }
 
-      public void storeMedia( String name, String... path ) throws IOException, IllegalArgumentException {
-        List<String> lines = Util.fileToLines( path );
-        Media media = new Media( lines );
+      public String storeData( String name, List<String> data ) throws IOException, IllegalArgumentException {
+        CaveObject dataObject = new CaveObject( null, DATA, data );
+        dataObject.name = name;
+        String guid = this.db.saveObject( dataObject );
+        return guid;
+      }
+
+      public List<String> getData( String name ) throws IOException, IllegalArgumentException {
+        CaveObject dataObject = this.db.objectFromName( name );
+        return dataObject.data;
+      }
+
+      public String storeMedia( String name, Media media ) throws IOException, IllegalArgumentException {
         CaveObject mediaObject = new CaveObject( null, MEDIA, media );
-        if ( name == null ) {
-          name = Paths.get( "", path ).toString();
-        }
         mediaObject.name = name;
-        this.db.saveObject( mediaObject );
+        String guid = this.db.saveObject( mediaObject );
+        return guid;
       }
 
       public Media getMedia( String name ) throws IOException, IllegalArgumentException {
-        CaveObject obj = this.db.objectFromName( name );
-        return obj.media;
+        CaveObject mediaObject = this.db.objectFromName( name );
+        return mediaObject.media;
       }
 
-      public void storeFile( String name, String... path ) throws IOException, IllegalArgumentException {
-        byte[] fileBytes = Util.fileToBytes( path );
-        CaveObject fileObject = new CaveObject( null, RAW, fileBytes );
-        if ( name == null ) {
+      public String storeRaw( String name, byte[] raw ) throws IOException, IllegalArgumentException {
+        CaveObject rawObject = new CaveObject( null, RAW, raw );
+        rawObject.name = name;
+        String guid = this.db.saveObject( rawObject );
+        return guid;
+      }
+
+      public byte[] getRaw( String name ) throws IOException, IllegalArgumentException {
+        CaveObject rawObject = this.db.objectFromName( name );
+        return rawObject.raw;
+       }
+
+    }
+
+    public static class CaveFileAPI
+    {
+      
+      public final Cave cave;
+
+      public CaveFileAPI( String pathToCave ) {
+        this.cave = new CaveObjectAPI( pathToCave );
+      }
+
+      protected static String nameFromPath( String name, String... path ) {
+        if( name == null || name.length() == 0 ) {
           name = Paths.get( "", path ).toString();
         }
-        fileObject.name = name;
-        this.db.saveObject( fileObject );
+        return name;
       }
 
-      public byte[] getFileAsBytes( String name, String... path ) throws IOException, IllegalArgumentException {
-        if ( path.length > 0 ) {
-          name = Paths.get( "", path ).toString();
-        }
-        if ( name == null ) {
-          throw new IllegalArgumentException( "getFile must receive a name or path." );
-        }
-        CaveObject fileObject = this.db.objectFromName( name );
-        return fileObject.raw;
+      public String storeMediaFile( String name, String... path ) {
+        name = CaveFileAPI.nameOrNameFromPath( name, path );
+        String file = Util.fileToString( path );
+        Media media = new Media( file );
+        return this.cave.storeMedia( name, media ); 
       }
 
-      public String getFileAsString( String name, String... path ) throws IOException, IllegalArgumentException {
-        System.out.println( name );
-        for( String p : path ) {
-          System.out.println( p );
-        }
-        byte[] fileBytes = this.getFileAsBytes( name, path );
-        return new String( fileBytes );
+      public String storeDataFile( String name, String... path ) {
+        name = CaveFileAPI.nameOrNameFromPath( name, path );
+        List<String> data = Util.fileToLines( path );
+        return this.cave.storeData( name, data ); 
+      }
+
+      public String storeRawFile( String name, String... path ) {
+        name = CaveFileAPI.nameOrNameFromPath( name, path );
+        byte[] raw = Util.fileToBytes( path );
+        return this.cave.storeRaw( name, raw );
       }
 
     }
