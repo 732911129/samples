@@ -34,17 +34,17 @@ public class App
       System.out.println( "Starting cave..." );
       List<String> data = Arrays.asList( args );
       CaveFileAPI api = new CaveFileAPI( "." );
+      CaveObjectAPI objApi = new CaveObjectAPI( "." );
       if ( "raw".equals( args[ 0 ] ) ) { 
         if ( args.length > 2 ) {
           api.storeRawFile( args[ 1 ], args[ 2 ] ); 
         }
-        String file = api.getFileAsString( args[ 1 ] );
-        System.out.println( file );
+        byte[] file = objApi.getRaw( args[ 1 ] );
+        System.out.println( new String( file ) );
       } else if ( "media".equals( args[ 0 ] ) ) {
         if ( args.length > 2 ) {
           api.storeMediaFile( args[ 1 ], args[ 2 ] ); 
         }
-        CaveObjectAPI objApi = new CaveObjectAPI( "." );
         Media media = objApi.getMedia( args[ 1 ] );
         System.out.println( media );
         System.out.println( media.getSlot( "age" ) );
@@ -232,7 +232,6 @@ public class App
       
       private void makeSlot( String line ) throws IllegalArgumentException {
         if ( line.trim().length() > 0 ) {
-          System.out.println( line );
           Slot s = new Slot( line );
           this.slotsByName.put( s.slotName, s );
           this.slots.add( s );
@@ -485,33 +484,33 @@ public class App
     public static class CaveFileAPI
     {
       
-      public final Cave cave;
+      public final CaveObjectAPI cave;
 
       public CaveFileAPI( String pathToCave ) {
         this.cave = new CaveObjectAPI( pathToCave );
       }
 
-      protected static String nameFromPath( String name, String... path ) {
+      protected static String nameOrNameFromPath( String name, String... path ) {
         if( name == null || name.length() == 0 ) {
           name = Paths.get( "", path ).toString();
         }
         return name;
       }
 
-      public String storeMediaFile( String name, String... path ) {
+      public String storeMediaFile( String name, String... path ) throws IOException {
         name = CaveFileAPI.nameOrNameFromPath( name, path );
         String file = Util.fileToString( path );
         Media media = new Media( file );
         return this.cave.storeMedia( name, media ); 
       }
 
-      public String storeDataFile( String name, String... path ) {
+      public String storeDataFile( String name, String... path ) throws IOException {
         name = CaveFileAPI.nameOrNameFromPath( name, path );
         List<String> data = Util.fileToLines( path );
         return this.cave.storeData( name, data ); 
       }
 
-      public String storeRawFile( String name, String... path ) {
+      public String storeRawFile( String name, String... path ) throws IOException {
         name = CaveFileAPI.nameOrNameFromPath( name, path );
         byte[] raw = Util.fileToBytes( path );
         return this.cave.storeRaw( name, raw );
