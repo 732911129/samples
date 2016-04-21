@@ -518,4 +518,38 @@ public class App
 
     }
 
+    public static class CaveHumanAPI
+    {
+
+      public final CaveObjectAPI objects;
+
+      public CaveHumanAPI( String pathToCave ) {
+        this.objects = new CaveObjectAPI( pathToCave );
+      }
+
+      public void newHuman( String handle, String firstName, String password ) throws IOException {
+        List<String> data = new ArrayList<String>();
+        data.add( "handle string " + handle );
+        data.add( "firstName string " + firstName );
+        data.add( "firstName string " + firstName );
+        data.add( "password string " + password );
+        Media m = new Media( data );
+        this.objects.storeMedia( handle, m );
+      }
+
+      public String getHumanFirstName( String handle ) throws IOException {
+        Media media = this.objects.getMedia( handle );
+        String firstName = media.getSlot( "firstName" ).string();
+        return firstName;
+      }
+
+      public boolean testHumanPassword( String handle, String testPassword ) throws IOException {
+
+        Media media = this.objects.getMedia( handle );
+        String password = media.getSlot( "password" ).string();
+        return testPassword.equals( password );
+      }
+
+    }
+
 }
