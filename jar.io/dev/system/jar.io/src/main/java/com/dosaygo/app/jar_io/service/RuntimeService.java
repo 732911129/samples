@@ -38,8 +38,7 @@ abstract public class RuntimeService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
-    String body = this.streamToString( e.getRequestBody() );
-    Map<String, String> params = this.queryToMap( body );
+    Map<String, String> params = this.bodyParams( e );
     Map<String, String> execute_params = new HashMap<String, String>( params );
     this.execute( execute_params );
     this.handleGet( e, params );

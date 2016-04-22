@@ -545,9 +545,19 @@ public class App
 
       public boolean testHumanPassword( String handle, String testPassword ) throws IOException {
 
-        Media media = this.objects.getMedia( handle );
-        String password = media.getSlot( "password" ).string();
-        return testPassword.equals( password );
+        boolean correct = false;
+        try { 
+          Media media = this.objects.getMedia( handle );
+          String password = media.getSlot( "password" ).string();
+          correct = testPassword.equals( password );
+        } catch ( IOException e ) {
+          System.out.println( "[ IOException. No such human ? ]" + handle + ", " + testPassword );    
+        } finally {
+          if ( ! correct ) {
+            System.out.println( "Incorrect login attempt: " + handle + ", " + testPassword );    
+          }
+          return correct;
+        }
       }
 
     }

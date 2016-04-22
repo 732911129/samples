@@ -1,6 +1,6 @@
 package com.dosaygo.app.jar_io.service;
 
-import com.dosaygo.data.cavedb.App.Cave.CaveHumanAPI;
+import com.dosaygo.data.cavedb.App.CaveHumanAPI;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -34,7 +34,40 @@ public class LoginService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
-    this.handleGet( e );
+    try { 
+      Map<String, String> params = this.bodyParams( e );
+      String handle = params.get( "handle" );
+      String password = params.get( "password" );
+      String create = params.get( "create" );
+      boolean login = false;
+      if ( create == null ) {
+        if ( handle != null && password != null ) {
+          login = this.humans.testHumanPassword( handle, password ); 
+        }
+      } else {
+        // SECURITY: Check if human exists first.
+          // And only if the human does not exist
+          // create a new human and set login true.
+          // Otherwise overwrite is possible. 
+        String name = params.get( "name" );
+        this.humans.newHuman( handle, name, password );
+        login = true;
+      }
+      if ( login ) {
+        // SECURITY : lovely insecure forgeable cookie
+          // So deliciously insecure.
+        this.cookies.put( "JARIOLOGIN", "YES" + handle );
+        this.preface = "LOGGED IN! Hello, " + this.humans.getHumanFirstName( handle );
+      } else {
+        this.cookies.put( "JARIOLOGIN", "NO" );
+        this.preface = "NOT LOGGED IN!";
+      }
+      this.handleGet( e );
+    } catch ( Exception ex ) {
+      System.out.println( this.detailThrowable ( ex ) );
+    } catch ( Error er ) {
+      System.out.println( this.detailThrowable ( er ) );
+    }
   }
 
 }

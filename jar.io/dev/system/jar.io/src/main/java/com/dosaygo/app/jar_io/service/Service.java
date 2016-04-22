@@ -36,8 +36,12 @@ abstract public class Service implements HttpHandler {
   protected String serviceBase;
   protected String storageBase;
   private String pageCache;
+  protected String preface;
+  protected final Map<String, String> cookies;
 
   public Service( String storageBase ) throws IOException {
+    this.cookies = new HashMap<String, String> ();
+    this.preface = "";
     this.serviceBase = Paths.get( ".", "jar.io" ).toAbsolutePath().toString();
     this.storageBase = storageBase;
     this.pageCache = "";
@@ -47,8 +51,12 @@ abstract public class Service implements HttpHandler {
     return UUID.randomUUID().toString();
   }
 
-
   protected Map<String, String> queryToMap(String query){
+    // SECURITY: sanitise params at this point
+      // If different services have differing requiremments 
+      // then include a HTTP context in this method to determine
+      // the santiszation requirements on a per request and service context
+      // basis
     Map<String, String> result = new HashMap<String, String> ();
     Arrays.asList( query.split( "&" ) ).stream()
       .map( param -> param.split( "=" ) )
@@ -80,6 +88,8 @@ abstract public class Service implements HttpHandler {
 
   @Override
   public void handle( HttpExchange e ) throws IOException {
+    this.cookies.clear();
+    this.preface = "";
     String method = e.getRequestMethod();
     String uri = e.getRequestURI().toString();
     System.out.println( method + " " + uri );
@@ -88,6 +98,10 @@ abstract public class Service implements HttpHandler {
       case "POST":  this.handlePost( e ); break;
       default:      this.handleGet( e ); break;
     }
+  }
+
+  public String getPreface() {
+    return this.preface;
   }
 
   public String name() {
@@ -107,20 +121,24 @@ abstract public class Service implements HttpHandler {
     this.handleGet( e, null );
   }
 
+  public void goHeaders( int status, HttpExchange e ) throws IOException {
+    Headers h = e.getResponseHeaders(); 
+    h.set( "Content-Type", "text/html; charset=utf-8" );
+    this.cookies.forEach( ( key, value ) -> {
+      h.set( "Set-Cookie", key + "=" + value + "; path=/; HttpOnly" );
+    } );
+    e.sendResponseHeaders( status, 0 );
+  }
+
   public void handleGet( HttpExchange e, Map<String, String> params ) throws IOException {
     
     if( params == null ) {
-      String query = e.getRequestURI().getQuery();
-      if( query != null ) {
-        params = this.queryToMap( query );
-      }
+      params = this.uriParams( e );
     }
     
-    Headers h = e.getResponseHeaders(); 
-    h.set( "Content-Type", "text/html; charset=utf-8" );
-    e.sendResponseHeaders( 200, 0 );
+    this.goHeaders( 200, e );
     
-    String page = this.getHTMLControl() + this.getHTMLNavigation();
+    String page = this.getPreface() + this.getHTMLControl() + this.getHTMLNavigation();
     if( params != null ) {
       page = this.template( page, params );
     }
@@ -141,10 +159,32 @@ abstract public class Service implements HttpHandler {
     return this.getStoragePath( this.name() );
   }
 
-  public String detailException ( Exception e ) {
+  public Map<String, String> bodyParams( HttpExchange e ) throws IOException {
+    Map<String, String> params = new HashMap<String, String> ();
+    String body = this.streamToString( e.getRequestBody() );
+    if ( body != null ) {
+      params = this.queryToMap( body );
+    }
+    return params;
+  }
+
+  public Map<String, String> uriParams( HttpExchange e ) throws IOException {
+    Map<String, String> params = new HashMap<String, String> ();
+    String query = e.getRequestURI().getQuery();
+    if( query != null ) {
+      params = this.queryToMap( query );
+    }
+    return params;
+  }
+
+  public String detailException ( Throwable e ) {
     StringWriter sw = new StringWriter();
     e.printStackTrace( new PrintWriter( sw ) );
     return sw.toString();
+  }
+
+  public String detailThrowable( Throwable e ) {
+    return this.detailException( e );
   }
 
   public String streamToString( InputStream is ) throws IOException {
