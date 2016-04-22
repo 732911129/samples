@@ -1,5 +1,7 @@
 package com.dosaygo.app.jar_io.service;
 
+import com.dosaygo.data.cavedb.App.Cave.CaveHumanAPI;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +26,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class LoginService extends Service {
 
+  public final CaveHumanAPI humans;
+
   public LoginService( String storageBase ) throws IOException {
     super( storageBase );
+    this.humans = new CaveHumanAPI( "." );
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
