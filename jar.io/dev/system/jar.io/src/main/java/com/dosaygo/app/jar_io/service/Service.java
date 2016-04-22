@@ -67,7 +67,7 @@ abstract public class Service implements HttpHandler {
     return result;
   }
   
-  public void cookiesToMap( HttpExchange e, Map<String, String> cookies ) {
+  public void clientCookiesToMap( HttpExchange e, Map<String, String> cookies ) {
     Map<String, List<String>> headers = e.getRequestHeaders();
     List<String> cookieHeaders = headers.get( "cookie" );
     if ( cookieHeaders != null ) {
@@ -113,7 +113,7 @@ abstract public class Service implements HttpHandler {
     try { 
       this.cookies.clear();
       this.inCookies.clear();
-      this.cookiesToMap( e, this.inCookies );
+      this.clientCookiesToMap( e, this.inCookies );
       this.preface = "";
       String method = e.getRequestMethod();
       String uri = e.getRequestURI().toString();
