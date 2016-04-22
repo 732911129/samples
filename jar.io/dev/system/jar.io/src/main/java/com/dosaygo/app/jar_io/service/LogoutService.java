@@ -29,6 +29,8 @@ public class LogoutService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
+    this.cookies.put( "JARIOLOGIN", "NO" );
+    this.preface = "LOGGED OUT";
     this.handleGet( e );
   }
 
