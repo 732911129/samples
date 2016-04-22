@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.LinkedList;
 
 import java.io.File;
@@ -37,16 +38,18 @@ abstract public class Service implements HttpHandler {
   protected String storageBase;
   private String pageCache;
   protected String preface;
+  protected final Map<String, String> inCookies;
   protected final Map<String, String> cookies;
 
   public Service( String storageBase ) throws IOException {
+    this.inCookies = new HashMap<String, String> ();
     this.cookies = new HashMap<String, String> ();
     this.preface = "";
     this.serviceBase = Paths.get( ".", "jar.io" ).toAbsolutePath().toString();
     this.storageBase = storageBase;
     this.pageCache = "";
   }
-
+  
   protected String guid() {
     return UUID.randomUUID().toString();
   }
@@ -62,6 +65,21 @@ abstract public class Service implements HttpHandler {
       .map( param -> param.split( "=" ) )
       .forEach( pair -> result.put( pair[ 0 ], pair.length > 1 ? pair[ 1 ] : "" ) );
     return result;
+  }
+  
+  public void cookiesToMap( HttpExchange e, Map<String, String> cookies ) {
+    Map<String, List<String>> headers = e.getRequestHeaders();
+    List<String> cookieHeaders = headers.get( "cookie" );
+    if ( cookieHeaders != null ) {
+      cookieHeaders.stream()
+        .map( cookieHeader -> cookieHeader.split( "\\s*;\\s*" ) )
+        .map( cookieArray -> Arrays.asList( cookieArray ) )
+        .forEach( cookieList -> {
+            cookieList.stream()
+              .map( keyValue -> keyValue.split( "\\s*=\\s*" ) )
+              .forEach( pair -> cookies.put( pair[ 0 ], pair[ 1 ] ) );
+          } );
+    }
   }
   
   public Map<String, String> headerToMap( String header ) {
@@ -88,15 +106,25 @@ abstract public class Service implements HttpHandler {
 
   @Override
   public void handle( HttpExchange e ) throws IOException {
-    this.cookies.clear();
-    this.preface = "";
-    String method = e.getRequestMethod();
-    String uri = e.getRequestURI().toString();
-    System.out.println( method + " " + uri );
-    switch( method ) {
-      case "GET":   this.handleGet( e ); break;
-      case "POST":  this.handlePost( e ); break;
-      default:      this.handleGet( e ); break;
+    // SECURITY
+      // Check if JARIOSESSION cookie is set
+      // and retrieve the session object
+      // making it available as a variable on the request
+    try { 
+      this.cookies.clear();
+      this.inCookies.clear();
+      this.cookiesToMap( e, this.inCookies );
+      this.preface = "";
+      String method = e.getRequestMethod();
+      String uri = e.getRequestURI().toString();
+      System.out.println( method + " " + uri );
+      switch( method ) {
+        case "GET":   this.handleGet( e ); break;
+        case "POST":  this.handlePost( e ); break;
+        default:      this.handleGet( e ); break;
+      }
+    } catch ( Throwable ex ) {
+      System.out.println( this.detailThrowable( ex ) );
     }
   }
 

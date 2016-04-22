@@ -269,6 +269,9 @@ public class App
 
     public static final class CaveObject 
     {
+      // TODO 
+        // check that kind matches the supplied
+        // source type 
 
       public final String guid;
       public final CaveObjectType kind;

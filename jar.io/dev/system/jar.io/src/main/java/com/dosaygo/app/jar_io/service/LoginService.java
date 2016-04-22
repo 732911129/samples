@@ -1,6 +1,8 @@
 package com.dosaygo.app.jar_io.service;
 
 import com.dosaygo.data.cavedb.App.CaveHumanAPI;
+import com.dosaygo.data.cavedb.App.CaveObject;
+import static com.dosaygo.data.cavedb.App.CaveObjectType.*;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -53,15 +55,18 @@ public class LoginService extends Service {
         this.humans.newHuman( handle, name, password );
         login = true;
       }
+      CaveObject sessionObject = new CaveObject( null, RAW, "".getBytes() );
       if ( login ) {
         // SECURITY : lovely insecure forgeable cookie
           // So deliciously insecure.
-        this.cookies.put( "JARIOLOGIN", "YES" + handle );
+        sessionObject.raw = "LOGGED IN".getBytes();
         this.preface = "LOGGED IN! Hello, " + this.humans.getHumanFirstName( handle );
       } else {
-        this.cookies.put( "JARIOLOGIN", "NO" );
+        sessionObject.raw = "LOGGED OUT".getBytes();
         this.preface = "NOT LOGGED IN!";
       }
+      String sessionId = this.humans.objects.db.saveObject( sessionObject );
+      this.cookies.put( "JARIOSESSION", sessionId );
       this.handleGet( e );
     } catch ( Exception ex ) {
       System.out.println( this.detailThrowable ( ex ) );
