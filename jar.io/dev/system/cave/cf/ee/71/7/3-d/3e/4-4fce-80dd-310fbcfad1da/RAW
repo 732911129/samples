@@ -1,7 +1,0 @@
-<form method=POST>
-  Handle: <input required name=handle>
-  Name: <input name=name value=anonymous>
-  Secret: <input required type=password name=password>
-  Create? <input type=checkbox name=create>
-  <button>Login</button>
-</form>

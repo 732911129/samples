@@ -1,4 +1,0 @@
-<form method=POST>
-  <input required name=taskguid value=::taskguid>
-  <button>Download</button>
-</form>

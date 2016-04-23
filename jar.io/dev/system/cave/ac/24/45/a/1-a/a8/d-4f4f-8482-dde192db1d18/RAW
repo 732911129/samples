@@ -1,4 +1,0 @@
-<form method=POST enctype=multipart/form-data>
-  <input required name=file type=file>
-  <button>Up</button>
-</form>

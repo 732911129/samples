@@ -1,5 +1,80 @@
 <head>
   <title>::service_name | jar.io </title>
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <meta charset=utf-8>
+  <style>
+    html, body, form, main, nav, 
+    button, input, select, 
+    option, optgroup, label {
+      font-size: 1rem;
+      font-family: Arial;
+    }
+    button, input, select, option, optgroup {
+      margin: 0 0.5rem;
+      padding: 0.2rem 0.4rem;
+    }
+    button, input[type="submit"] {
+      margin: 0;
+      background: lime;
+      border-radius: 0.5rem;
+    }
+    input#create:not(:checked) + #specify_name {
+      display: none;
+    }
+    input.explainer:not(:checked) ~ div.explainer {
+      display: none;
+    }
+    div.explain_box * {
+      font-size: 0.8rem;
+    }
+    div.explainer {
+      font-size: 0.8rem;
+      max-width: 300px;
+      padding: 1rem;
+      background: turquoise;
+      margin: 0.5rem 0;
+    }
+    form p {
+      background: aqua;
+      padding: 0.5rem 0.3rem;
+    }
+    p[ centered ], nav[ centered ] {
+      text-align: center;
+    }
+    html, body, form, main, nav {
+      box-sizing: border-box;
+      padding: 1rem;
+      margin: 0.5rem;
+    }
+    html {
+      display: table;
+      font-size: 20px;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+    body {
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+    }
+    nav, form, main {
+      margin: 1rem auto;
+      display: table;
+      text-align: left;  
+      border: 1px solid grey;
+    }
+    ol[ horizontal ], ul[ horizontal ] {
+      display: table-row;
+    }
+    ol[ horizontal ] > li, ul[ horizontal ] > li {
+      float: left;
+      margin-left: 2rem;
+    }
+    input[name="taskguid"], input#taskguid {
+      width: 40ch;
+    }
+  </style>
 </head>
 <body> 
   <h1>::service_name | jar.io </h1>

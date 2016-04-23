@@ -1,8 +1,0 @@
-<form method=POST>
-  <input required name=taskguid value=::taskguid>
-  <select required name=run_package>
-    <option selected value=no_package>Don't run package</option>
-    <option value=run_package>Run Package</option>
-  </select>
-  <button>Build with Maven</button>
-</form>

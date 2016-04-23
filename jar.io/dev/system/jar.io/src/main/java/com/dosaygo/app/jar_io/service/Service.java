@@ -141,7 +141,10 @@ abstract public class Service implements HttpHandler {
     LinkedList<String> iterations = new LinkedList<String>();
     params.put( "service_name", this.name() );
     iterations.add( page );
-    params.forEach( ( key, value ) -> iterations.add( iterations.getLast().replace( "::" + key, value ) ) );
+    // template each parameter slot in turn
+    params.forEach( ( key, value ) -> iterations.add( iterations.getLast().replaceAll( "::" + key, value ) ) );
+    // remove any untemplated slots from the page
+    iterations.add( iterations.getLast().replaceAll( "::\\w+", "" ) );
     return iterations.getLast();
   }
 
@@ -166,7 +169,12 @@ abstract public class Service implements HttpHandler {
     
     this.goHeaders( 200, e );
     
-    String page = this.getHTMLHeader() + this.getPreface() + this.getHTMLControl() + this.getHTMLNavigation();
+    String page = "<!DOCTYPE html><html>" + 
+                    this.getHTMLHeader() + 
+                    this.getPreface() + 
+                    this.getHTMLControl() + 
+                    this.getHTMLNavigation() + 
+                  "</body></html>";
     if( params != null ) {
       page = this.template( page, params );
     }
