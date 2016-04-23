@@ -1,0 +1,12 @@
+  <script>
+    (function () {
+      var x = document.querySelector( 'pre' );
+      setInterval( scrollToBottom( x ), 100 );
+      function scrollToBottom( el ) {
+        return function scrollElementToBottom() {
+          el.scrollIntoView( false );
+        };
+      }
+    }());
+  </script>
+

@@ -49,7 +49,7 @@ public class CopyService extends RuntimeService {
     // execute & redirect
     if( "execute".equals( params.get( "mode" ) ) ) {
       Map<String, String> execute_params = new HashMap<String, String> ( params );
-      this.execute( execute_params );
+      this.execute( null, execute_params );
       Headers h = e.getResponseHeaders(); 
       String redirectTo = "/" + params.get( "next_service" ) + "?taskguid=" + params.get( "taskguid" );
       System.out.println( "REDIRECT -> " + redirectTo );

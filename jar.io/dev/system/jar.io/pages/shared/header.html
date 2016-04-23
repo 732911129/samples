@@ -74,6 +74,27 @@
     input[name="taskguid"], input#taskguid {
       width: 40ch;
     }
+    div#process_output {
+      margin: 1rem auto;
+      text-align: left;
+      width: 100ch;
+      max-width: 100ch;
+      background: black;
+      color: white;
+      height: 60ex;
+      overflow-y:scroll;
+      border: 3px solid lime;
+    }
+    div#process_output pre, div#process_output code {
+      width: 100%;
+      padding: 0.6rem;
+      max-width: 100%;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      box-sizing: border-box;
+      display:block;
+      overflow-x: auto;
+    }
   </style>
 </head>
 <body> 

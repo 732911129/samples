@@ -163,25 +163,40 @@ abstract public class Service implements HttpHandler {
 
   public void handleGet( HttpExchange e, Map<String, String> params ) throws IOException {
     
+    boolean contentOnly = false;
+
     if( params == null ) {
       params = this.uriParams( e );
     }
+
+    if( "contentOnly".equals( params.get( "__responseMode" ) ) ) {
+      contentOnly = true;
+    }
     
-    this.goHeaders( 200, e );
+    if ( ! contentOnly ) {
+      this.goHeaders( 200, e );
+    }
     
     String page = "<!DOCTYPE html><html>" + 
                     this.getHTMLHeader() + 
                     this.getPreface() + 
                     this.getHTMLControl() + 
-                    this.getHTMLNavigation() + 
-                  "</body></html>";
+                    this.getHTMLNavigation();
+
+    if ( ! contentOnly ) {
+      page += "</body></html>";
+    }
+
     if( params != null ) {
       page = this.template( page, params );
     }
     
     OutputStream os = e.getResponseBody();
     os.write( page.getBytes() );
-    os.close();
+
+    if ( ! contentOnly ) {
+      os.close();
+    }
   
   }
 
