@@ -1,9 +1,27 @@
 <form method=POST>
-  <input required name=taskguid value=::taskguid>
-  <select required name=make_jar>
-    <option selected value=no_jar>Don't make jar ( compile classes only )</option>
-    <option value=make_jar>Make jar</option>
-  </select>
-  <input name=entrypoint>
-  <button>Build with Java</button>
+  <h1>Build</h1>
+  <h2>build using <code>javac</code> not maven</h2>
+  <p>
+    <label for=taskguid>Task GUID of project to build: </label>
+    <input id=taskguid required name=taskguid value=::taskguid>
+  </p>
+  <p>
+  <label for=make_jar>Do you want to make a JAR or just compile <code>.class</code> files? </label>
+    <select id=make_jar required name=make_jar>
+      <option selected value=no_jar>Just compile classes</option>
+      <option value=make_jar>Make JAR</option>
+    </select>
+  </p>
+  <p>
+    <label for=entrypoint>Executable JAR Entrypoint Class: </label>
+    <input id=entrypoint name=entrypoint>
+  </p>
+  <div class=explain_box>
+    <label for=entrypoint_explainer class=explainer>What's this "Entrypoint Class"?</label>
+    <input id=entrypoint_explainer class=explainer type=checkbox>
+    <div class=explainer>If you have a main method and you want your jar to be executable, specify the class that has the main method you will use for your entrypoint here.</div>
+  </div>
+  <p>
+    <button>Build with <code>javac</code></button>
+  </p>
 </form>

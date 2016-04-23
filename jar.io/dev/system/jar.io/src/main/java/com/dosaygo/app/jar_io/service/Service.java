@@ -166,7 +166,7 @@ abstract public class Service implements HttpHandler {
     
     this.goHeaders( 200, e );
     
-    String page = this.getPreface() + this.getHTMLControl() + this.getHTMLNavigation();
+    String page = this.getHTMLHeader() + this.getPreface() + this.getHTMLControl() + this.getHTMLNavigation();
     if( params != null ) {
       page = this.template( page, params );
     }
@@ -226,8 +226,19 @@ abstract public class Service implements HttpHandler {
     return sw.toString();
   }
 
+  protected String getHTMLHeader() {
+    String header = "";
+    try { 
+      header = this.getHTML( "shared", "header.html" );
+    } catch ( IOException e ) {
+      System.out.println( e );
+    } finally { 
+      return header;
+    }
+  }
+
   protected String getHTMLControl() {
-    if ( this.pageCache == "" ) {
+    if ( true || this.pageCache == "" ) {
       try { 
         this.pageCache = this.getHTML( this.name() + ".html" );
       } catch ( IOException e ) {

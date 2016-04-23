@@ -1,26 +1,96 @@
-<ol>
-  <li>
-    <a href=/loginservice>Login</a>
-  </li>
-  <li>
-    <a href=/copyservice?mode=execute&next_service=uploader&taskguid=::taskguid&current_service=::service_name>Upload</a>
-  </li>
-  <li>
-    <a href=/copyservice?mode=execute&next_service=dezipservice&taskguid=::taskguid&current_service=::service_name>Unzip</a>
-  </li>
-  <li>
-    <a href=/copyservice?mode=execute&next_service=mavenbuildservice&taskguid=::taskguid&current_service=::service_name>Maven Build</a>
-  </li>
-  <li>
-    <a href=/copyservice?mode=execute&next_service=buildservice&taskguid=::taskguid&current_service=::service_name>Build</a>
-  </li>
-  <li>
-    <a href=/copyservice?mode=execute&next_service=rezipservice&taskguid=::taskguid&current_service=::service_name>Rezip</a>
-  </li>
-  <li>
-    <a href=/copyservice?mode=execute&next_service=downloader&taskguid=::taskguid&current_service=::service_name>Download</a>
-  </li>
-  <li>
-    <a href=/logoutservice>Log out</a>
-  </li>
-</ol>
+<style>
+  html, body, form, main, nav, 
+  button, input, select, 
+  option, optgroup, label {
+    font-size: 1rem;
+    font-family: Arial;
+  }
+  button, input, select, option, optgroup {
+    margin: 0 0.5rem;
+    padding: 0.2rem 0.4rem;
+  }
+  button, input[type="submit"] {
+    margin: 0;
+    background: lime;
+    border-radius: 0.5rem;
+  }
+  input#create:not(:checked) + #specify_name {
+    display: none;
+  }
+  input.explainer:not(:checked) ~ div.explainer {
+    display: none;
+  }
+  div.explain_box * {
+    font-size: 0.8rem;
+  }
+  div.explainer {
+    font-size: 0.8rem;
+    max-width: 300px;
+    padding: 1rem;
+    background: turquoise;
+    margin: 0.5rem 0;
+  }
+  form p {
+    background: aqua;
+    padding: 0.5rem 0.3rem;
+  }
+  html, body, form, main, nav {
+    box-sizing: border-box;
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+  html {
+    display: table;
+    font-size: 20px;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  body {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+  nav, form, main {
+    margin: 1rem auto;
+    display: table;
+    text-align: left;  
+    border: 1px solid grey;
+  }
+  ol {
+    padding: 0;  
+    height: 100%;
+  }
+  ol li {
+    float: left;
+    margin-left: 2rem;
+  }
+</style>
+<nav>
+  <ol>
+    <li>
+      <a href=/loginservice>Login</a>
+    </li>
+    <li>
+      <a href=/copyservice?mode=execute&next_service=uploader&taskguid=::taskguid&current_service=::service_name>Upload</a>
+    </li>
+    <li>
+      <a href=/copyservice?mode=execute&next_service=dezipservice&taskguid=::taskguid&current_service=::service_name>Unzip</a>
+    </li>
+    <li>
+      <a href=/copyservice?mode=execute&next_service=mavenbuildservice&taskguid=::taskguid&current_service=::service_name>Maven Build</a>
+    </li>
+    <li>
+      <a href=/copyservice?mode=execute&next_service=buildservice&taskguid=::taskguid&current_service=::service_name>Build</a>
+    </li>
+    <li>
+      <a href=/copyservice?mode=execute&next_service=rezipservice&taskguid=::taskguid&current_service=::service_name>Rezip</a>
+    </li>
+    <li>
+      <a href=/copyservice?mode=execute&next_service=downloader&taskguid=::taskguid&current_service=::service_name>Download</a>
+    </li>
+    <li>
+      <a href=/logoutservice>Log out</a>
+    </li>
+  </ol>
+</nav>

@@ -1,0 +1,35 @@
+<style>
+  html {
+     
+
+  }
+  body {
+
+  }
+</style>
+<ol>
+  <li>
+    <a href=/loginservice>Login</a>
+  </li>
+  <li>
+    <a href=/copyservice?mode=execute&next_service=uploader&taskguid=::taskguid&current_service=::service_name>Upload</a>
+  </li>
+  <li>
+    <a href=/copyservice?mode=execute&next_service=dezipservice&taskguid=::taskguid&current_service=::service_name>Unzip</a>
+  </li>
+  <li>
+    <a href=/copyservice?mode=execute&next_service=mavenbuildservice&taskguid=::taskguid&current_service=::service_name>Maven Build</a>
+  </li>
+  <li>
+    <a href=/copyservice?mode=execute&next_service=buildservice&taskguid=::taskguid&current_service=::service_name>Build</a>
+  </li>
+  <li>
+    <a href=/copyservice?mode=execute&next_service=rezipservice&taskguid=::taskguid&current_service=::service_name>Rezip</a>
+  </li>
+  <li>
+    <a href=/copyservice?mode=execute&next_service=downloader&taskguid=::taskguid&current_service=::service_name>Download</a>
+  </li>
+  <li>
+    <a href=/logoutservice>Log out</a>
+  </li>
+</ol>
