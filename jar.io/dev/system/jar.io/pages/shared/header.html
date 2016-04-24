@@ -21,6 +21,10 @@
     input#create:not(:checked) + #specify_name {
       display: none;
     }
+    p.preface {
+      font-weight:bold;
+      color:red;
+    }
     input.explainer:not(:checked) ~ div.explainer {
       display: none;
     }
@@ -99,4 +103,7 @@
 </head>
 <body> 
   <h1>::service_name | jar.io </h1>
+  <p class=preface>
+    ::preface
+  </p>
   

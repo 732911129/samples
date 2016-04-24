@@ -1,17 +1,21 @@
-- Sessions, Cave, Humans refactor, and improvement-creating upgrade
-  - Session object works to be a Media. 
-    - Perhaps a CaveSession API ? 
-  - Refactor and clean up code.
-    - Particularly the cross cutting concern of humans, cave and session
-    where services make regard to those. Answer the question what is a clean and decoupled and minimum effort way to have Services access cave and the CaveHumanAPI and sessions ? 
-- Create the preface to be a message parameter that is rendered in the HTML.
-- Add unit tests. 
-- Windows command scripts.
-- Make install script for linux and macosx to apt-get everything required. 
-- Make install script for windows. 
-- Add favicon.ico ( or other static files ) handlers. Perhaps make the dispatcher really a dispatcher and not just serving a link to login. 
+Service Scripts TODO
+  - Fix build ( non maven service script )
+  - Windows command scripts.
+  - Make install script for linux and macosx to apt-get everything required. 
+  - Make install script for windows. 
+
+Java Code and HTML Todo
+  - Sessions, Cave, Humans refactor, and improvement-creating upgrade
+    - Session object works to be a Media. 
+      - Perhaps a CaveSession API ? 
+    - Refactor and clean up code.
+      - Particularly the cross cutting concern of humans, cave and session
+      where services make regard to those. Answer the question what is a clean and decoupled and minimum effort way to have Services access cave and the CaveHumanAPI and sessions ? 
+  - Add unit tests. 
+  - Add favicon.ico ( or other static files ) handlers. Perhaps make the dispatcher really a dispatcher and not just serving a link to login. 
 
 DONE ALREADY
+  DONE - Create the preface to be a message parameter that is rendered in the HTML.
   DONE - Investigate and fix bugs where if you call unzip or maven build again after post, the system hangs. 
   DONE - Fix scroll to bottom.
   DONE - Increase orienting information in command scripts.

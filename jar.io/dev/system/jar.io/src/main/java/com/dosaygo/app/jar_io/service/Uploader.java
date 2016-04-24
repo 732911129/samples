@@ -42,6 +42,7 @@ public class Uploader extends Service {
     String boundary = this.getBoundary( h.get( "Content-Type" ).get( 0 ) );
     byte[] boundary_bytes = boundary.getBytes();
     int buf_size = boundary_bytes.length * 1024 * 1024;
+    String filename = "";
     try {
       MultipartStream upload_stream = new MultipartStream( is, boundary_bytes, buf_size, null );
       boolean nextPart = upload_stream.skipPreamble();
@@ -54,7 +55,8 @@ public class Uploader extends Service {
           }
         }
         if ( hm.containsKey( "filename" ) ) {
-          System.out.print( "UPLOAD <- " + hm.get( "filename" ) );
+          filename = hm.get( "filename" );
+          System.out.print( "UPLOAD <- " + filename );
           if ( hm.containsKey( "content-type" ) ) {
             System.out.println( " ( " + hm.get( "content-type" ) + " )" );
           }
@@ -79,6 +81,7 @@ public class Uploader extends Service {
         ByteBuffer b = ByteBuffer.wrap( outsba );
         fouts.write( b );
         fouts.close();
+        this.preface += "<br>Uploaded " + filename;
         this.handleGet( e, params );
       } catch ( Exception ex ) {
         System.out.println( this.detailException( ex ) );

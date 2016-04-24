@@ -44,24 +44,29 @@ abstract public class RuntimeService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
+    BufferedWriter responseWriter = null;
     try { 
       Map<String, String> params = this.bodyParams( e );
       Map<String, String> execute_params = new HashMap<String, String>( params );
       this.goHeaders( 200, e );
+      this.preface += "<br>Running " + this.command();
       params.put( "__responseMode", "contentOnly" );
       this.handleGet( e, params );
-      BufferedWriter responseWriter = new BufferedWriter( new OutputStreamWriter( e.getResponseBody() ) );
+      responseWriter = new BufferedWriter( new OutputStreamWriter( e.getResponseBody() ) );
       responseWriter.write( "<div id=process_output><pre><code>" );
       responseWriter.write( this.getHTML( "shared", "outputscroll.html" ) );
       this.execute( responseWriter, execute_params );
       responseWriter.write( "</code></pre></div>" );
       responseWriter.write( "<hr class=command_stop>" );
-      responseWriter.write( "</body></html>" );
-      responseWriter.close();
     } catch ( Exception ex ) {
+      responseWriter.write( "An error occurred." );
       System.out.println( this.detailThrowable( ex ) );
     } catch ( Error er ) {
+      responseWriter.write( "An error occurred." );
       System.out.println( this.detailThrowable( er ) );
+    } finally {
+      responseWriter.write( "</body></html>" );
+      responseWriter.close();
     }
   }
 
@@ -82,6 +87,7 @@ abstract public class RuntimeService extends Service {
   }
 
   public void execute( BufferedWriter writer, Map<String,String> parameters ) throws IOException {
+    InputStream stream = null;
     try { 
       this.transformParameters( parameters );
       String platform = "macosx";
@@ -98,19 +104,22 @@ abstract public class RuntimeService extends Service {
       this.positionArguments( parameters, command_args );
       Process p = cmd.start();
       if ( writer != null ) {
-        InputStream stream = p.getInputStream();
+        stream = p.getInputStream();
         BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) );
         String line;
         while( ( line = reader.readLine() ) != null ) {
           writer.write( line + "\n" );
           writer.flush();
         }
-        stream.close();
       }
     } catch ( Exception ex ) {
       System.out.println( this.detailThrowable( ex ) );
     } catch ( Error er ) {
       System.out.println( this.detailThrowable( er ) );
+    } finally {
+      if ( stream != null ) {
+        stream.close();
+      }
     }
   }
 

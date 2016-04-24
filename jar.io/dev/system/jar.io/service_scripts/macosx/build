@@ -52,7 +52,7 @@ echo "Done."
 
 echo "Compiling sources..."
 
-javac @sources.txt -d $build/classes
+javac @sources.txt -d $build/classes -verbose
 
 echo "Done."
 

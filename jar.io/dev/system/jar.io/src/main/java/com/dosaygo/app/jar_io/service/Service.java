@@ -190,6 +190,7 @@ abstract public class Service implements HttpHandler {
   public String template( String page, Map<String, String> params ) {
     LinkedList<String> iterations = new LinkedList<String>();
     params.put( "service_name", this.name() );
+    params.put( "preface", this.getPreface() );
     iterations.add( page );
     // template each parameter slot in turn
     params.forEach( ( key, value ) -> iterations.add( iterations.getLast().replaceAll( "::" + key, value ) ) );
@@ -229,7 +230,6 @@ abstract public class Service implements HttpHandler {
     
     String page = "<!DOCTYPE html><html>" + 
                     this.getHTMLHeader() + 
-                    this.getPreface() + 
                     this.getHTMLControl() + 
                     this.getHTMLNavigation();
 
