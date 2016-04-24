@@ -104,7 +104,7 @@ abstract public class Service implements HttpHandler {
     }
   }  
 
-  public void redirect( HttpExchange e, String uri ) {
+  public void redirect( HttpExchange e, String redirectTo ) throws IOException {
 
     Headers h = e.getResponseHeaders(); 
     System.out.println( "REDIRECT -> " + redirectTo );
@@ -131,13 +131,21 @@ abstract public class Service implements HttpHandler {
       this.preface = "";
       String method = e.getRequestMethod();
       String uri = e.getRequestURI().toString();
-      CaveObject session = LoginService.getSession( this, e );
-      if ( session == null ) {
-        this.redirect( e, "/loginservice" );
-      }
-      String status = new String( session.raw );
-      if ( "LOGGED OUT".equals( status ) ) {
-        this.redirect( e, "/loginservice" );
+      String status;
+      CaveObject session = this.getSession( e );
+      System.out.println( uri );
+      System.out.println( session );
+      if ( ! uri.startsWith( "/loginservice" ) ) {
+        if ( session == null ) {
+          this.redirect( e, "/loginservice" );
+          return;
+        }
+        status = new String( session.raw );
+        if ( "LOGGED OUT".equals( status ) ) {
+          this.redirect( e, "/loginservice" );
+          return;
+        }
+        this.preface = status;
       }
       System.out.println( method + " " + uri );
       switch( method ) {
@@ -147,6 +155,28 @@ abstract public class Service implements HttpHandler {
       }
     } catch ( Throwable ex ) {
       System.out.println( this.detailThrowable( ex ) );
+    }
+
+  }
+
+  public CaveObject getSession( HttpExchange e ) {
+
+    // NOTE: This can only be called after
+      // Service.handle cookie setup has been called 
+      // so that all the cookies have been mapped.
+
+    String sessionId = this.inCookies.get( "JARIOSESSION" );
+    System.out.println( sessionId );
+    if ( sessionId == null ) {
+      return null;
+    }
+
+    try { 
+      CaveObject sessionObject = this.humans.objects.db.getObject( sessionId ); 
+      return sessionObject;
+    } catch ( IOException ex ) {
+      System.out.println( this.detailThrowable( ex ) );
+      return null;
     }
 
   }

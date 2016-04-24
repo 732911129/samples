@@ -33,21 +33,6 @@ public class LoginService extends Service {
     super( storageBase );
   }
 
-  public static CaveObject getSession( Service service, HttpExchange e ) throws IOException {
-
-    // NOTE: This can only be called after
-      // Service.handle cookie setup has been called 
-      // so that all the cookies have been mapped.
-    String sessionId = service.inCookies.get( "JARIOSESSION" );
-    if ( sessionId == null ) {
-      return null;
-    }
-
-    CaveObject sessionObject = service.humans.objects.db.getObject( sessionId ); 
-    return sessionObject;
-
-  }
-
   public void handlePost( HttpExchange e ) throws IOException {
     
     try { 
