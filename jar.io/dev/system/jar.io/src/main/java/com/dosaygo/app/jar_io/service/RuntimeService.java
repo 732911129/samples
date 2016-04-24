@@ -53,7 +53,7 @@ abstract public class RuntimeService extends Service {
     responseWriter.write( "<div id=process_output><pre><code>" );
     responseWriter.write( this.getHTML( "shared", "outputscroll.html" ) );
     this.execute( responseWriter, execute_params );
-    responseWriter.write( "</code></pre>" );
+    responseWriter.write( "</code></pre></div>" );
     responseWriter.write( "<hr class=command_stop>" );
     responseWriter.write( "</body></html>" );
     responseWriter.close();
