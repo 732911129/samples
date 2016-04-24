@@ -1,10 +1,14 @@
   <script>
     (function () {
       var x = document.querySelector( 'pre' );
-      setInterval( scrollToBottom( x ), 100 );
+      setTimeout( scrollToBottom( x ), 100 );
       function scrollToBottom( el ) {
         return function scrollElementToBottom() {
           el.scrollIntoView( false );
+          var stopExists = document.querySelector( 'hr.command_stop' );
+          if ( ! stopExists ) {
+            setTimeout( scrollToBottom( x ), 100 );
+          }
         };
       }
     }());
