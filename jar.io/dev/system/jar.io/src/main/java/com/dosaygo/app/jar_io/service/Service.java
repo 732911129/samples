@@ -104,6 +104,14 @@ abstract public class Service implements HttpHandler {
     }
   }  
 
+  public void redirect( HttpExchange e, String uri ) {
+
+    Headers h = e.getResponseHeaders(); 
+    System.out.println( "REDIRECT -> " + redirectTo );
+    h.set( "Location", redirectTo );
+    e.sendResponseHeaders( 302, -1 );
+
+  }
 
   protected void transformParameters( Map<String,String> params ) {
     // default is no parameter transformation
@@ -124,6 +132,13 @@ abstract public class Service implements HttpHandler {
       String method = e.getRequestMethod();
       String uri = e.getRequestURI().toString();
       CaveObject session = LoginService.getSession( this, e );
+      if ( session == null ) {
+        this.redirect( e, "/loginservice" );
+      }
+      String status = new String( session.raw );
+      if ( "LOGGED OUT".equals( status ) ) {
+        this.redirect( e, "/loginservice" );
+      }
       System.out.println( method + " " + uri );
       switch( method ) {
         case "GET":   this.handleGet( e ); break;
