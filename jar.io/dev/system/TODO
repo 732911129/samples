@@ -1,6 +1,6 @@
 - Refactor and clean up code.
 DONE - Add command output to pages. 
 - Add login session checks on each service.
-- Add some new HTML to a service's page after a post has been performed to indicate the next step in a clear way. 
+DONE - Add some new HTML to a service's page after a post has been performed to indicate the next step in a clear way. 
 - Allow the preface to me a message parameter that is rendered in the HTML.
 
