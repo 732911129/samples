@@ -20,26 +20,41 @@ echo $guid $make_jar $entrypoint $build
 # clean
 
 echo "Cleaning build directory..."
+
 rm -rf $build
+
+echo "Done."
 
 # make build directories 
 
 echo "Making classes directory..."
+
 mkdir -p $build/classes
+
+echo "Done."
 
 if [[ $make_jar == *make_jar* ]]; then
   echo "Preparing a jar directory..."
+
   mkdir -p $build/jar
+
+  echo "Done."
 fi
 
 # make sources
 
 echo "Collecting sources..."
+
 cd $guid
 find . -name "*.java" > sources.txt
 
+echo "Done."
+
 echo "Compiling sources..."
+
 javac @sources.txt -d $build/classes
+
+echo "Done."
 
 echo "Cleaning up..."
 
@@ -53,8 +68,10 @@ if [[ $make_jar == *make_jar* ]]; then
   if [[ $entrypoint != "" ]]; then
     echo "Building an executable jar with entrypoint $entrypoint..." 
     jar cvfe ./target/jar/executable.jar $entrypoint -C ./target/classes . 
+    echo "Done."
   else
     echo "Building a jar..."
     jar cvf ./target/jar/classes.jar -C ./target/classes . 
+    echo "Done."
   fi
 fi

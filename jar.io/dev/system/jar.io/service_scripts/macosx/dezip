@@ -23,5 +23,7 @@ if [[ ! $@ == *-q* ]]; then
 else
   echo "Unzipping $zip into $staging..."
   unzip $staging/$zip -d $staging
+  echo "Unzipped $zip into $staging."
+  echo "Done."
 fi
 
