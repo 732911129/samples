@@ -58,7 +58,6 @@ public class Uploader extends Service {
           if ( hm.containsKey( "content-type" ) ) {
             System.out.print( " ( " + hm.get( "content-type" ) + " )" );
           }
-          System.out.println( "" );
         }
         upload_stream.readBodyData( outs );
         nextPart = upload_stream.readBoundary();

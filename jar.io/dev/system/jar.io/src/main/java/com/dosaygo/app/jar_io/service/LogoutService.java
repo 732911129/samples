@@ -35,7 +35,6 @@ public class LogoutService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
-    this.inCookies.forEach( ( key, value ) -> System.out.println( key + "=" + value ) );
     String sessionId = this.inCookies.get( "JARIOSESSION" );
     if ( sessionId != null ) {
       CaveObject sessionObject = this.humans.objects.db.getObject( sessionId );

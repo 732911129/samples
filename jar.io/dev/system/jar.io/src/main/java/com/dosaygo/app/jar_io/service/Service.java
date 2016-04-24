@@ -133,8 +133,6 @@ abstract public class Service implements HttpHandler {
       String uri = e.getRequestURI().toString();
       String status;
       CaveObject session = this.getSession( e );
-      System.out.println( uri );
-      System.out.println( session );
       if ( ! uri.startsWith( "/loginservice" ) ) {
         if ( session == null ) {
           this.redirect( e, "/loginservice" );
@@ -166,7 +164,6 @@ abstract public class Service implements HttpHandler {
       // so that all the cookies have been mapped.
 
     String sessionId = this.inCookies.get( "JARIOSESSION" );
-    System.out.println( sessionId );
     if ( sessionId == null ) {
       return null;
     }

@@ -54,6 +54,7 @@ abstract public class RuntimeService extends Service {
     responseWriter.write( this.getHTML( "shared", "outputscroll.html" ) );
     this.execute( responseWriter, execute_params );
     responseWriter.write( "</code></pre>" );
+    responseWriter.write( "<hr class=command_stop>" );
     responseWriter.write( "</body></html>" );
     responseWriter.close();
   }
@@ -100,8 +101,8 @@ abstract public class RuntimeService extends Service {
         }
         stream.close();
       }
-    } catch ( Exception e ) {
-      System.out.println( e.toString() );
+    } catch ( Exception ex ) {
+      System.out.println( this.detailThrowable( ex ) );
     }
   }
 
