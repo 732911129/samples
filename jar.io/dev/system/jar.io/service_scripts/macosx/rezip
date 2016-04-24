@@ -9,7 +9,7 @@ zip=compiled.$zipbase.zip
 
 echo "zipping $guid into $guid/$zip..."
 cd $guid
-zip -r $zip *;
+zip -vr $zip *;
 echo "zipped $guid into $guid/$zip."
 echo "Done."
 

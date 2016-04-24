@@ -1,15 +1,18 @@
-- Investigate and fix bugs where if you call unzip or maven build again after post, the system hangs. 
-- Allow the preface to me a message parameter that is rendered in the HTML.
 - Session object works to be a Media. 
-- Perhaps a CaveSession API ? 
+  - Perhaps a CaveSession API ? 
 - Refactor and clean up code.
   - Particularly the cross cutting concern of humans, cave and session
   where services make regard to those. Answer the question what is a clean and decoupled and minimum effort way to have Services access cave and the CaveHumanAPI and sessions ? 
+- Allow the preface to me a message parameter that is rendered in the HTML.
 - Add unit tests. 
+- Windows command scripts.
+- Install script for linux and macosx to apt-get everything required. 
+- Install script for windows. 
+- Add favicon.ico ( or other static files ) handlers. Perhaps make the dispatcher really a dispatcher and not just serving a link to login. 
+DONE - Investigate and fix bugs where if you call unzip or maven build again after post, the system hangs. 
 DONE - Fix scroll to bottom.
 DONE - Increase orienting information in command scripts.
 DONE - Add login session checks on each service.
 DONE - Add command output to pages. 
 DONE - Add some new HTML to a service's page after a post has been performed to indicate the next step in a clear way. 
-- Add favicon.ico ( or other static files ) handlers. Perhaps make the dispatcher really a dispatcher and not just serving a link to login. 
 

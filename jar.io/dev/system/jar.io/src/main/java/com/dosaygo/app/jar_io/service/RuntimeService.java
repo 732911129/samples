@@ -44,19 +44,25 @@ abstract public class RuntimeService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
-    Map<String, String> params = this.bodyParams( e );
-    Map<String, String> execute_params = new HashMap<String, String>( params );
-    this.goHeaders( 200, e );
-    params.put( "__responseMode", "contentOnly" );
-    this.handleGet( e, params );
-    BufferedWriter responseWriter = new BufferedWriter( new OutputStreamWriter( e.getResponseBody() ) );
-    responseWriter.write( "<div id=process_output><pre><code>" );
-    responseWriter.write( this.getHTML( "shared", "outputscroll.html" ) );
-    this.execute( responseWriter, execute_params );
-    responseWriter.write( "</code></pre></div>" );
-    responseWriter.write( "<hr class=command_stop>" );
-    responseWriter.write( "</body></html>" );
-    responseWriter.close();
+    try { 
+      Map<String, String> params = this.bodyParams( e );
+      Map<String, String> execute_params = new HashMap<String, String>( params );
+      this.goHeaders( 200, e );
+      params.put( "__responseMode", "contentOnly" );
+      this.handleGet( e, params );
+      BufferedWriter responseWriter = new BufferedWriter( new OutputStreamWriter( e.getResponseBody() ) );
+      responseWriter.write( "<div id=process_output><pre><code>" );
+      responseWriter.write( this.getHTML( "shared", "outputscroll.html" ) );
+      this.execute( responseWriter, execute_params );
+      responseWriter.write( "</code></pre></div>" );
+      responseWriter.write( "<hr class=command_stop>" );
+      responseWriter.write( "</body></html>" );
+      responseWriter.close();
+    } catch ( Exception ex ) {
+      System.out.println( this.detailThrowable( ex ) );
+    } catch ( Error er ) {
+      System.out.println( this.detailThrowable( er ) );
+    }
   }
 
   private void positionArguments( Map<String,String> arg_map, List<String> args ) {
@@ -76,12 +82,12 @@ abstract public class RuntimeService extends Service {
   }
 
   public void execute( BufferedWriter writer, Map<String,String> parameters ) throws IOException {
-    this.transformParameters( parameters );
-    String platform = "macosx";
-    String platform_extension = "";
-    Path target_dir = Paths.get( this.storageRoot() );
-    Path command_dir = Paths.get( this.serviceBase, "service_scripts", platform, this.command() + platform_extension );
     try { 
+      this.transformParameters( parameters );
+      String platform = "macosx";
+      String platform_extension = "";
+      Path target_dir = Paths.get( this.storageRoot() );
+      Path command_dir = Paths.get( this.serviceBase, "service_scripts", platform, this.command() + platform_extension );
       ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
       if ( writer == null ) {
         cmd.inheritIO();
@@ -103,6 +109,8 @@ abstract public class RuntimeService extends Service {
       }
     } catch ( Exception ex ) {
       System.out.println( this.detailThrowable( ex ) );
+    } catch ( Error er ) {
+      System.out.println( this.detailThrowable( er ) );
     }
   }
 
