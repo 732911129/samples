@@ -17,6 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import com.dosaygo.data.cavedb.App.CaveHumanAPI;
+import com.dosaygo.data.cavedb.App.CaveObject;
+
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.Files;
@@ -40,6 +43,7 @@ abstract public class Service implements HttpHandler {
   protected String preface;
   protected final Map<String, String> inCookies;
   protected final Map<String, String> cookies;
+  public final CaveHumanAPI humans;
 
   public Service( String storageBase ) throws IOException {
     this.inCookies = new HashMap<String, String> ();
@@ -48,6 +52,7 @@ abstract public class Service implements HttpHandler {
     this.serviceBase = Paths.get( ".", "jar.io" ).toAbsolutePath().toString();
     this.storageBase = storageBase;
     this.pageCache = "";
+    this.humans = new CaveHumanAPI( "." );
   }
   
   protected String guid() {
@@ -106,6 +111,7 @@ abstract public class Service implements HttpHandler {
 
   @Override
   public void handle( HttpExchange e ) throws IOException {
+    
     // SECURITY
       // Check if JARIOSESSION cookie is set
       // and retrieve the session object
@@ -117,6 +123,7 @@ abstract public class Service implements HttpHandler {
       this.preface = "";
       String method = e.getRequestMethod();
       String uri = e.getRequestURI().toString();
+      CaveObject session = LoginService.getSession( this, e );
       System.out.println( method + " " + uri );
       switch( method ) {
         case "GET":   this.handleGet( e ); break;
@@ -126,6 +133,7 @@ abstract public class Service implements HttpHandler {
     } catch ( Throwable ex ) {
       System.out.println( this.detailThrowable( ex ) );
     }
+
   }
 
   public String getPreface() {

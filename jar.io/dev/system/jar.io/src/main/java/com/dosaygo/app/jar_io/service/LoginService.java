@@ -28,14 +28,28 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class LoginService extends Service {
 
-  public final CaveHumanAPI humans;
 
   public LoginService( String storageBase ) throws IOException {
     super( storageBase );
-    this.humans = new CaveHumanAPI( "." );
+  }
+
+  public static CaveObject getSession( Service service, HttpExchange e ) throws IOException {
+
+    // NOTE: This can only be called after
+      // Service.handle cookie setup has been called 
+      // so that all the cookies have been mapped.
+    String sessionId = service.inCookies.get( "JARIOSESSION" );
+    if ( sessionId == null ) {
+      return null;
+    }
+
+    CaveObject sessionObject = service.humans.objects.db.getObject( sessionId ); 
+    return sessionObject;
+
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
+    
     try { 
       Map<String, String> params = this.bodyParams( e );
       String handle = params.get( "handle" );
@@ -73,6 +87,7 @@ public class LoginService extends Service {
     } catch ( Error er ) {
       System.out.println( this.detailThrowable ( er ) );
     }
+
   }
 
 }
