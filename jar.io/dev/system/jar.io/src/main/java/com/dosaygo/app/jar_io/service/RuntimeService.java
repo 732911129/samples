@@ -87,7 +87,9 @@ abstract public class RuntimeService extends Service {
   }
 
   public void execute( BufferedWriter writer, Map<String,String> parameters ) throws IOException {
-    InputStream stream = null;
+    InputStream 
+      stream = null,
+      estream = null;
     try { 
       this.transformParameters( parameters );
       String platform = "macosx";
@@ -105,11 +107,23 @@ abstract public class RuntimeService extends Service {
       Process p = cmd.start();
       if ( writer != null ) {
         stream = p.getInputStream();
-        BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) );
-        String line;
-        while( ( line = reader.readLine() ) != null ) {
-          writer.write( line + "\n" );
-          writer.flush();
+        estream = p.getErrorStream();
+        BufferedReader 
+          reader = new BufferedReader( new InputStreamReader( stream ) ),
+          ereader = new BufferedReader( new InputStreamReader( estream ) );
+        String 
+          line = null, 
+          eline = null;
+        while( ( ( line = reader.readLine() ) != null ) 
+              || ( ( eline = ereader.readLine() ) != null ) ) {
+          if ( line != null ) {
+            writer.write( line + "\n" );
+            writer.flush();
+          } 
+          if ( eline != null ) {
+            writer.write( eline + "\n" );
+            writer.flush();
+          }
         }
       }
     } catch ( Exception ex ) {
