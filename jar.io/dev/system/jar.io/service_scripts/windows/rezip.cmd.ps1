@@ -1,36 +1,15 @@
-@ECHO OFF
-SETLOCAL ENABLEEXTENSIONS
+if [[ $# -ne 2 ]]; then
+  echo "Usage: $0 [ task-guid ] [ zipbase ]"
+  exit 1
+fi
 
-SET USAGE="Usage: %0 [ zipfile ] [ task-guid ]"
-SET ZIPFILE=%1
-SET GUID=%2
-SHIFT
-SET ARGS=%*
-SET STAGING="\Users\%USERNAME%\Desktop\jar-io\tmp\build_staging\%GUID%"
+guid=$1
+zipbase=$2
+zip=compiled.$zipbase.zip
 
-IF "%ZIPFILE%"=="" (
-  ECHO %USAGE%
-  EXIT /B 1 
-) ELSE IF "%GUID%"=="" (
-  ECHO %USAGE%
-  EXIT /B 1
-)
-
-IF NOT EXIST %ZIPFILE% (
-  ECHO "%ZIPFILE% does not exist."
-  EXIT /B 1
-) ELSE (
-  ECHO "%ZIPFILE% exists."
-)
-
-IF NOT EXIST %STAGING% (
-  ECHO "Making %STAGING% directory..."
-  MD %STAGING%
-) ELSE (
-  ECHO "Clearing %STAGING% directory..."
-  RD %STAGING%
-)
-
-ECHO "Unzipping %ZIPFILE% into %STAGING%..."
-powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('%ZIPFILE%', '%STAGING%'); }"
+echo "zipping $guid into $guid/$zip..."
+cd $guid
+zip -vr $zip *;
+echo "zipped $guid into $guid/$zip."
+echo "Done."
 

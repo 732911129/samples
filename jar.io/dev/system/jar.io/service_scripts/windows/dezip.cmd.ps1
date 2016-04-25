@@ -1,36 +1,29 @@
-@ECHO OFF
-SETLOCAL ENABLEEXTENSIONS
+if [[ $# -lt 2 || $# -gt 3 ]]; then
+  echo "Usage: $0 [ zipfile ] [ task-guid ] [ -q ]"
+  echo "-q suppresses all prompts and assumes yes answer."
+  exit 1
+fi
 
-SET USAGE="Usage: %0 [ zipfile ] [ task-guid ]"
-SET ZIPFILE=%1
-SET GUID=%2
-SHIFT
-SET ARGS=%*
-SET STAGING="\Users\%USERNAME%\Desktop\jar-io\tmp\build_staging\%GUID%"
+zip=$1
+guid=$2
+shift
+args="$@"
+staging=$guid
 
-IF "%ZIPFILE%"=="" (
-  ECHO %USAGE%
-  EXIT /B 1 
-) ELSE IF "%GUID%"=="" (
-  ECHO %USAGE%
-  EXIT /B 1
-)
-
-IF NOT EXIST %ZIPFILE% (
-  ECHO "%ZIPFILE% does not exist."
-  EXIT /B 1
-) ELSE (
-  ECHO "%ZIPFILE% exists."
-)
-
-IF NOT EXIST %STAGING% (
-  ECHO "Making %STAGING% directory..."
-  MD %STAGING%
-) ELSE (
-  ECHO "Clearing %STAGING% directory..."
-  RD %STAGING%
-)
-
-ECHO "Unzipping %ZIPFILE% into %STAGING%..."
-powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('%ZIPFILE%', '%STAGING%'); }"
+# check if the quiet option is set
+if [[ ! $@ == *-q* ]]; then
+  while true; do
+    read -p "Unzip $zip into $staging? ( y/n ) " yn
+    case $yn in
+      [Yy]* ) unzip $staging/$zip -d $staging; break;;
+      [Nn]* ) exit;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+else
+  echo "Unzipping $zip into $staging..."
+  unzip -o $staging/$zip -d $staging
+  echo "Unzipped $zip into $staging."
+  echo "Done."
+fi
 
