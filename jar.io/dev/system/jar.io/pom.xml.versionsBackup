@@ -8,10 +8,15 @@
     <version>1.0-alpha</version>
   </parent>
   <groupId>com.dosaygo</groupId>
-  <artifactId>cavedb</artifactId>
+  <artifactId>jar.io</artifactId>
   <version>1.0-alpha</version>
-  <name>cavedb</name>
+  <name>jar.io</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
   <build>
     <plugins>
       <plugin>
@@ -23,7 +28,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.dosaygo.data.cavedb.App</mainClass>
+              <mainClass>com.dosaygo.app.jar_io.Server</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -39,16 +44,21 @@
       </plugin>
     </plugins>
   </build>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
   <dependencies>
+    <dependency>
+      <groupId>com.dosaygo</groupId>
+      <artifactId>cavedb</artifactId>
+      <version>RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>RELEASE</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

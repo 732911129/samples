@@ -1,4 +1,6 @@
 echo "Running maven clean..."
+# Uncomment to use the latest versions
+# mvn clean versions:use-latest-versions
 mvn clean
 echo Done.
 echo "Running maven compile..."
