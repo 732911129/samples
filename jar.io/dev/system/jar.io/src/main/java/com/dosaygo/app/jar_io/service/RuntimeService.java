@@ -85,6 +85,36 @@ abstract public class RuntimeService extends Service {
       }
     } );
   }
+  
+  public String getPlatform() {
+    String osName = System.getProperty( "os.name" );
+    String platform = "unknown";
+    if ( osName != null ) {
+      String[] parts = osName.split( "\\s+" );
+      String keyName = parts[ 0 ].toLowerCase();
+      switch ( keyName ) {
+        case "windows":
+        case "mac":
+        case "linux":
+          platform = keyName;
+          break;
+        default:
+          break;
+      }
+    }
+    return platform;
+  }
+
+  public String getPlatformExtension( String platform ) {
+    switch( platform ) {
+      case "mac":
+      case "linux":
+      default:
+        return "";
+      case "windows":
+        return ".cmd";
+    }
+  }
 
   public void execute( BufferedWriter writer, Map<String,String> parameters ) throws IOException {
     InputStream 
@@ -92,8 +122,8 @@ abstract public class RuntimeService extends Service {
       estream = null;
     try { 
       this.transformParameters( parameters );
-      String platform = "macosx";
-      String platform_extension = "";
+      String platform = this.getPlatform();
+      String platform_extension = this.getPlatformExtension( platform ); 
       Path target_dir = Paths.get( this.storageRoot() );
       Path command_dir = Paths.get( this.serviceBase, "service_scripts", platform, this.command() + platform_extension );
       ProcessBuilder cmd = new ProcessBuilder( command_dir.toString() );
