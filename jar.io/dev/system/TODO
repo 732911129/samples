@@ -1,7 +1,7 @@
 Service Scripts TODO
-  - Fix build ( non maven service script )
-    - Redirect and if possible interleave error stream also.
   - Windows command scripts.
+  - Fix build ( non maven service script )
+    COMPILING - Redirect and if possible interleave error stream also.
   - Make install script for linux and macosx to apt-get everything required. 
   - Make install script for windows. 
 
