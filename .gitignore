@@ -6,3 +6,7 @@
 # Ignore compiled python files
 
 *.pyc
+*.jar
+*.class
+*.sw?
+*~

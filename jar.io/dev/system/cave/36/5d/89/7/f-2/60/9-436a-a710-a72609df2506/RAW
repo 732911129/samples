@@ -1,0 +1,10 @@
+<form method=POST>
+  <h1>Unzip Project File</h1>
+  <p>
+    <label for=taskguid>Task GUID of project to unzip: </label>
+    <input id=taskguid required name=taskguid value=::taskguid>
+  </p>
+  <p>
+    <button>Dezip</button>
+  </p>
+</form>

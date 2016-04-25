@@ -1,0 +1,17 @@
+<form method=POST>
+  <h1>Unzip Project File</h1>
+  <p>
+    <label for=taskguid>Task GUID of project to unzip: </label>
+    <input id=taskguid required name=taskguid value=::taskguid>
+  </p>
+  <p>
+    <button>Dezip</button>
+  </p>
+  <p>
+    Next:
+    <a class=display_on_post_only href=/copyservice?mode=execute&next_service=buildservice&taskguid=::taskguid&current_service=::service_name>Build with <code>javac</code></a>
+    , or
+    <br>
+    <a class=display_on_post_only href=/copyservice?mode=execute&next_service=mavenbuildservice&taskguid=::taskguid&current_service=::service_name>Build with maven.</a>
+  </p>
+</form>

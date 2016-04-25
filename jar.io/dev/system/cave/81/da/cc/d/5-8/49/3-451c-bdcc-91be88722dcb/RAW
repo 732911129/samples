@@ -1,0 +1,18 @@
+<form method=POST>
+  <h1>Maven Build</h1>
+  <h2>Build using maven</h2>
+  <p>
+    <label for=taskguid>Task GUID of project to build: </label>
+    <input id=taskguid required name=taskguid value=::taskguid>
+  </p>
+  <p>
+    <label for=run_package>Run <code>mvn package</code> ?</label>
+    <select id=run_package required name=run_package>
+      <option selected value=no_package>Don't run package</option>
+      <option value=run_package>Run package</option>
+    </select>
+  </p>
+  <p>
+    <button>Build with Maven</button>
+  </p>
+</form>

@@ -1,0 +1,14 @@
+com\dosaygo\app\jar_io\service\Uploader.class
+com\dosaygo\app\jar_io\Server$API.class
+com\dosaygo\app\jar_io\Server.class
+com\dosaygo\app\jar_io\Server$Dispatcher.class
+com\dosaygo\app\jar_io\service\BuildService.class
+com\dosaygo\app\jar_io\service\MavenBuildService.class
+com\dosaygo\app\jar_io\service\Service.class
+com\dosaygo\app\jar_io\service\RezipService.class
+com\dosaygo\app\jar_io\service\Downloader.class
+com\dosaygo\app\jar_io\service\LogoutService.class
+com\dosaygo\app\jar_io\service\CopyService.class
+com\dosaygo\app\jar_io\service\DezipService.class
+com\dosaygo\app\jar_io\service\LoginService.class
+com\dosaygo\app\jar_io\service\RuntimeService.class

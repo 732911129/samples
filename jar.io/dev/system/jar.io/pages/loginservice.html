@@ -1,0 +1,21 @@
+<form method=POST>
+  <h1>Login</h1>
+  <p>
+    <label for=handle>Handle:</label> 
+    <input id=handle required name=handle>
+    <label for=password>Secret: </label> 
+    <input id=password required type=password name=password>
+    <label for=create>Create? </label> 
+    <input id=create type=checkbox name=create>
+    <span id=specify_name>
+      <label for=name>Name: </label> 
+      <input id=name name=name value=anonymous>
+    </span>
+  </p>
+  <p>
+    <button>Login</button>
+  </p>
+  <p>
+    <a class=display_on_post_only href=/copyservice?mode=execute&next_service=uploader&taskguid=::taskguid&current_service=::service_name>Next: Upload</a>
+  </p>
+</form>

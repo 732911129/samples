@@ -1,0 +1,12 @@
+- Factor our Service for use in Cavedb.
+- Make cavedb for use in jar.io
+- Result is 3 packages : Service, Cavedb, Jar.io
+- Files API:
+  void stringToFile( String data, String filePath )
+  String fileToString( String filePath )
+
+- Add service command output to HTML pages.
+- Add users ( SQL table ).
+- Clean up UI.
+
+
