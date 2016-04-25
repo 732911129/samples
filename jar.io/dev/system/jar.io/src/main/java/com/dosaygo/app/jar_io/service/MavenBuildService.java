@@ -19,6 +19,7 @@ public class MavenBuildService extends RuntimeService {
   
   public MavenBuildService( String storageBase ) throws IOException {
     super( storageBase );
+    this.progressStep = 5;
   }
 
   @Override

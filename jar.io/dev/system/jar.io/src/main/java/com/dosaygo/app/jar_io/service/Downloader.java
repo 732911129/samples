@@ -29,6 +29,7 @@ public class Downloader extends Service {
 
   public Downloader( String storageBase ) throws IOException {
     super( storageBase );
+    this.progressStep = 10;
   }
 
   public void transformParameters( Map<String,String> params ) {

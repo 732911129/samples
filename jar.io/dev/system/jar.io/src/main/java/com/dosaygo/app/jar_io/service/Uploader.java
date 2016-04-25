@@ -33,9 +33,11 @@ public class Uploader extends Service {
 
   public Uploader( String storageBase ) throws IOException {
     super( storageBase );
+    this.progressStep = 1;
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
+    this.progressStep = 2;
     InputStream is = e.getRequestBody();
     ByteArrayOutputStream outs = new ByteArrayOutputStream();
     Headers h = e.getRequestHeaders();
@@ -85,6 +87,8 @@ public class Uploader extends Service {
         this.handleGet( e, params );
       } catch ( Exception ex ) {
         System.out.println( this.detailException( ex ) );
+      } finally {
+        this.progressStep = 1;
       }
     }
   }

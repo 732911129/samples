@@ -19,6 +19,7 @@ public class RezipService extends RuntimeService {
 
   public RezipService( String storageBase ) throws IOException {
     super( storageBase );
+    this.progressStep = 7;
   }
 
   @Override

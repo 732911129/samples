@@ -44,6 +44,7 @@ abstract public class RuntimeService extends Service {
   }
 
   public void handlePost( HttpExchange e ) throws IOException {
+    this.progressStep += 1;
     BufferedWriter responseWriter = null;
     try { 
       Map<String, String> params = this.bodyParams( e );
@@ -67,6 +68,7 @@ abstract public class RuntimeService extends Service {
     } finally {
       responseWriter.write( "</body></html>" );
       responseWriter.close();
+      this.progressStep -= 1;
     }
   }
 

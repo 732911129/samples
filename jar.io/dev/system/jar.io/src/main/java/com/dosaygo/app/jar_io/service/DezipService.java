@@ -19,6 +19,7 @@ public class DezipService extends RuntimeService {
 
   public DezipService( String storageBase ) throws IOException {
     super( storageBase );
+    this.progressStep = 3;
   }
 
   @Override

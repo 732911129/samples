@@ -37,6 +37,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 abstract public class Service implements HttpHandler {
 
+  protected int progressStep;
   protected String serviceBase;
   protected String storageBase;
   private String pageCache;
@@ -46,6 +47,7 @@ abstract public class Service implements HttpHandler {
   public final CaveHumanAPI humans;
 
   public Service( String storageBase ) throws IOException {
+    this.progressStep = 1;
     this.inCookies = new HashMap<String, String> ();
     this.cookies = new HashMap<String, String> ();
     this.preface = "";
@@ -181,6 +183,10 @@ abstract public class Service implements HttpHandler {
   public String getPreface() {
     return this.preface;
   }
+  
+  public int getProgressStep() {
+    return this.progressStep;
+  }
 
   public String name() {
     Class kind = this.getClass();
@@ -191,6 +197,7 @@ abstract public class Service implements HttpHandler {
     LinkedList<String> iterations = new LinkedList<String>();
     params.put( "service_name", this.name() );
     params.put( "preface", this.getPreface() );
+    params.put( "progress_step", String.valueOf( this.getProgressStep() ) );
     iterations.add( page );
     // template each parameter slot in turn
     params.forEach( ( key, value ) -> iterations.add( iterations.getLast().replaceAll( "::" + key, value ) ) );
