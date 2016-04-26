@@ -1,10 +1,15 @@
-Service Scripts TODO
-  DONE - Windows command scripts.
-    - Use powershell scripting.
-  - Fix build ( non maven service script )
-    COMPILING - Redirect and if possible interleave error stream also.
-  - Make install script for linux and macosx to apt-get everything required. 
-  - Make install script for windows. 
+Install Todo
+- Make install script for linux and macosx to apt-get everything required. 
+- Make install script for windows. 
+
+Install Instructions
+- Create
+
+Architecture Document
+- Create
+
+Video 
+- Create
 
 Java Code and HTML Todo
   - Sessions, Cave, Humans refactor, and improvement-creating upgrade
@@ -17,6 +22,11 @@ Java Code and HTML Todo
   - Add favicon.ico ( or other static files ) handlers. Perhaps make the dispatcher really a dispatcher and not just serving a link to login. 
 
 DONE ALREADY
+  DONE Service Scripts TODO
+    DONE - Windows command scripts.
+      DONE - Use powershell scripting.
+    DONE - Fix build ( non maven service script )
+      DONE - Redirect and if possible interleave error stream also.
   DONE - Create the preface to be a message parameter that is rendered in the HTML.
   DONE - Investigate and fix bugs where if you call unzip or maven build again after post, the system hangs. 
   DONE - Fix scroll to bottom.
