@@ -2,6 +2,7 @@
 
 *.sw?
 *~
+*.properties
 
 # Ignore compiled python files
 
