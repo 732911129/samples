@@ -1,5 +1,5 @@
-guid=$1
-run_package=$2
+$guid=$args[ 0 ]
+$run_package=$args[ 1 ]
 
 cd $guid
 
@@ -18,10 +18,10 @@ mvn compile
 echo "Testing with maven..."
 mvn test
 
-if [[ $run_package == *run_package* ]]; then
+if ( $run_package -eq "run_package" ) {
   echo "Running package..."
   mvn package
-fi
+}
 
 echo "Done."
 

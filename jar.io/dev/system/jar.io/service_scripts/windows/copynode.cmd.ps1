@@ -1,36 +1,28 @@
-if [[ $# -lt 3 || $# -gt 3 ]]; then
-  echo "Usage: $0 [ node ] [ service1 ] [ service2 ]"
-  exit 1
-fi
+$argLen = $args.Length
 
-node=$1
-s1=$2
-s2=$3
-source=$s1/$node
-dest=$s2/$node
+if ( $argLen -ne 3 ) {
+  echo "Usage: copynode.cmd [ node ] [ source ] [ dest ]"
+  exit
+}
 
-if [[ ! -e $source ]]; then
-  echo "Source $source does not exist."
-  exit 1
-elif [[ ! -d $source ]]; then
-  echo "Source exists but is not a directory."
-  exit 1
-fi
+$node=$args[ 0 ]
+$s1=$args[ 1 ]
+$s2=$args[ 2 ]
+$source= Join-Path -Path $s1 -ChildPath $node
+$dest= Join-Path -Path $s2 -ChildPath $node
 
-if [[ -e $dest ]]; then
-  echo "Destination exists, deleting..."
-  rm -rf $dest
+if ( Test-Path $dest ) {
+  echo "$dest exists. Deleting..."
+  Remove-Item -Force -Path $dest -Recurse
   echo "Done."
-fi
+}
 
-if [[ ! -e $s2 ]]; then
-  echo "Making destination root...."
-  mkdir -p $s2
-  echo "Done."
-fi
+echo "Making $dest parent..."
+New-Item -Force -Type directory -Path $s2
+echo "Done."
 
 echo "Copying $source to $dest..."
-cp -r $source $dest
+Copy-Item $source $dest -recurse
 echo "Done."
 
 
