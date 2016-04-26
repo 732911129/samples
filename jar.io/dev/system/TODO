@@ -1,5 +1,5 @@
 Service Scripts TODO
-  - Windows command scripts.
+  DONE - Windows command scripts.
     - Use powershell scripting.
   - Fix build ( non maven service script )
     COMPILING - Redirect and if possible interleave error stream also.

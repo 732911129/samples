@@ -1,27 +1,28 @@
-if [[ $# -lt 1 || $# -gt 3 ]]; then
-  echo "Usage: $0 [ task-guid ] [ make_jar ] [ entrypoint ]"
-  exit 1
-fi
+$argLen = $args.Count
+if ( $argLen -lt 1 -or $argLen -gt 3 ) {
+  echo "Usage: build.cmd [ task-guid ] [ make_jar ] [ entrypoint ]"
+  exit
+}
+$guid=$args[ 0 ]
+$make_jar=$args[ 1 ]
+$entrypoint=$args[ 2 ]
+$build= Join-Path -Path $guid -ChildPath target
+$classes= Join-Path -Path $build -ChildPath classes
+$jar = Join-Path -Path $build -ChildPath jar
+$classes_jar = Join-Path -Path $jar -ChildPath "classes.jar"
+$executable_jar = Join-Path -Path $jar -ChildPath "executable.jar"
 
-guid=$1
-make_jar=$2
-entrypoint=$3
-build=$guid/target
-
-if [[ ! -e $guid ]]; then
+if ( Test-Path $guid -ne $true ) {
   echo "Source $guid directory does not exist."
-  exit 1
-elif [[ ! -d $guid ]]; then
-  echo "Source $guid directory exists but is not a directory."
-  exit 1
-fi
+  exit 
+}
 
 echo $guid $make_jar $entrypoint $build
 # clean
 
 echo "Cleaning build directory..."
 
-rm -rf $build
+Remove-Item -Path $build -recurse -force
 
 echo "Done."
 
@@ -29,49 +30,44 @@ echo "Done."
 
 echo "Making classes directory..."
 
-mkdir -p $build/classes
+New-Item -Path $classes -type directory -force
 
 echo "Done."
 
-if [[ $make_jar == *make_jar* ]]; then
+if ( $make_jar -eq "make_jar" ) {
   echo "Preparing a jar directory..."
 
-  mkdir -p $build/jar
+  New-Item -Path $jar -type directory -force
 
   echo "Done."
-fi
+}
 
 # make sources
 
 echo "Collecting sources..."
 
 cd $guid
-find . -name "*.java" > sources.txt
+$sources = Get-ChildItem -Path $guid -type file -name | Get-Unique
+$sources = $sources -join ", "
 
 echo "Done."
 
 echo "Compiling sources..."
 
-javac @sources.txt -d $build/classes -verbose
-
-echo "Done."
-
-echo "Cleaning up..."
-
-rm sources.txt
+javac $sources -d $classes -verbose
 
 echo "Done."
 
 # if make jar
 
-if [[ $make_jar == *make_jar* ]]; then
-  if [[ $entrypoint != "" ]]; then
+if ( $make_jar -eq "make_jar" ) {
+  if ( $entrypoint -ne "" ) {
     echo "Building an executable jar with entrypoint $entrypoint..." 
-    jar cvfe ./target/jar/executable.jar $entrypoint -C ./target/classes . 
+    jar cvfe $executable_jar $entrypoint -C $classes . 
     echo "Done."
-  else
+  } else {
     echo "Building a jar..."
-    jar cvf ./target/jar/classes.jar -C ./target/classes . 
+    jar cvf $class_jar -C $classes .
     echo "Done."
-  fi
-fi
+  }
+}

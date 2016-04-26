@@ -1,15 +1,22 @@
-if [[ $# -ne 2 ]]; then
-  echo "Usage: $0 [ task-guid ] [ zipbase ]"
-  exit 1
-fi
+$argLen = $args.Count
+if ( $argLen -ne 2 ) {
+  echo "Usage: rezip.cmd [ task-guid ] [ zipbase ]"
+  exit 
+}
 
-guid=$1
-zipbase=$2
-zip=compiled.$zipbase.zip
+$guid=$args[ 0 ]
+$zipbase=$args[ 1 ]
+$zip="compiled." + $zipbase + ".zip"
+$zipPath = Join-Path -Path $guid -ChildPath $zip
 
-echo "zipping $guid into $guid/$zip..."
+if ( Test-Path $zipPath ) {
+  echo "$zipPath exists. Deleting..."
+  Remove-Item $zipPath -force
+}
+
+echo "zipping $guid into $zipPath..."
 cd $guid
-zip -vr $zip *;
-echo "zipped $guid into $guid/$zip."
+Compress-Archive -Path $guid -Update -DestinationPath $zipPath
+echo "zipped $guid into $zipPath."
 echo "Done."
 
