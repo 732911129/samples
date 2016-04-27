@@ -1,9 +1,22 @@
-cpu = $( sysctl -n machdep.cpu.brand_string )
+function ask() {
+  command="
+    osascript -e '
+    tell application \"System Events\"
+    activate
+    set myReply to ( display dialog \"$1\" )
+    end tell'"
+  answer=`eval "$command"`
+  echo $1 $answer
+}
+#open "http://www.oracle.com/technetwork/java/javase/downloads/index.html"
 
-if [[ $cpu == "*intel*" ]]; then
-  echo Intel
-else
-  echo AMD
-fi
+proj="Jar.IO"
 
+ask "Download JDK?"
+ask "Download Maven?"
+ask "Install JDK?"
+ask "Install Maven?"
+ask "Unzip Sample Project $proj ?"
+ask "Build Sample Project $proj ?"
+ask "Run Sample Project $proj ?"
 
