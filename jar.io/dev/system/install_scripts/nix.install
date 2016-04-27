@@ -1,0 +1,35 @@
+function ask() {
+  command="
+    osascript -e '
+    tell application \"System Events\"
+    activate
+    set myReply to ( display dialog \"$1\" )
+    end tell'"
+  answer=`eval "$command"`
+  if [[ $answer =~ ^(.*)OK(.*)$ ]]; then
+    echo "OK" 
+  else
+    echo "NO"
+  fi
+}
+
+proj="Jar.IO"
+
+doit=$( ask "Download JDK?" )
+
+if [[ $doit == "OK" ]]; then
+  open "http://www.oracle.com/technetwork/java/javase/downloads/index.html"
+fi
+
+doit = $( ask "Download Maven?" )
+
+if [[ $doit == "OK" ]]; then
+  open "https://maven.apache.org/download.cgi"
+fi
+
+ask "Install JDK?"
+ask "Install Maven?"
+ask "Unzip Sample Project $proj ?"
+ask "Build Sample Project $proj ?"
+ask "Run Sample Project $proj ?"
+
