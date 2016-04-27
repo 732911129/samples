@@ -1,0 +1,9 @@
+cpu = $( sysctl -n machdep.cpu.brand_string )
+
+if [[ $cpu == "*intel*" ]]; then
+  echo Intel
+else
+  echo AMD
+fi
+
+

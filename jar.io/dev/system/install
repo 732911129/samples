@@ -1,6 +1,0 @@
-#!/bin/sh
-cd cavedb
-mvn package install
-cd ..
-./build
-
