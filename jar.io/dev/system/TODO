@@ -1,15 +1,48 @@
+Architecture Refactor
+  - Let's draw an architecture diagram
+
+  - Let's think about the architecture for efficient, clean and simple.
+
+  - Let's refactor the Service and Runtime Service classes. 
+
+  - Let's refactor the CAVEDB classes.
+
+  - Let's use a media object for sessions. 
+
 Install Todo
-- Make install script for linux and macosx to apt-get everything required. 
-- Make install script for windows. 
+  - Make install script for windows. 
+    - Install powershell 5. 
+    - Perform steps as below:
+      - Install JDK 1.8
+      - Configure JAVA_HOME
+      - Add JAVA / bin to path ( JDK )
+      - Install MAVEN
+      - Add Maven to PATH
+      - Unzip project and build project.
+      - Start server. 
+      - Open localhost:8080 in browser.
+
+  - Make install script for linux and macosx to apt-get everything required. 
+    - Install JDK 1.8
+    - Configure JAVA_HOME
+    - Add JAVA / bin to path ( JDK )
+    - Install MAVEN
+    - Add Maven to PATH
+    - Unzip project and build project.
+    - Start server. 
+    - Open localhost:8080 in browser.
 
 Install Instructions
-- Create
-
-Architecture Document
-- Create
+  - Create
+   - With the install script we can keep the install instructions simple.
 
 Video 
-- Create
+  - Create
+   - Make the video first and talk about the architecture. 
+
+Architecture Document
+  - Create
+   - Write the document inspired by the talk about the architecture.
 
 Java Code and HTML Todo
   - Sessions, Cave, Humans refactor, and improvement-creating upgrade
@@ -20,19 +53,5 @@ Java Code and HTML Todo
       where services make regard to those. Answer the question what is a clean and decoupled and minimum effort way to have Services access cave and the CaveHumanAPI and sessions ? 
   - Add unit tests. 
   - Add favicon.ico ( or other static files ) handlers. Perhaps make the dispatcher really a dispatcher and not just serving a link to login. 
-
-DONE ALREADY
-  DONE Service Scripts TODO
-    DONE - Windows command scripts.
-      DONE - Use powershell scripting.
-    DONE - Fix build ( non maven service script )
-      DONE - Redirect and if possible interleave error stream also.
-  DONE - Create the preface to be a message parameter that is rendered in the HTML.
-  DONE - Investigate and fix bugs where if you call unzip or maven build again after post, the system hangs. 
-  DONE - Fix scroll to bottom.
-  DONE - Increase orienting information in command scripts.
-  DONE - Add login session checks on each service.
-  DONE - Add command output to pages. 
-  DONE - Add some new HTML to a service's page after a post has been performed to indicate the next step in a clear way. 
 
 
