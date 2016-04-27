@@ -6,14 +6,27 @@ function ask() {
     set myReply to ( display dialog \"$1\" )
     end tell'"
   answer=`eval "$command"`
-  echo $1 $answer
+  if [[ $answer =~ ^(.*)OK(.*)$ ]]; then
+    echo "OK" 
+  else
+    echo "NO"
+  fi
 }
-#open "http://www.oracle.com/technetwork/java/javase/downloads/index.html"
 
 proj="Jar.IO"
 
-ask "Download JDK?"
-ask "Download Maven?"
+doit=$( ask "Download JDK?" )
+
+if [[ $doit == "OK" ]]; then
+  open "http://www.oracle.com/technetwork/java/javase/downloads/index.html"
+fi
+
+doit = $( ask "Download Maven?" )
+
+if [[ $doit == "OK" ]]; then
+  open "https://maven.apache.org/download.cgi"
+fi
+
 ask "Install JDK?"
 ask "Install Maven?"
 ask "Unzip Sample Project $proj ?"
