@@ -1,28 +1,22 @@
-# Development
+# Install & Run Instructions
 
-## Server Architecture Iteration Number 1
+Windows
 
-### Dispatcher
+1. Download and install the latest JDK
+2. Download and install Maven ( adding the JAVA_HOME directory that maven requires, to your path, and also add the maven bin directory to your bath ) 
+3. Unzip system.zip
+4. Open CMD.exe and go to the directory "system" from the unzipped archive in step 3.
+5. run `build.cmd` 
+6. run `run_server.cmd`
+7. open a web browser and navigate to http://localhost:8080
 
-  A Dispatcher, implemented by public Response serve.
+\*nix and Mac OS X
 
-  The dispatch matches the URI to a route string, and calls 
-  the corresponding Service.
-
-### Service
-
-  Service has a serve method. 
-
-  The response of the called service's serve method is the return result of the Dispatcher.
-
-## Services Architecture Iteration Number 1
-
-  - Reader service ( just returns the text value of a file in the "front" directory of any filename you pass it )
-    - Implemented by Files.lines
-  - Unzip service ( just unzips and returns the directory tree of any zipfile blob you pass it )
-    - Implemented by Runtime.
-  - Compile service ( just returns the jar file, and compile output including errors, of the compilation of any directory tree you pass it )
-    - Implemented by Runtime and a custom compile to jar shell script.
-
-
+1. Download and install the latest JDK
+2. Download and install Maven ( adding the JAVA_HOME directory that maven requires, to your path, and also add the maven bin directory to your bath ) 
+3. Unzip system.zip
+4. Open a bash shell and go t the directory "system" from the unzipped archive in step 3.
+5. run `build`
+6. run `run_server`
+7. open a web browser and navigate to http://localhost:8080
 
