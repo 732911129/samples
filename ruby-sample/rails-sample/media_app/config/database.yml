@@ -1,0 +1,16 @@
+development: &development
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: postgres
+  password: uEfgW7y7
+  host: 146.148.97.71 
+
+postgresql_settings: &postgresql_settings
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: postgres
+  password: uEfgW7y7
+  host: 146.148.97.71 
+
