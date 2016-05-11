@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START app_yaml]
+service: ruby-gae-sample
 runtime: ruby
 vm: true
 entrypoint: bundle exec ruby app.rb -p $PORT
