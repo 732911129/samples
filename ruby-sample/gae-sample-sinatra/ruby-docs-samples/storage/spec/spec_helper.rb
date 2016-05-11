@@ -14,5 +14,5 @@
 
 require "rspec"
 
-PROJECT_ID=ENV["GOOGLE_PROJECT_ID"]
-BUCKET_NAME=ENV["GOOGLE_PROJECT_ID"]
+PROJECT_ID="populace-soho"
+BUCKET_NAME="populace-soho"
