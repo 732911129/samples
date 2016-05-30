@@ -13,6 +13,7 @@
 # limitations under the License.
 
 #[START all]
+service: sample-rails-gae
 runtime: ruby
 vm: true
 entrypoint: bundle exec ruby app.rb -p 8080
