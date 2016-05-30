@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>2-bit</title>
+    <style>
+      pre {
+        line-height: 20%;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="https://github.com/dosaygo/2-bit"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a> 
+    <button code=0 symbol="." id=dot>dot</button>
+    <button code=1 symbol="&#10;&#13;" id=newline>newline</button>
+    <button code=2 symbol="|" id=bar>bar</button>
+    <button code=3 symbol=" " id=space>space</button>
+    <div container>
+      <pre id=mp></pre>
+    </div>
+  </body>
+  <script>
+
+    document.addEventListener( 'load', load );
+    
+    load();
+
+    function load() {
+
+      if ( self.twobitloaded ) return;
+
+      var
+        mp = document.querySelector( '#mp' ),
+        dot = document.querySelector( '#dot' ),
+        newline = document.querySelector( '#newline' ),
+        bar = document.querySelector( '#bar' ),
+        space = document.querySelector( '#space' ),
+        all = [ dot, newline, bar, space ];
+
+      if( mp && dot && space && newline && bar ) {
+        self.twobitloaded = true;
+        install();
+        drawHash();
+        self.onpopstate = quicklyDrawHash;
+      }
+
+      // TODO : implement binary packing
+      function binary( code ) {
+        return code;
+      }
+
+      function drawHash() {
+        var
+          setup = setupDraw(),
+          all = setup.all,
+          hash = setup.hash;
+        
+        if ( ! all || ! hash ) return;
+        
+        function drawOneHash( index ) {
+          paint( all[ hash[ index ] ].getAttribute( 'symbol' ) );
+          function drawNextHash() {
+            drawOneHash( index+1 );
+          }
+          if( index+1 < hash.length ) setTimeout( drawNextHash, 30 );
+        }
+        drawOneHash( 0 );
+      } 
+
+      function install() {
+        for( var i = 0; i < all.length; i++ ) {
+          var
+            part = all[ i ];
+          part.addEventListener( 'click', obey );
+        }
+      }
+
+      function obey( action ) {
+        var
+          button = action.target,
+          code = button.getAttribute( 'code' ),
+          symbol = button.getAttribute( 'symbol' );
+
+        packCode( code );
+      }
+
+      function paint( symbol ) {
+        mp.innerText = mp.innerText.slice(0, -1 ) + symbol + '*';
+      }
+
+      function packCode( code ) {
+        document.location.hash += binary( code );
+      }
+
+      function quicklyDrawHash() {
+        var
+          setup = setupDraw(),
+          all = setup.all,
+          hash = setup.hash;
+          
+        if ( ! all || ! hash ) return;
+        
+        for( var i = 0; i < hash.length; i++ ) {
+          paint( all[ hash[ i ] ].getAttribute( 'symbol' ) );
+        }
+      }
+      
+      function setupDraw() {
+        var
+          hash = document.location.hash,
+          all = [];
+
+        if ( ! hash ) return { 'hash' : '', all : [] };
+
+        mp.innerText = '';
+        hash = hash.split( '' );
+        hash.shift();
+
+        for( var i = 0; i < 4; i++ ) {
+          var
+            selector =  "button[code=\"" + i + "\"]" ;
+          all[ i ] = document.querySelector( selector );
+        }
+        return { 'hash' : hash, 'all' : all };
+      }
+  
+    }
+  
+  </script>
+</html>
